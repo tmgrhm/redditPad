@@ -57,13 +57,34 @@
 	for (id dict in responseArray)
 	{
 		TGComment *comment = [[TGComment new] initCommentFromDictionary:dict];
-		if (comment) [comments addObject:comment];
+		
+		if (comment)
+		{
+			comments = (NSMutableArray *) [comments arrayByAddingObjectsFromArray:[self childrenCommentsForComment:comment]];
+		}
 	}
 	
 	self.comments = [NSArray arrayWithArray:comments];
 	[self.commentTableView reloadData];
 	
 	NSLog(@"Found %lu comments", self.comments.count);
+}
+
+- (NSMutableArray *) childrenCommentsForComment:(TGComment *)comment
+{
+	NSMutableArray *comments = [NSMutableArray new];
+
+	[comments addObject:comment];
+	
+	if (comment.children.count > 0)
+	{
+		for (TGComment *child in comment.children)
+		{
+			comments = (NSMutableArray *) [comments arrayByAddingObjectsFromArray:[self childrenCommentsForComment:child]];
+		}
+	}
+	
+	return comments;
 }
 
 - (NSAttributedString *) commentBodyFromMarkdown:(NSString *)commentBody
@@ -123,6 +144,12 @@
 	
 	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
 	cell.author.text = comment.author;
+	
+	cell.indentationLevel = comment.indentationLevel;
+	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
+	
+//	NSLog(@"%f = %f + (%lu * %f)", cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth), cell.originalLeftMargin, cell.indentationLevel, cell.indentationWidth);
+//	NSLog(@"comment: %@ \n indentation: %lu \n constant: %f", comment.body, comment.indentationLevel, cell.leftMargin.constant);
 	
 	return cell;
 }

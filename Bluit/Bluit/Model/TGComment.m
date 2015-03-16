@@ -19,6 +19,7 @@
 	
 	if (![@"t1" isEqualToString:dict[@"kind"]]) // TODO don't use literal string, typedef
 	{
+//		NSLog(@"TGComment got passed a !t1 object");
 		return nil; // TODO handle error better
 	}
 	
@@ -33,8 +34,34 @@
 	_edited = data[@"edited"];
 	//	_editDate;
 	_saved = data[@"saved"];
+	_indentationLevel = [data[@"indentationLevel"] integerValue];
 	
+	if ([data[@"replies"] isKindOfClass:NSDictionary.class])
+	{
+		NSMutableArray *children = [NSMutableArray new];
+		NSArray *childrenDicts = data[@"replies"][@"data"][@"children"];
+		
+		for (id child in childrenDicts)
+		{
+			NSMutableDictionary *mutableChild = [child mutableCopy];
+			mutableChild[@"data"] = [mutableChild[@"data"] mutableCopy];
+			mutableChild[@"data"][@"indentationLevel"] = [NSString stringWithFormat:@"%lu", self.indentationLevel + 1];
+			TGComment *comment = [[TGComment new] initCommentFromDictionary:mutableChild];
+			if (comment)
+			{
+				[children addObject:comment];
+			}
+		}
+		
+		_children = children;
+	}
+
 	return self;
+}
+
+- (NSString *) description
+{
+	return [NSString stringWithFormat:@"body: %@ \n author:%@ \n indent:%lu \n \t children: %lu", self.body, self.author, self.indentationLevel, self.children.count];
 }
 
 @end

@@ -20,6 +20,9 @@
 @property (nonatomic, copy, readonly) NSDate *editDate;
 @property (nonatomic, assign, readonly, getter=isSaved) BOOL saved;
 
+@property (nonatomic, strong) NSArray *children;
+@property (nonatomic, assign) NSInteger indentationLevel;
+
 - (instancetype) initCommentFromDictionary:(NSDictionary *)dict;
 
 @end
