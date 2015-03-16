@@ -12,6 +12,10 @@
 
 - (void)awakeFromNib {
     // Initialization code
+	
+	self.body.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
+	
+	self.originalLeftMargin = self.leftMargin.constant;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

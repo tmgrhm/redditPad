@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */; };
-		E210FEA41AB2DAC40000E739 /* TGCommentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA31AB2DAC40000E739 /* TGCommentTableViewController.m */; };
 		E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA61AB2DBA50000E739 /* TGComment.m */; };
 		E210FEAA1AB2DEF40000E739 /* TGLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */; };
 		E210FEAD1AB48B7E0000E739 /* TGLinkHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEAC1AB48B7E0000E739 /* TGLinkHeaderViewController.m */; };
@@ -46,8 +45,6 @@
 		AEE5257E68B4E4BFA4A6ED8A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCommentTableViewCell.h; path = Views/TGCommentTableViewCell.h; sourceTree = "<group>"; };
 		E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCommentTableViewCell.m; path = Views/TGCommentTableViewCell.m; sourceTree = "<group>"; };
-		E210FEA21AB2DAC40000E739 /* TGCommentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCommentTableViewController.h; path = Views/TGCommentTableViewController.h; sourceTree = "<group>"; };
-		E210FEA31AB2DAC40000E739 /* TGCommentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCommentTableViewController.m; path = Views/TGCommentTableViewController.m; sourceTree = "<group>"; };
 		E210FEA51AB2DBA50000E739 /* TGComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGComment.h; path = Model/TGComment.h; sourceTree = "<group>"; };
 		E210FEA61AB2DBA50000E739 /* TGComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGComment.m; path = Model/TGComment.m; sourceTree = "<group>"; };
 		E210FEA81AB2DEF40000E739 /* TGLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLinkViewController.h; path = Views/TGLinkViewController.h; sourceTree = "<group>"; };
@@ -223,8 +220,6 @@
 				E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */,
 				E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */,
 				E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */,
-				E210FEA21AB2DAC40000E739 /* TGCommentTableViewController.h */,
-				E210FEA31AB2DAC40000E739 /* TGCommentTableViewController.m */,
 				E210FEA81AB2DEF40000E739 /* TGLinkViewController.h */,
 				E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */,
 				E210FEAB1AB48B7E0000E739 /* TGLinkHeaderViewController.h */,
@@ -378,7 +373,6 @@
 				E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */,
 				E245146A1AA6448500B80D2E /* TGSubredditListViewController.m in Sources */,
 				E210FEAD1AB48B7E0000E739 /* TGLinkHeaderViewController.m in Sources */,
-				E210FEA41AB2DAC40000E739 /* TGCommentTableViewController.m in Sources */,
 				E210FEB31AB4C0620000E739 /* TGLinkHeaderContainerViewController.m in Sources */,
 				E28BB7F61AB17ED2005E47B8 /* TGLoginViewController.m in Sources */,
 				E210FEAA1AB2DEF40000E739 /* TGLinkViewController.m in Sources */,

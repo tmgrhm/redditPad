@@ -23,10 +23,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 	
-	[self.webView loadRequest:[NSURLRequest requestWithURL:self.link.url]];
+	if (!self.url) self.url = self.link.url;
+	
+	[self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
 	// TODO fix webView being wrong-size for sites like imgur and youtube
 	
-	self.titleLabel.text = self.link.title; // TODO make dynamic per webview
+//	self.titleLabel.text = self.link.title; // TODO make dynamic per webview
 	
 }
 
@@ -50,7 +52,7 @@
 - (IBAction)sharePressed:(id)sender { 	// TODO
 	
 	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
-											initWithActivityItems:@[self.link.title, self.link.url]
+											initWithActivityItems:@[self.link.title, self.url] // TODO handle !self.link
 											applicationActivities:nil];
 	
 	shareSheet.popoverPresentationController.sourceView = self.view;

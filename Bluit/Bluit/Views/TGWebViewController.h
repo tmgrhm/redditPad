@@ -11,6 +11,7 @@
 
 @interface TGWebViewController : UIViewController
 
-@property (strong, nonatomic) TGLink *link;
+@property (strong, nonatomic) TGLink *link; // TODO probably remove
+@property (strong, nonatomic) NSURL *url;
 
 @end

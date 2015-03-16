@@ -14,4 +14,6 @@
 @property (strong, nonatomic) TGLink *link;
 @property (strong, nonatomic) NSArray *comments;
 
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)url inRange:(NSRange)characterRange;
+
 @end

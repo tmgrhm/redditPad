@@ -461,40 +461,18 @@
                                         <rect key="frame" x="0.0" y="179" width="640" height="601"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="25" reuseIdentifier="TGCommentTableViewCell" id="Y1M-j8-X0j" customClass="TGCommentTableViewCell">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="25" shouldIndentWhileEditing="NO" reuseIdentifier="TGCommentTableViewCell" id="Y1M-j8-X0j" customClass="TGCommentTableViewCell">
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Y1M-j8-X0j" id="Klm-ER-wFi">
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obN-1r-MgQ">
-                                                            <rect key="frame" x="25" y="20" width="590" height="18"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="18" id="d3K-RG-V87"/>
-                                                                <constraint firstAttribute="height" constant="18" id="ySZ-HR-SAv"/>
-                                                            </constraints>
-                                                            <attributedString key="attributedText">
-                                                                <fragment content="Comment body">
-                                                                    <attributes>
-                                                                        <color key="NSColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                                        <font key="NSFont" size="15" name="HelveticaNeue"/>
-                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" lineSpacing="2"/>
-                                                                    </attributes>
-                                                                </fragment>
-                                                            </attributedString>
-                                                            <nil key="highlightedColor"/>
-                                                            <variation key="default">
-                                                                <mask key="constraints">
-                                                                    <exclude reference="ySZ-HR-SAv"/>
-                                                                </mask>
-                                                            </variation>
-                                                        </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="timestamp" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LcX-50-Z1V">
                                                             <rect key="frame" x="97" y="47" width="62" height="16"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                             <color key="textColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <color key="highlightedColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 points" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Io4-hE-zze">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="0 points" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Io4-hE-zze">
                                                             <rect key="frame" x="25" y="47" width="47" height="16"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                                             <color key="textColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -506,34 +484,58 @@
                                                             <color key="textColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <color key="highlightedColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </label>
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f2L-PO-Jbc">
+                                                            <rect key="frame" x="25" y="21" width="590" height="18"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="590" id="XbG-UT-mmB"/>
+                                                            </constraints>
+                                                            <attributedString key="attributedText">
+                                                                <fragment>
+                                                                    <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                                    <attributes>
+                                                                        <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                            <variation key="default">
+                                                                <mask key="constraints">
+                                                                    <exclude reference="XbG-UT-mmB"/>
+                                                                </mask>
+                                                            </variation>
+                                                        </textView>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="xSG-6U-4Oh" firstAttribute="top" secondItem="obN-1r-MgQ" secondAttribute="bottom" constant="8" id="6cY-cH-HNQ"/>
+                                                        <constraint firstItem="f2L-PO-Jbc" firstAttribute="leading" secondItem="Io4-hE-zze" secondAttribute="leading" id="5Xc-yj-JnU"/>
                                                         <constraint firstAttribute="bottomMargin" secondItem="Io4-hE-zze" secondAttribute="bottom" constant="8" id="6f6-mO-ufg"/>
+                                                        <constraint firstItem="f2L-PO-Jbc" firstAttribute="top" secondItem="Klm-ER-wFi" secondAttribute="topMargin" constant="13" id="D9O-HA-YVe"/>
                                                         <constraint firstItem="Io4-hE-zze" firstAttribute="leading" secondItem="LcX-50-Z1V" secondAttribute="trailing" constant="25" id="Fvt-hm-ac1"/>
                                                         <constraint firstItem="Io4-hE-zze" firstAttribute="leading" secondItem="Klm-ER-wFi" secondAttribute="leadingMargin" constant="17" id="Q35-VK-iiL"/>
+                                                        <constraint firstItem="f2L-PO-Jbc" firstAttribute="leading" secondItem="Klm-ER-wFi" secondAttribute="leadingMargin" constant="17" id="QIn-ZM-LdI"/>
                                                         <constraint firstItem="xSG-6U-4Oh" firstAttribute="leading" secondItem="LcX-50-Z1V" secondAttribute="trailing" constant="25" id="Qol-aa-dbn"/>
-                                                        <constraint firstItem="obN-1r-MgQ" firstAttribute="leading" secondItem="Klm-ER-wFi" secondAttribute="leadingMargin" constant="17" id="Swk-hH-lcG"/>
                                                         <constraint firstItem="LcX-50-Z1V" firstAttribute="leading" secondItem="xSG-6U-4Oh" secondAttribute="trailing" constant="25" id="VIJ-pL-1gM"/>
+                                                        <constraint firstAttribute="trailingMargin" secondItem="f2L-PO-Jbc" secondAttribute="trailing" constant="17" id="VlT-qw-37B"/>
                                                         <constraint firstItem="Io4-hE-zze" firstAttribute="baseline" secondItem="LcX-50-Z1V" secondAttribute="baseline" id="e0T-lX-fmN"/>
                                                         <constraint firstItem="LcX-50-Z1V" firstAttribute="leading" secondItem="Io4-hE-zze" secondAttribute="trailing" constant="25" id="kku-aa-RyR"/>
-                                                        <constraint firstAttribute="trailingMargin" secondItem="obN-1r-MgQ" secondAttribute="trailing" constant="17" id="lfZ-VJ-cVL"/>
                                                         <constraint firstItem="xSG-6U-4Oh" firstAttribute="baseline" secondItem="LcX-50-Z1V" secondAttribute="baseline" id="lvc-ud-s9B"/>
-                                                        <constraint firstItem="Io4-hE-zze" firstAttribute="top" secondItem="obN-1r-MgQ" secondAttribute="bottom" constant="9" id="omA-i4-J4i"/>
-                                                        <constraint firstItem="obN-1r-MgQ" firstAttribute="top" secondItem="Klm-ER-wFi" secondAttribute="topMargin" constant="12" id="ty5-lF-aqN"/>
+                                                        <constraint firstItem="Io4-hE-zze" firstAttribute="top" secondItem="f2L-PO-Jbc" secondAttribute="bottom" constant="8" id="pYj-Jj-ORj"/>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="constraints">
                                                             <exclude reference="Fvt-hm-ac1"/>
+                                                            <exclude reference="Q35-VK-iiL"/>
                                                             <exclude reference="VIJ-pL-1gM"/>
-                                                            <exclude reference="6cY-cH-HNQ"/>
                                                         </mask>
                                                     </variation>
                                                 </tableViewCellContentView>
                                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 <connections>
                                                     <outlet property="author" destination="xSG-6U-4Oh" id="XBD-eb-tmL"/>
-                                                    <outlet property="body" destination="obN-1r-MgQ" id="1gI-F5-RdU"/>
+                                                    <outlet property="body" destination="f2L-PO-Jbc" id="5Pc-U9-KSO"/>
+                                                    <outlet property="leftMargin" destination="QIn-ZM-LdI" id="gQ2-iP-SbW"/>
                                                     <outlet property="score" destination="Io4-hE-zze" id="Wla-gv-Qp1"/>
                                                     <outlet property="timestamp" destination="LcX-50-Z1V" id="BA1-cz-URz"/>
                                                 </connections>
@@ -610,11 +612,12 @@
                     <connections>
                         <outlet property="commentTableView" destination="YGR-3a-BRG" id="k5i-rI-Fef"/>
                         <outlet property="fadeView" destination="uee-uG-Rup" id="q7z-9f-eEj"/>
+                        <segue destination="gFf-Ur-DKX" kind="show" identifier="commentLinkTapped" id="EsB-c4-zmq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gf7-mU-JSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2984" y="831"/>
+            <point key="canvasLocation" x="2984" y="830"/>
         </scene>
         <!--Subreddit List View Controller-->
         <scene sceneID="wg7-f3-ORb">
@@ -1086,6 +1089,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Xrt-m8-Eu0"/>
-        <segue reference="tea-0r-P4J"/>
+        <segue reference="EsB-c4-zmq"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -20,11 +20,14 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - TSMarkdownParser (1.0.13)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
+  - TSMarkdownParser
 
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  TSMarkdownParser: c566d9ba17242282b880822eeb26d07abd2e25e6
 
 COCOAPODS: 0.35.0

@@ -10,9 +10,12 @@
 
 @interface TGCommentTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *body;
+@property (weak, nonatomic) IBOutlet UITextView *body;
 @property (weak, nonatomic) IBOutlet UILabel *score;
 @property (weak, nonatomic) IBOutlet UILabel *timestamp;
 @property (weak, nonatomic) IBOutlet UILabel *author;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftMargin;
+@property (assign, nonatomic) float originalLeftMargin;
 
 @end
