@@ -10,6 +10,7 @@
 
 @interface TGSubredditListViewController : UIViewController
 
+- (void) reloadTableViewData;
 
 @end
 

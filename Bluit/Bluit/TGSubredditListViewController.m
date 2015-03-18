@@ -28,7 +28,7 @@
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] retrieveUserSubscriptionsWithCompletion:^(NSArray *subreddits){
 		weakSelf.subreddits = subreddits;
-		[weakSelf.tableView reloadData];
+		[weakSelf reloadTableViewData];
 	}];
 }
 
@@ -39,6 +39,13 @@
 
 
 #pragma mark - UITableView
+- (void) reloadTableViewData
+{
+	[self.tableView beginUpdates];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView endUpdates];
+}
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 1;
@@ -60,7 +67,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	// When user selects a row
-//	self.selectedLink = self.subreddits[indexPath.row];
+   [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+	
+//	self.selectedSubreddit = self.subreddits[indexPath.row];
 	// Perform segue
 	
 	self.selectedRow = self.subreddits[indexPath.row][@"data"][@"url"];

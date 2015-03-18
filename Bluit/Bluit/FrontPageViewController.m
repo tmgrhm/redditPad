@@ -33,15 +33,13 @@
 	self.tableView.estimatedRowHeight = 80.0;
 	self.tableView.rowHeight = UITableViewAutomaticDimension;
 	
-	NSLog(@"fpVC.subreddit: %@", self.subreddit);
-	
 	[self loadSubreddit:self.subreddit];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self.tableView reloadData];
+	[self reloadTableViewData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,17 +55,16 @@
 
 - (void)loadSubreddit:(NSString *)subredditURL
 {
+	NSLog(@"fpVC.subreddit: %@", self.subreddit);
+	
 	self.title = subredditURL;
 	
-	if ([subredditURL length] == 0)
-	{
-		subredditURL = @"hot";
-		self.title = @"Front Page";
-	}
+	if ([subredditURL length] == 0)	subredditURL = @"hot";
+	if ([subredditURL isEqualToString:@"hot"])	self.title = @"Front Page";
 	
 	[[TGRedditClient sharedClient] requestSubreddit:subredditURL withCompletion:^(NSArray *collection, NSError *error) {
 		self.listings = collection;
-		[self.tableView reloadData];
+		[self reloadTableViewData];
 	}];
 }
 
@@ -77,6 +74,13 @@
 }
 
 #pragma mark - UITableView
+- (void) reloadTableViewData
+{
+	[self.tableView beginUpdates];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView endUpdates];
+}
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 1;
@@ -96,11 +100,10 @@
 	cell.title.text = link.title;
 	cell.score.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.score];
 	cell.subreddit.text = link.subreddit;
-	cell.domain.text = link.domain;
 	cell.author.text = link.author;
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
+	cell.commentsButton.tag = indexPath.row; // TODO better way
 	
-	cell.commentsButton.tag = indexPath.row;
 	if (link.isSelfpost)
 	{
 		cell.domain.hidden = YES;
@@ -116,12 +119,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	// When user selects a row
+   [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+	
 	self.selectedLink = self.listings[indexPath.row];
 	// Perform segue
 	[self performSegueWithIdentifier:@"listingToWebView" sender:self];
-	[tableView selectRowAtIndexPath:nil
-						   animated:NO
-					 scrollPosition:UITableViewScrollPositionNone];	// TODO better way?
 }
 
 #pragma mark - Navigation

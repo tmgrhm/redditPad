@@ -17,6 +17,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+	
+	UIView *selectedTableViewBG = [UIView new];
+	[selectedTableViewBG setBackgroundColor:[UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1]];
+	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
+	
     return YES;
 }
 

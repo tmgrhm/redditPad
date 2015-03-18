@@ -10,6 +10,7 @@
 #import "TGWebViewController.h"
 #import "TGCommentTableViewCell.h"
 #import "TGLinkHeaderContainerViewController.h"
+#import "TGSelfpostView.h"
 
 #import "TGRedditClient.h"
 #import "TGComment.h"
@@ -20,6 +21,8 @@
 
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
+
+@property (strong, nonatomic) NSMutableArray *collapsedComments;
 
 @property (strong, nonatomic) NSURL *urlFromCommentTapped;
 
@@ -33,6 +36,8 @@
 
 	self.commentTableView.estimatedRowHeight = 80.0;
 	self.commentTableView.rowHeight = UITableViewAutomaticDimension;
+	
+	self.collapsedComments = [NSMutableArray new];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
@@ -65,7 +70,8 @@
 	}
 	
 	self.comments = [NSArray arrayWithArray:comments];
-	[self.commentTableView reloadData];
+	
+	[self reloadCommentTableViewData];
 	
 	NSLog(@"Found %lu comments", self.comments.count);
 }
@@ -75,7 +81,6 @@
 	NSMutableArray *comments = [NSMutableArray new];
 
 	[comments addObject:comment];
-	
 	if (comment.children.count > 0)
 	{
 		for (TGComment *child in comment.children)
@@ -121,7 +126,13 @@
 	return NO; // TODO ???
 }
 
-#pragma mark - Table view data source
+#pragma mark - Table view
+- (void) reloadCommentTableViewData
+{
+	[self.commentTableView beginUpdates];
+	[self.commentTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView endUpdates];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	// Return the number of sections.
@@ -148,10 +159,40 @@
 	cell.indentationLevel = comment.indentationLevel;
 	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
 	
-//	NSLog(@"%f = %f + (%lu * %f)", cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth), cell.originalLeftMargin, cell.indentationLevel, cell.indentationWidth);
-//	NSLog(@"comment: %@ \n indentation: %lu \n constant: %f", comment.body, comment.indentationLevel, cell.leftMargin.constant);
-	
+	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
+		
 	return cell;
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+	
+	// TODO collapsing
+	TGComment *comment = self.comments[indexPath.row];
+	NSMutableArray *newComments = [self.comments mutableCopy];
+	NSArray *children = [TGComment childrenRecursivelyForComment:comment];
+	
+	if ([self.collapsedComments containsObject:comment])
+	{
+		[self.collapsedComments removeObject:comment];
+		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, children.count)];
+		[newComments insertObjects:children atIndexes:indexes];
+		
+		for (TGComment *child in children)
+		{
+			if ([self.collapsedComments containsObject:child])
+				[newComments removeObjectsInArray:[TGComment childrenRecursivelyForComment:child]];
+		}
+	}
+	else
+	{
+		[self.collapsedComments addObject:comment];
+		[newComments removeObjectsInArray:children];
+	}
+	
+	self.comments = newComments;
+	[self reloadCommentTableViewData];
 }
 
 #pragma mark - Navigation

@@ -22,7 +22,7 @@
 	
 //	NSLog(@"Container VC loaded, %@", self.link.selfText);
 	
-	NSString *segueIdentifier = [self.link.selfText isEqualToString:@""] ? @"embedLinkHeaderView" : @"embedSelfpostHeaderView";
+	NSString *segueIdentifier = self.link.isSelfpost ? @"embedSelfpostHeaderView" : @"embedLinkHeaderView";
 	[self performSegueWithIdentifier:segueIdentifier sender:nil];
 }
 

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TGSelfpostView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" scrollEnabled="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nRJ-hI-MJT">
+                    <rect key="frame" x="0.0" y="33" width="3512" height="18"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="590" id="HsO-J4-bfH"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment>
+                            <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                            <attributes>
+                                <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="HsO-J4-bfH"/>
+                        </mask>
+                    </variation>
+                </textView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TxP-jO-EgS">
+                    <rect key="frame" x="0.0" y="59" width="590" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="OQ3-Wz-y4R"/>
+                        <constraint firstAttribute="height" constant="18" id="tww-OB-ZB5"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="0 points, 0 comments in /r/nowhere">
+                            <attributes>
+                                <color key="NSColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <color key="highlightedColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="tww-OB-ZB5"/>
+                            <exclude reference="OQ3-Wz-y4R"/>
+                        </mask>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9qm-Xm-UCX">
+                    <rect key="frame" x="0.0" y="0.0" width="590" height="21"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yWR-6g-ls7">
+                    <rect key="frame" x="0.0" y="85" width="590" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="EL3-0j-kdL"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="sw4-Ss-E2U"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="9 hours ago, by nobody">
+                            <attributes>
+                                <color key="NSColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <color key="highlightedColor" red="0.57998436689999999" green="0.59209477899999996" blue="0.60038077830000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="sw4-Ss-E2U"/>
+                            <exclude reference="EL3-0j-kdL"/>
+                        </mask>
+                    </variation>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="59" id="C44-tD-82Q"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="top" secondItem="nRJ-hI-MJT" secondAttribute="bottom" constant="8" symbolic="YES" id="KUi-bs-GLL"/>
+                <constraint firstItem="nRJ-hI-MJT" firstAttribute="top" secondItem="9qm-Xm-UCX" secondAttribute="bottom" constant="12" id="NGe-Ju-STR"/>
+                <constraint firstAttribute="trailing" secondItem="TxP-jO-EgS" secondAttribute="trailing" constant="10" id="S7M-6o-UGj"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="trailing" secondItem="yWR-6g-ls7" secondAttribute="trailing" id="T5m-Gy-BiO"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="leading" secondItem="yWR-6g-ls7" secondAttribute="leading" id="Txz-UT-GCe"/>
+                <constraint firstItem="yWR-6g-ls7" firstAttribute="top" secondItem="TxP-jO-EgS" secondAttribute="bottom" constant="8" symbolic="YES" id="YWo-Xv-jyo"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="leading" secondItem="nRJ-hI-MJT" secondAttribute="leading" id="bRs-MC-2on"/>
+                <constraint firstItem="9qm-Xm-UCX" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="l3P-gQ-u3S"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="leading" secondItem="9qm-Xm-UCX" secondAttribute="leading" id="ohL-nJ-Hd9"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vls-c5-dkM"/>
+                <constraint firstItem="TxP-jO-EgS" firstAttribute="trailing" secondItem="9qm-Xm-UCX" secondAttribute="trailing" id="w4s-31-mZj"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <connections>
+                <outlet property="ptsCmtsSubLabel" destination="TxP-jO-EgS" id="2WT-eY-Pnn"/>
+                <outlet property="selfText" destination="nRJ-hI-MJT" id="r8x-7X-dHP"/>
+                <outlet property="timeAuthorLabel" destination="yWR-6g-ls7" id="kub-Ve-Sw5"/>
+                <outlet property="titleLabel" destination="9qm-Xm-UCX" id="Xjh-80-wR6"/>
+            </connections>
+            <point key="canvasLocation" x="412" y="487"/>
+        </view>
+    </objects>
+</document>

@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *timestamp;
 @property (weak, nonatomic) IBOutlet UILabel *author;
 
+@property (nonatomic, getter=isCollapsed) BOOL collapsed;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftMargin;
 @property (assign, nonatomic) float originalLeftMargin;
 
