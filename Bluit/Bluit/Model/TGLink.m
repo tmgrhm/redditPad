@@ -34,15 +34,17 @@
 	_url = [NSURL URLWithString:data[@"url"]];
 	_selfText = data[@"selftext"];
 	_selfTextHTML = data[@"body_html"];
-	_thumbnailURL = [NSURL URLWithString:data[@"thumbnail"]];
 //	_creationDate = [NSDate ]; TODO
 	_edited = data[@"edited"];
 //	_editDate;
+	_selfpost = [_domain containsString:[NSString stringWithFormat:@"self.%@", _subreddit]]; // TODO make safer?
 	_saved = data[@"saved"];
 	_nsfw = data[@"over_18"];
 	_sticky = data[@"stickied"];
 	_distinguished = data[@"distinguished"];
 	_viewed = data[@"visited"];
+	
+	_thumbnailURL = _selfpost ? nil : [NSURL URLWithString:data[@"thumbnail"]];
 	
 	return self;
 }

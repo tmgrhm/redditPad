@@ -25,6 +25,7 @@
 	
 	NSDictionary *data = dict[@"data"];
 	
+	_id = data[@"id"];
 	_body = data[@"body"];
 	_bodyHTML = data[@"body_html"];
 	_score = [data[@"score"] integerValue]; // TODO deal with negative values
@@ -57,6 +58,33 @@
 	}
 
 	return self;
+}
+
+- (NSUInteger) numReplies
+{
+	NSUInteger numReplies = self.children.count;
+	for (TGComment *child in self.children)
+	{
+		numReplies += [child numReplies];
+	}
+	return numReplies;
+}
+
++ (NSArray *) childrenRecursivelyForComment:(TGComment *)comment
+{
+	NSMutableArray *comments = [NSMutableArray new];
+	
+	if (comment.children.count > 0)
+	{
+		NSArray *children = comment.children;
+		for (TGComment *child in children)
+		{
+			[comments addObject:child];
+			comments = [[comments arrayByAddingObjectsFromArray:[TGComment childrenRecursivelyForComment:child]] mutableCopy];
+		}
+	}
+	
+	return comments;
 }
 
 - (NSString *) description

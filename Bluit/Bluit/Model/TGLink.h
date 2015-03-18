@@ -31,6 +31,7 @@
 @property (nonatomic, copy, readonly) NSDate *creationDate;
 @property (nonatomic, assign, readonly, getter=isEdited) BOOL edited;
 @property (nonatomic, copy, readonly) NSDate *editDate;
+@property (nonatomic, assign, readonly, getter=isSelfpost) BOOL selfpost;
 @property (nonatomic, assign, readonly, getter=isSaved) BOOL saved;
 @property (nonatomic, assign, readonly, getter=isNsfw) BOOL nsfw;
 @property (nonatomic, assign, readonly, getter=isSticky) BOOL sticky;

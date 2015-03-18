@@ -10,6 +10,7 @@
 
 @interface TGComment : NSObject
 
+@property (nonatomic, copy, readonly) NSString *id;
 @property (nonatomic, copy, readonly) NSString *body;
 @property (nonatomic, copy, readonly) NSString *bodyHTML;
 @property (nonatomic, assign, readonly) NSUInteger score;
@@ -23,6 +24,10 @@
 @property (nonatomic, strong) NSArray *children;
 @property (nonatomic, assign) NSInteger indentationLevel;
 
++ (NSArray *) childrenRecursivelyForComment:(TGComment *)comment;
+
 - (instancetype) initCommentFromDictionary:(NSDictionary *)dict;
+
+- (NSUInteger) numReplies;
 
 @end
