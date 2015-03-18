@@ -21,6 +21,8 @@
 
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
+@property (strong, nonatomic) NSMutableDictionary *offscreenCells;
+@property (strong, nonatomic) NSMutableDictionary *commentHeights;
 
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
 
@@ -34,16 +36,51 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-	self.commentTableView.estimatedRowHeight = 80.0;
-	self.commentTableView.rowHeight = UITableViewAutomaticDimension;
+//	self.commentTableView.estimatedRowHeight = 80.0;
+//	self.commentTableView.rowHeight = UITableViewAutomaticDimension;
 	
 	self.collapsedComments = [NSMutableArray new];
+	self.commentHeights = [NSMutableDictionary new];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
 	 {
 		 [weakSelf commentsFromResponse:comments];
 	 }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
+	[self viewWillTransitionToSize:self.commentTableView.bounds.size withTransitionCoordinator:nil];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	TGSelfpostView *header = [[TGSelfpostView alloc] initWithFrame:CGRectMake(0, 0, size.width, 0)];
+	header.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	header.selfText.attributedText = [self commentBodyFromMarkdown:self.link.selfText];
+	header.selfText.delegate = self;
+	
+	header.titleLabel.text = self.link.title;
+	header.ptsCmtsSubLabel.text = [NSString stringWithFormat:@"%lu points, %lu comments in /r/%@", self.link.score, self.link.totalComments, self.link.subreddit];
+	header.timeAuthorLabel.text = [NSString stringWithFormat:@"timestamp, by %@", self.link.author]; // TODO timestamp
+	
+	NSLayoutConstraint *headerWidthConstraint = [NSLayoutConstraint
+												 constraintWithItem:header attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+												 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:size.width
+												 ];
+
+	[header addConstraint:headerWidthConstraint];
+	[header setNeedsLayout];
+	[header layoutIfNeeded];
+	CGFloat height = [header systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+	[header removeConstraint:headerWidthConstraint];
+	
+	header.frame = CGRectMake(0, 0, size.width, height);
+	header.translatesAutoresizingMaskIntoConstraints = YES;
+	self.commentTableView.tableHeaderView = header;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,6 +155,20 @@
 	return string;
 }
 
+- (void) configureCell:(TGCommentTableViewCell *)cell fromComment:(TGComment *)comment
+{
+	cell.body.attributedText = [self commentBodyFromMarkdown:comment.body];
+	cell.body.delegate = self;
+	
+	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
+	cell.author.text = comment.author;
+	
+	cell.indentationLevel = comment.indentationLevel;
+	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
+	
+	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
+}
+
 #pragma mark - UITextView Delegate
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)url inRange:(NSRange)characterRange
 {
@@ -147,20 +198,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	// Configure the cell...
 	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
-	
 	TGComment *comment = ((TGComment *)self.comments[indexPath.row]);
-	
-	cell.body.attributedText = [self commentBodyFromMarkdown:comment.body];
-	cell.body.delegate = self;
-	
-	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
-	cell.author.text = comment.author;
-	
-	cell.indentationLevel = comment.indentationLevel;
-	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
-	
-	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
-		
+	[self configureCell:cell fromComment:comment];
 	return cell;
 }
 
@@ -193,6 +232,50 @@
 	
 	self.comments = newComments;
 	[self reloadCommentTableViewData];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	// Calls the sizing method to return a calculated height.
+	return [self heightForBasicCellAtIndexPath:indexPath];
+}
+
+- (CGFloat)heightForBasicCellAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGComment *comment = self.comments[indexPath.row];
+	CGFloat height;
+	if ((height = [[self.commentHeights objectForKey:comment.id] floatValue]))
+	{
+		return height;
+	}
+	
+	// In here I create a cell and configure it with a cell identifier
+	static TGCommentTableViewCell *sizingCell = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell"];
+	});
+	
+	// This configures the sizing cell labels with text values
+	[self configureCell:sizingCell fromComment:self.comments[indexPath.row]];
+	
+	// This line calls the calculation. It fires the Auto Layout constraints on the cell,
+	// If label 2 and / or label 3 are empty, they will be collapsed to 0 height.
+	height = [self calculateHeightForConfiguredSizingCell:sizingCell];
+	[self.commentHeights setValue:[NSNumber numberWithFloat:height] forKey:comment.id];
+	
+	return height;
+}
+
+- (CGFloat)calculateHeightForConfiguredSizingCell:(TGCommentTableViewCell *)sizingCell
+{
+	//Force the cell to update its constraints
+	[sizingCell setNeedsLayout];
+	[sizingCell layoutIfNeeded];
+	
+	// Get the size of the 'squashed' cell and return it to caller
+	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	return size.height;
 }
 
 #pragma mark - Navigation
