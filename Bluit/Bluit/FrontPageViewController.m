@@ -13,6 +13,8 @@
 #import "TGWebViewController.h"
 #import "TGLinkViewController.h"
 
+#import <AFNetworking/UIImageView+AFNetworking.h>
+
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -99,6 +101,14 @@
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
 	
 	cell.commentsButton.tag = indexPath.row;
+	if (link.isSelfpost)
+	{
+		cell.domain.hidden = YES;
+		[cell.thumbnail setImage:nil];
+	} else {
+		cell.domain.text = link.domain;
+		[cell.thumbnail setImageWithURL:link.thumbnailURL];
+	}
 	
 	return cell;
 }
