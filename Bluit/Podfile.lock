@@ -20,14 +20,17 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - TSMarkdownParser (1.0.13)
+  - fmemopen (0.0.1)
+  - XNGMarkdownParser (0.3.0):
+    - fmemopen
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
-  - TSMarkdownParser
+  - XNGMarkdownParser
 
 SPEC CHECKSUMS:
   AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  TSMarkdownParser: c566d9ba17242282b880822eeb26d07abd2e25e6
+  fmemopen: 54fc0cc9d9063de6103b40a24849818a53c8f1e5
+  XNGMarkdownParser: 72c20da1aceec6df477acd78d2297fb9584e7771
 
 COCOAPODS: 0.35.0

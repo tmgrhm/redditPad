@@ -15,7 +15,7 @@
 #import "TGRedditClient.h"
 #import "TGComment.h"
 
-#import <TSMarkdownParser/TSMarkdownParser.h>
+#import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @interface TGLinkViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
@@ -94,21 +94,22 @@
 
 - (NSAttributedString *) commentBodyFromMarkdown:(NSString *)commentBody
 {
-	TSMarkdownParser *parser = [TSMarkdownParser standardParser];
+	
+	XNGMarkdownParser *parser = [XNGMarkdownParser new];
 	
 	parser.paragraphFont = [UIFont systemFontOfSize:15];
-	parser.strongFont = [UIFont boldSystemFontOfSize:15];
-	parser.emphasisFont = [UIFont italicSystemFontOfSize:15];
-	parser.h1Font = [UIFont boldSystemFontOfSize:25];
-	parser.h2Font = [UIFont boldSystemFontOfSize:23];
-	parser.h3Font = [UIFont boldSystemFontOfSize:21];
-	parser.h4Font = [UIFont boldSystemFontOfSize:19];
-	parser.h5Font = [UIFont boldSystemFontOfSize:17];
-	parser.h6Font = [UIFont boldSystemFontOfSize:15];
+	parser.boldFontName = [UIFont boldSystemFontOfSize:15].fontName;
+	parser.italicFontName = [UIFont italicSystemFontOfSize:15].fontName;
+//	parser.h1font = [UIFont boldSystemFontOfSize:25];
+//	parser.h2Font = [UIFont boldSystemFontOfSize:23];
+//	parser.h3Font = [UIFont boldSystemFontOfSize:21];
+//	parser.h4Font = [UIFont boldSystemFontOfSize:19];
+//	parser.h5Font = [UIFont boldSystemFontOfSize:17];
+//	parser.h6Font = [UIFont boldSystemFontOfSize:15];
 	
-	NSMutableAttributedString *string = [[parser attributedStringFromMarkdown:commentBody] mutableCopy];
+	NSMutableAttributedString *string = [[parser attributedStringFromMarkdownString:commentBody] mutableCopy]; // TODO I think XNG allows you to set paragraph style on the parser instead
 	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-	[paragraphStyle setLineSpacing:4.0];
+	[paragraphStyle setLineSpacing:4.0]; // TODO look at NSMutableString's LineHeight property (inspect NSAttributedString at runtime to see — e.g. "LineHeight 0/0")
 	[paragraphStyle setParagraphSpacing:0]; // TODO add pargraph parsing to comment body? hard line break (two returns) turns into \n\n in comment[@"body"]
 	
 	[string addAttribute:NSParagraphStyleAttributeName
@@ -193,6 +194,19 @@
 	
 	self.comments = newComments;
 	[self reloadCommentTableViewData];
+}
+
+	TGCommentTableViewCell *sizingCell = self.sizingCell;
+
+	// This configures the sizing cell labels with text values
+	[self configureCell:sizingCell atIndex:indexPath];
+
+	// This line calls the calculation. It fires the Auto Layout constraints on the cell,
+	// If label 2 and / or label 3 are empty, they will be collapsed to 0 height.
+	height = [self calculateHeightForConfiguredSizingCell:sizingCell];
+	[self.commentHeights setValue:[NSNumber numberWithFloat:height] forKey:comment.id];
+
+	return height;
 }
 
 #pragma mark - Navigation
