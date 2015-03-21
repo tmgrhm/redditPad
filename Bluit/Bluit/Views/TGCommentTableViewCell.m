@@ -13,8 +13,7 @@
 - (void)awakeFromNib {
     // Initialization code
 	
-	self.body.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
-	
+//	self.body.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
 	self.originalLeftMargin = self.leftMargin.constant;
 }
 
@@ -23,6 +22,5 @@
 
     // Configure the view for the selected state
 }
-
 
 @end
