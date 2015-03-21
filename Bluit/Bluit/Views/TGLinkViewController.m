@@ -21,7 +21,9 @@
 
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
+@property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 
+@property (strong, nonatomic) NSMutableDictionary *commentHeights;
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
 
 @property (strong, nonatomic) NSURL *urlFromCommentTapped;
@@ -34,10 +36,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-	self.commentTableView.estimatedRowHeight = 80.0;
+//	self.commentTableView.estimatedRowHeight = 80.0;
 	self.commentTableView.rowHeight = UITableViewAutomaticDimension;
+	self.sizingCell = [TGCommentTableViewCell new];
 	
 	self.collapsedComments = [NSMutableArray new];
+	self.commentHeights = [NSMutableDictionary new];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
@@ -119,6 +123,38 @@
 	return string;
 }
 
+- (void) configureCell:(TGCommentTableViewCell *)cell atIndex:(NSIndexPath *)indexPath
+{
+	TGComment *comment = ((TGComment *)self.comments[indexPath.row]);
+	
+	NSAttributedString *attributedMarkdown = [self commentBodyFromMarkdown:comment.body];
+	cell.body.attributedText = attributedMarkdown; // TODO wtf exc_bad_access sometimes even though all appear alive
+	cell.body.delegate = self;
+	if ([self.collapsedComments containsObject:comment])
+	{
+		cell.body.textContainer.maximumNumberOfLines = 1;
+	}
+	
+	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
+	cell.author.text = comment.author;
+	
+	cell.indentationLevel = comment.indentationLevel;
+	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
+	
+	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
+}
+
+- (CGFloat)calculateHeightForConfiguredSizingCell:(TGCommentTableViewCell *)sizingCell
+{
+	//Force the cell to update its constraints
+	[sizingCell setNeedsLayout];
+	[sizingCell layoutIfNeeded];
+	
+	// Get the size of the 'squashed' cell and return it to caller
+	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	return size.height;
+}
+
 #pragma mark - UITextView Delegate
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)url inRange:(NSRange)characterRange
 {
@@ -148,19 +184,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	// Configure the cell...
 	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
-	
-	TGComment *comment = ((TGComment *)self.comments[indexPath.row]);
-	
-	cell.body.attributedText = [self commentBodyFromMarkdown:comment.body];
-	cell.body.delegate = self;
-	
-	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
-	cell.author.text = comment.author;
-	
-	cell.indentationLevel = comment.indentationLevel;
-	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
-	
-	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
+	[self configureCell:cell atIndex:indexPath];
 		
 	return cell;
 }
@@ -196,6 +220,22 @@
 	[self reloadCommentTableViewData];
 }
 
+- (CGFloat) tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGComment *comment = self.comments[indexPath.row];
+	CGFloat height;
+	if ((height = [[self.commentHeights objectForKey:comment.id] floatValue]))
+	{
+		return height;
+	}
+
+	// In here I create a cell and configure it with a cell identifier
+/*	static TGCommentTableViewCell *sizingCell = nil; // TODO create a new cell instead of dequeueing from tableview?
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell"];
+	});*/
+	
 	TGCommentTableViewCell *sizingCell = self.sizingCell;
 
 	// This configures the sizing cell labels with text values
