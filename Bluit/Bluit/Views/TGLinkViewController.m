@@ -52,35 +52,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	[self viewWillTransitionToSize:self.commentTableView.bounds.size withTransitionCoordinator:nil];
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	TGSelfpostView *header = [[TGSelfpostView alloc] initWithFrame:CGRectMake(0, 0, size.width, 0)];
-	header.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	header.selfText.attributedText = [self commentBodyFromMarkdown:self.link.selfText];
-	header.selfText.delegate = self;
-	
-	header.titleLabel.text = self.link.title;
-	header.ptsCmtsSubLabel.text = [NSString stringWithFormat:@"%lu points, %lu comments in /r/%@", self.link.score, self.link.totalComments, self.link.subreddit];
-	header.timeAuthorLabel.text = [NSString stringWithFormat:@"timestamp, by %@", self.link.author]; // TODO timestamp
-	
-	NSLayoutConstraint *headerWidthConstraint = [NSLayoutConstraint
-												 constraintWithItem:header attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
-												 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0f constant:size.width
-												 ];
-
-	[header addConstraint:headerWidthConstraint];
-	[header setNeedsLayout];
-	[header layoutIfNeeded];
-	CGFloat height = [header systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-	[header removeConstraint:headerWidthConstraint];
-	
-	header.frame = CGRectMake(0, 0, size.width, height);
-	header.translatesAutoresizingMaskIntoConstraints = YES;
-	self.commentTableView.tableHeaderView = header;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -102,7 +73,7 @@
 		
 		if (comment)
 		{
-			comments = (NSMutableArray *) [comments arrayByAddingObjectsFromArray:[self childrenCommentsForComment:comment]];
+			comments = (NSMutableArray *) [comments arrayByAddingObjectsFromArray:[TGComment childrenRecursivelyForComment:comment]];
 		}
 	}
 	
@@ -111,22 +82,6 @@
 	[self reloadCommentTableViewData];
 	
 	NSLog(@"Found %lu comments", self.comments.count);
-}
-
-- (NSMutableArray *) childrenCommentsForComment:(TGComment *)comment
-{
-	NSMutableArray *comments = [NSMutableArray new];
-
-	[comments addObject:comment];
-	if (comment.children.count > 0)
-	{
-		for (TGComment *child in comment.children)
-		{
-			comments = (NSMutableArray *) [comments arrayByAddingObjectsFromArray:[self childrenCommentsForComment:child]];
-		}
-	}
-	
-	return comments;
 }
 
 - (NSAttributedString *) commentBodyFromMarkdown:(NSString *)commentBody
