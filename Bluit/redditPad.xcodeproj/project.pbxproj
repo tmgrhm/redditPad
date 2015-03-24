@@ -29,6 +29,8 @@
 		E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */; };
 		E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */; };
 		E28BB7F61AB17ED2005E47B8 /* TGLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */; };
+		E2A512871AC0CEF80007A842 /* TGCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A512861AC0CEF80007A842 /* TGCommentCell.m */; };
+		E2A5128A1AC0D42C0007A842 /* TGPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A512891AC0D42C0007A842 /* TGPostViewController.m */; };
 		F01739A4B8845F47B0205BA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F306A862EA62B98203377AA7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +89,10 @@
 		E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGWebViewController.m; path = Views/TGWebViewController.m; sourceTree = "<group>"; };
 		E28BB7F41AB17ED2005E47B8 /* TGLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLoginViewController.h; path = Views/TGLoginViewController.h; sourceTree = "<group>"; };
 		E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLoginViewController.m; path = Views/TGLoginViewController.m; sourceTree = "<group>"; };
+		E2A512851AC0CEF80007A842 /* TGCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCommentCell.h; path = Views/TGCommentCell.h; sourceTree = "<group>"; };
+		E2A512861AC0CEF80007A842 /* TGCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCommentCell.m; path = Views/TGCommentCell.m; sourceTree = "<group>"; };
+		E2A512881AC0D42C0007A842 /* TGPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGPostViewController.h; path = Views/TGPostViewController.h; sourceTree = "<group>"; };
+		E2A512891AC0D42C0007A842 /* TGPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGPostViewController.m; path = Views/TGPostViewController.m; sourceTree = "<group>"; };
 		F306A862EA62B98203377AA7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -150,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				E25C5E5C1AA653CA00690896 /* API */,
+				E2A5128B1AC202F60007A842 /* Controllers */,
 				E28BB7E91AAFA2A8005E47B8 /* Model */,
 				E28BB7EA1AAFA2B4005E47B8 /* Views */,
 				E245145E1AA6448500B80D2E /* Supporting Files */,
@@ -210,16 +217,35 @@
 		E28BB7EA1AAFA2B4005E47B8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E245146B1AA6448500B80D2E /* Main.storyboard */,
+				E20F193E1AB7864C00210A58 /* TGSelfpostViewCell.xib */,
+				E24514701AA6448500B80D2E /* LaunchScreen.xib */,
+				E245146E1AA6448500B80D2E /* Images.xcassets */,
+				E28BB7EE1AAFB0B7005E47B8 /* TGListingTableViewCell.h */,
+				E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */,
+				E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */,
+				E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */,
+				E2A512851AC0CEF80007A842 /* TGCommentCell.h */,
+				E2A512861AC0CEF80007A842 /* TGCommentCell.m */,
+				E20F193B1AB77BC900210A58 /* TGSelfpostView.h */,
+				E20F193C1AB77BC900210A58 /* TGSelfpostView.m */,
+				E210FEB41AB4CE9F0000E739 /* EmptySegue.h */,
+				E210FEB51AB4CE9F0000E739 /* EmptySegue.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		E2A5128B1AC202F60007A842 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
 				E24514651AA6448500B80D2E /* FrontPageViewController.h */,
 				E24514661AA6448500B80D2E /* FrontPageViewController.m */,
 				E24514681AA6448500B80D2E /* TGSubredditListViewController.h */,
 				E24514691AA6448500B80D2E /* TGSubredditListViewController.m */,
 				E28BB7F41AB17ED2005E47B8 /* TGLoginViewController.h */,
 				E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */,
-				E245146B1AA6448500B80D2E /* Main.storyboard */,
-				E20F193E1AB7864C00210A58 /* TGSelfpostViewCell.xib */,
-				E24514701AA6448500B80D2E /* LaunchScreen.xib */,
-				E245146E1AA6448500B80D2E /* Images.xcassets */,
+				E2A512881AC0D42C0007A842 /* TGPostViewController.h */,
+				E2A512891AC0D42C0007A842 /* TGPostViewController.m */,
 				E210FEA81AB2DEF40000E739 /* TGLinkViewController.h */,
 				E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */,
 				E210FEB11AB4C0620000E739 /* TGLinkHeaderContainerViewController.h */,
@@ -228,18 +254,10 @@
 				E210FEAC1AB48B7E0000E739 /* TGLinkHeaderViewController.m */,
 				E210FEAE1AB49AD10000E739 /* TGSelfPostHeaderViewController.h */,
 				E210FEAF1AB49AD10000E739 /* TGSelfPostHeaderViewController.m */,
-				E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */,
-				E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */,
-				E20F193B1AB77BC900210A58 /* TGSelfpostView.h */,
-				E20F193C1AB77BC900210A58 /* TGSelfpostView.m */,
-				E28BB7EE1AAFB0B7005E47B8 /* TGListingTableViewCell.h */,
-				E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */,
 				E28BB7F11AB0D98C005E47B8 /* TGWebViewController.h */,
 				E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */,
-				E210FEB41AB4CE9F0000E739 /* EmptySegue.h */,
-				E210FEB51AB4CE9F0000E739 /* EmptySegue.m */,
 			);
-			name = Views;
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,9 +410,11 @@
 				E210FEB01AB49AD10000E739 /* TGSelfPostHeaderViewController.m in Sources */,
 				E24514881AA64C1200B80D2E /* TGRedditClient.m in Sources */,
 				E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */,
+				E2A5128A1AC0D42C0007A842 /* TGPostViewController.m in Sources */,
 				E24514671AA6448500B80D2E /* FrontPageViewController.m in Sources */,
 				E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */,
 				E210FEB61AB4CE9F0000E739 /* EmptySegue.m in Sources */,
+				E2A512871AC0CEF80007A842 /* TGCommentCell.m in Sources */,
 				E24514611AA6448500B80D2E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

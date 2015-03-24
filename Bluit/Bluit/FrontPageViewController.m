@@ -12,6 +12,7 @@
 #import "TGListingTableViewCell.h"
 #import "TGWebViewController.h"
 #import "TGLinkViewController.h"
+#import "TGPostViewController.h"
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
@@ -156,6 +157,21 @@
 		}
 		linkVC.link = self.listings[indexPathRow];
 	}
+	else if ([segue.identifier isEqualToString:@"listingToPostView"])
+	{
+		TGPostViewController *linkVC = segue.destinationViewController;
+		
+		NSInteger indexPathRow = 0;
+		if ([sender isKindOfClass:[UIButton class]])
+		{
+			UIButton *commentsButton = (UIButton *)sender;
+			indexPathRow = commentsButton.tag;
+			// TODO change how the row is identified
+			// http://stackoverflow.com/questions/23784630/
+		}
+		linkVC.link = self.listings[indexPathRow];
+	}
+
 }
 
 @end
