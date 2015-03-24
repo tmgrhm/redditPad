@@ -104,13 +104,16 @@
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
 	cell.commentsButton.tag = indexPath.row; // TODO better way
 	
-	if (link.isSelfpost)
-	{
-		cell.domain.hidden = YES;
+	if (link.thumbnailURL == nil) {
 		[cell.thumbnail setImage:nil];
 	} else {
-		cell.domain.text = link.domain;
 		[cell.thumbnail setImageWithURL:link.thumbnailURL];
+	}
+	
+	if (link.isSelfpost) {
+		cell.domain.hidden = YES;
+	} else {
+		cell.domain.text = link.domain;
 	}
 	
 	return cell;
