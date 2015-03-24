@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
+@property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
 
 @end
@@ -22,9 +23,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+	[self createShadow];
 	
 	if (!self.url) self.url = self.link.url;
-	
 	[self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
 	// TODO fix webView being wrong-size for sites like imgur and youtube
 	
@@ -37,16 +38,21 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Navigation
+- (void)createShadow
+{
+	CALayer *containerCALayer = self.shadowView.layer;
+	containerCALayer.borderColor = [[UIColor colorWithRed:0.776 green:0.788 blue:0.8 alpha:0.6] CGColor];
+	containerCALayer.borderWidth = 0.5f;
+	// TODO get a performant shadow
+	//	containerCALayer.shouldRasterize = YES;
+	//	containerCALayer.rasterizationScale = UIScreen.mainScreen.scale;
+	containerCALayer.shadowColor = [[UIColor colorWithRed:0.776 green:0.788 blue:0.8 alpha:1] CGColor];
+	containerCALayer.shadowOpacity = 0.5f;
+	containerCALayer.shadowRadius = 6.0f;
+	CGRect bounds = self.shadowView.bounds;
+	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 1, bounds.size.width, bounds.size.height);
+	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
-- (IBAction)closePressed:(id)sender {	// TODO
-	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)sharePressed:(id)sender { 	// TODO
@@ -60,6 +66,18 @@
 	[self presentViewController:shareSheet
 					   animated:YES
 					 completion:nil];
+}
+
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+
+- (IBAction)closePressed:(id)sender {	// TODO
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
