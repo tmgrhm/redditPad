@@ -169,55 +169,20 @@
 	
 	[self configureCell:self.sizingCell atIndex:indexPath];
 	
-	[self.sizingCell setNeedsUpdateConstraints];
-	[self.sizingCell updateConstraintsIfNeeded];
-	self.sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(tableView.bounds), CGRectGetHeight(self.sizingCell.bounds));
+	[self.sizingCell setTranslatesAutoresizingMaskIntoConstraints:NO];
+	[self.sizingCell.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+	[self.sizingCell.contentView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+	self.sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(tableView.frame), 80.0f);
+//	[self.sizingCell setNeedsUpdateConstraints];
+//	[self.sizingCell updateConstraintsIfNeeded]; // TODO why is this breaking constraints before it even knows the cell size
 	
 	height = [self calculateHeightForConfiguredSizingCell:self.sizingCell];
 	[self.commentHeights setValue:@(height) forKey:comment.id];
-	
+	NSLog(@"Height: %f for %@", height, [comment.body stringByPaddingToLength:50 withString:@" " startingAtIndex:0]);
 	// +1 for the separator
 	height += 1.0f;
 	
 	return height;
-}
-
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
-	
-	// TODO collapsing
-	TGComment *comment = self.comments[indexPath.row];
-	NSMutableArray *newComments = [self.comments mutableCopy];
-	NSArray *children = [TGComment childrenRecursivelyForComment:comment];
-	
-	if ([self.collapsedComments containsObject:comment])
-	{
-		[self.collapsedComments removeObject:comment];
-		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, children.count)];
-		[newComments insertObjects:children atIndexes:indexes];
-		
-		for (TGComment *child in children)
-		{
-			if ([self.collapsedComments containsObject:child])
-				[newComments removeObjectsInArray:[TGComment childrenRecursivelyForComment:child]];
-		}
-	}
-	else
-	{
-		[self.collapsedComments addObject:comment];
-		[newComments removeObjectsInArray:children];
-	}
-	
-	self.comments = newComments;
-	[self reloadCommentTableViewData];
-}
-
-- (void) reloadCommentTableViewData
-{
-	[self.commentTableView beginUpdates];
-	[self.commentTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-	[self.commentTableView endUpdates];
 }
 
 - (void) configureCell:(TGCommentTableViewCell *)cell atIndex:(NSIndexPath *)indexPath
@@ -240,14 +205,52 @@
 	cell.backgroundColor = [self.collapsedComments containsObject:comment] ? [UIColor colorWithHue:0.583 saturation:0.025 brightness:0.941 alpha:1] : [UIColor whiteColor]; // TODO collapsing
 }
 
-- (CGFloat)calculateHeightForConfiguredSizingCell:(TGCommentTableViewCell *)sizingCell
+- (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell
 {
 	//Force the cell to update its constraints
 	[sizingCell setNeedsLayout];
 	[sizingCell layoutIfNeeded];
 	
 	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	return size.height;
+	return size.height; // TODO COMMENTS width 412 wtf
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+	
+	TGComment *comment = self.comments[indexPath.row];
+	NSMutableArray *newComments = [self.comments mutableCopy];
+	NSArray *children = [TGComment childrenRecursivelyForComment:comment];
+	
+	if ([self.collapsedComments containsObject:comment])
+	{
+		[self.collapsedComments removeObject:comment];
+		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, children.count)];
+		[newComments insertObjects:children atIndexes:indexes];
+		
+		for (TGComment *child in children)
+		{
+			if ([self.collapsedComments containsObject:child])
+				[newComments removeObjectsInArray:[TGComment childrenRecursivelyForComment:child]];
+		}
+	}
+	else
+	{
+		NSLog(@"Collapsing: %@", comment.body);
+		[self.collapsedComments addObject:comment];
+		[newComments removeObjectsInArray:children];
+	}
+	
+	self.comments = newComments;
+	[self reloadCommentTableViewData];
+}
+
+- (void) reloadCommentTableViewData
+{
+	[self.commentTableView beginUpdates];
+	[self.commentTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+	[self.commentTableView endUpdates];
 }
 
 #pragma mark - Navigation

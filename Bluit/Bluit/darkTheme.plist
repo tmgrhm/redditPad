@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>themeName</key>
+	<string>darkTheme</string>
+	<key>statusBarStyle</key>
+	<string>lightStyle</string>
+	<key>backgroundColor</key>
+	<string>323233</string>
+	<key>textColor</key>
+	<string>FFFFFF</string>
+	<key>secondaryTextColor</key>
+	<string>949799</string>
+	<key>contentBackgroundColor</key>
+	<string>252626</string>
+	<key>tintColor</key>
+	<string>4099FF</string>
+	<key>separatorColor</key>
+	<string>434445</string>
+	<key>shadowColor</key>
+	<string>1A1A1A</string>
+</dict>
+</plist>

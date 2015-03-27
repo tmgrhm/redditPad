@@ -9,11 +9,15 @@
 #import "TGLoginViewController.h"
 #import "TGRedditClient.h"
 
+#import "ThemeManager.h"
+
 @interface TGLoginViewController ()
+
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (weak, nonatomic) IBOutlet UILabel *loginSuccessfulLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *themeSegControl;
 
 @end
 
@@ -23,6 +27,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+	
+	NSString *theme = [ThemeManager sharedManager].theme[@"themeName"];
+	self.themeSegControl.selectedSegmentIndex = [theme isEqualToString:@"lightTheme"] ? 0 : 1;
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,6 +56,12 @@
 	self.usernameField.alpha = 0.5;
 	self.passwordField.alpha = 0.5;
 	self.loginButton.alpha = 0.5;
+}
+- (IBAction)themeSegControlValueChanged:(UISegmentedControl *)sender
+{
+	NSString *title = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
+	NSString *theme = [title isEqualToString:@"Light"] ? @"lightTheme" : @"darkTheme";
+	[[NSUserDefaults standardUserDefaults] setObject:theme forKey:@"theme"];
 }
 
 /*

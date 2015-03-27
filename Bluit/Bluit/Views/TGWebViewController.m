@@ -8,6 +8,8 @@
 
 #import "TGWebViewController.h"
 
+#import "ThemeManager.h"
+
 @interface TGWebViewController ()
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
@@ -22,8 +24,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+	
 	[self createShadow];
+	[self themeAppearance];
 	
 	if (!self.url) self.url = self.link.url;
 	[self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
@@ -41,22 +44,29 @@
 - (void)createShadow
 {
 	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[UIColor colorWithRed:0.776 green:0.788 blue:0.8 alpha:0.6] CGColor];
-	containerCALayer.borderWidth = 0.5f;
+	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
+	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
 	//	containerCALayer.shouldRasterize = YES;
 	//	containerCALayer.rasterizationScale = UIScreen.mainScreen.scale;
-	containerCALayer.shadowColor = [[UIColor colorWithRed:0.776 green:0.788 blue:0.8 alpha:1] CGColor];
+	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
 	containerCALayer.shadowOpacity = 0.5f;
 	containerCALayer.shadowRadius = 6.0f;
 	CGRect bounds = self.shadowView.bounds;
-	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 1, bounds.size.width, bounds.size.height);
+	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 2, bounds.size.width, bounds.size.height);
 	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
-
+	
+	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
+	self.fadeView.alpha = 0.7f;
 }
 
-- (IBAction)sharePressed:(id)sender { 	// TODO
-	
+- (void) themeAppearance
+{
+	// empty
+}
+
+- (IBAction)sharePressed:(id)sender
+{ 	// TODO
 	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
 											initWithActivityItems:@[self.link.title, self.url] // TODO handle !self.link
 											applicationActivities:nil];
@@ -66,6 +76,8 @@
 	[self presentViewController:shareSheet
 					   animated:YES
 					 completion:nil];
+	
+	// TODO if launchservices invalidationhandler called — http://stackoverflow.com/questions/25192313/sharing-via-uiactivityviewcontroller-to-twitter-facebook-etc-causing-crash
 }
 
 #pragma mark - Navigation
@@ -76,7 +88,8 @@
     // Pass the selected object to the new view controller.
 }
 
-- (IBAction)closePressed:(id)sender {	// TODO
+- (IBAction)closePressed:(id)sender
+{	// TODO
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
 

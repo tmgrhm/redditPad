@@ -14,6 +14,8 @@
 #import "TGLinkViewController.h"
 #import "TGPostViewController.h"
 
+#import "ThemeManager.h"
+
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -49,6 +51,21 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Setup & Appearance
+- (void) themeAppearance
+{
+	// empty
+}
+
+#pragma mark - IBAction
+
+- (IBAction)refreshButtonPressed:(id)sender
+{
+	[self loadFrontPage];
+}
+
+#pragma mark - Loading Data
+
 - (void)loadFrontPage
 {
 	[self loadSubreddit:@"hot"];
@@ -69,12 +86,8 @@
 	}];
 }
 
-- (IBAction)refreshButtonPressed:(id)sender
-{
-	[self loadFrontPage];
-}
 
-#pragma mark - UITableView
+#pragma mark - TableView
 - (void) reloadTableViewData
 {
 	[self.tableView beginUpdates];
@@ -115,7 +128,15 @@
 		cell.domain.hidden = YES;
 	} else {
 		cell.domain.text = link.domain;
+		cell.domain.hidden = NO;
 	}
+	
+	cell.score.textColor = [ThemeManager secondaryTextColor];
+	cell.subreddit.textColor = [ThemeManager secondaryTextColor];
+	cell.timestamp.textColor = [ThemeManager secondaryTextColor];
+	cell.author.textColor = [ThemeManager secondaryTextColor];
+	cell.domain.textColor = [ThemeManager secondaryTextColor];
+	cell.totalComments.textColor = [ThemeManager tintColor];
 	
 	return cell;
 }
