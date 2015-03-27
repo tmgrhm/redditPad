@@ -179,9 +179,13 @@
 {
 	TGComment *comment = self.comments[indexPath.row];
 	CGFloat height;
-	if ((height = [[self.commentHeights objectForKey:comment.id] floatValue])) // if cached, return cached height
+	if ([self.collapsedComments containsObject:comment])
 	{
-		return height;
+		return 80.0f; // TODO probably wanna create a NSMutableDictionary *collapsedCommentHeights; — doesn't work for comments which begin with, e.g., a header
+	}
+	else if ((height = [[self.commentHeights objectForKey:comment.id] floatValue]))
+	{
+		return height; // if cached, return cached height
 	}
 	
 	static TGCommentCell *sizingCell = nil;
