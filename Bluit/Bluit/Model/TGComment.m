@@ -26,7 +26,7 @@
 	NSDictionary *data = dict[@"data"];
 	
 	_id = data[@"id"];
-	_body = data[@"body"];
+	[self setBody: data[@"body"]];
 	_bodyHTML = data[@"body_html"];
 	_score = [data[@"score"] integerValue]; // TODO deal with negative values
 	_scoreHidden = data[@"score_hidden"];
@@ -58,6 +58,17 @@
 	}
 
 	return self;
+}
+
+- (void) setBody:(NSString *)body
+{
+	NSString *newBody = body;
+	while ([newBody hasSuffix:@"\n"])
+		newBody = [newBody substringToIndex:newBody.length-1];
+	
+	newBody = [newBody stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
+	
+	_body = newBody;
 }
 
 - (NSUInteger) numReplies
