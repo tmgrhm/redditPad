@@ -162,6 +162,8 @@ static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 	 ];
 }
 
+
+
 - (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion
 {
 	NSLog(@"requesting comments for: %@", link.id);

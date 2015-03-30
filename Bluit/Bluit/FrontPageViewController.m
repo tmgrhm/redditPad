@@ -13,6 +13,7 @@
 #import "TGWebViewController.h"
 #import "TGLinkViewController.h"
 #import "TGPostViewController.h"
+#import "TGImageViewController.h"
 
 #import "ThemeManager.h"
 
@@ -147,7 +148,17 @@
 	
 	self.selectedLink = self.listings[indexPath.row];
 	// Perform segue
-	[self performSegueWithIdentifier:@"listingToWebView" sender:self];
+	
+	NSString *lastPathComponent = self.selectedLink.url.pathComponents.lastObject;
+	
+	if ([lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"] || [lastPathComponent hasSuffix:@".gif"])
+	{
+		[self performSegueWithIdentifier:@"listingToImageView" sender:self];
+	}
+	else
+	{
+		[self performSegueWithIdentifier:@"listingToWebView" sender:self];
+	}
 }
 
 #pragma mark - Navigation
@@ -162,6 +173,11 @@
 	{
 		TGWebViewController *webVC = segue.destinationViewController;
 		webVC.link = self.selectedLink;
+	}
+	else if ([segue.identifier isEqualToString:@"listingToImageView"])
+	{
+		TGImageViewController *imageVC = segue.destinationViewController;
+		imageVC.imageURL = self.selectedLink.url;
 	}
 	else if ([segue.identifier isEqualToString:@"listingToLinkView"])
 	{
