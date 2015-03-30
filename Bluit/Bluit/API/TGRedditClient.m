@@ -99,7 +99,9 @@ static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 	[operation start];
 }
 
-- (void) loginWithUsername:(NSString *)username password:(NSString *)password withCompletion:(void (^)(void))completion
+- (void) loginWithUsername:(NSString *)username
+				  password:(NSString *)password
+			withCompletion:(void (^)(void))completion
 {
 	NSDictionary *parameters = @{@"user": username, @"passwd": password, @"api_type": @"json"};
 	
@@ -108,26 +110,35 @@ static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 	__weak __typeof(self)weakSelf = self;
 	
 	[self.manager POST:urlString
-	   parameters:parameters
-		  success:^(NSURLSessionDataTask *task, id responseObject){
-			  NSDictionary *data = (NSDictionary *)responseObject[@"json"][@"data"];
-			  
-			  weakSelf.modhash = data[@"modhash"];
-			  weakSelf.sessionIdentifier = data[@"cookie"];
-			  
-			  NSString *cookieValue = weakSelf.sessionIdentifier ?
-			  [NSString stringWithFormat:@"reddit_session=%@", [weakSelf.sessionIdentifier stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] : nil;
-			  
-			  [weakSelf.serializer setValue:weakSelf.modhash forHTTPHeaderField:@"X-Modhash"];
-			  [weakSelf.serializer setValue:cookieValue forHTTPHeaderField:@"Cookie"];
-			  
-			  NSLog(@"login successful: %@, sessionID: %@", weakSelf.modhash, weakSelf.sessionIdentifier);
-			  completion();
-		  }
-		  failure:^(NSURLSessionDataTask *task, NSError *error){
-			  NSLog(@"%@", error.description);
-		  }
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject)
+		{
+			NSDictionary *data = (NSDictionary *)responseObject[@"json"][@"data"];
+			weakSelf.modhash = data[@"modhash"];
+			weakSelf.sessionIdentifier = data[@"cookie"] ?
+			[NSString stringWithFormat:@"reddit_session=%@", [data[@"cookie"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] : nil;
+			
+			NSLog(@"got new session: \"%@\" \nsessionID: \"%@\"", weakSelf.modhash, weakSelf.sessionIdentifier);
+			
+			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.modhash forKey:@"modhash"];
+			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.sessionIdentifier forKey:@"sessionIdentifier"];
+			
+			[weakSelf setSerializerHTTPHeaders:weakSelf.modhash and:weakSelf.sessionIdentifier];
+			completion();
+		}
+			   failure:^(NSURLSessionDataTask *task, NSError *error)
+		{
+			NSLog(@"%@", error.description);
+		}
 	 ];
+}
+
+- (void) setSerializerHTTPHeaders:(NSString *)modhash and:(NSString *)sessionIdentifier
+{
+	[self.serializer setValue:modhash forHTTPHeaderField:@"X-Modhash"];
+	[self.serializer setValue:sessionIdentifier forHTTPHeaderField:@"Cookie"];
+	
+	NSLog(@"set headers: \"%@\" \nsessionID: \"%@\"", modhash, sessionIdentifier);
 }
 
 - (void)retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion {

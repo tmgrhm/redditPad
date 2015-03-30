@@ -132,7 +132,6 @@
 	}
 	
 	cell.score.textColor = [ThemeManager secondaryTextColor];
-	cell.subreddit.textColor = [ThemeManager secondaryTextColor];
 	cell.timestamp.textColor = [ThemeManager secondaryTextColor];
 	cell.author.textColor = [ThemeManager secondaryTextColor];
 	cell.domain.textColor = [ThemeManager secondaryTextColor];

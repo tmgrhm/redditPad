@@ -272,6 +272,7 @@
                     <connections>
                         <outlet property="tableView" destination="BZg-Up-pLI" id="aL0-mq-d06"/>
                         <segue destination="gFf-Ur-DKX" kind="presentation" identifier="listingToWebView" modalPresentationStyle="overFullScreen" id="iGZ-e7-hTh"/>
+                        <segue destination="Hgp-7R-LJR" kind="presentation" identifier="listingToImageView" modalPresentationStyle="overFullScreen" id="Acd-4H-vvZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
@@ -761,7 +762,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="JFe-PZ-Ue8">
                                 <rect key="frame" x="159" y="0.0" width="450" height="1024"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TGSubredditTableViewCell" textLabel="Qrs-Td-lgU" style="IBUITableViewCellStyleDefault" id="le8-6Y-grB">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -967,6 +968,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1430" y="831"/>
+        </scene>
+        <!--Image View Controller-->
+        <scene sceneID="RGj-LM-YPV">
+            <objects>
+                <viewController id="Hgp-7R-LJR" customClass="TGImageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nVs-I2-sv0"/>
+                        <viewControllerLayoutGuide type="bottom" id="5s5-JW-vVh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Gdw-38-U4i">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Ft-mC-4TJ" userLabel="Fade View">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" maximumZoomScale="10" translatesAutoresizingMaskIntoConstraints="NO" id="9YX-E0-ajR">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="9YX-E0-ajR" secondAttribute="trailing" id="3fu-FF-AKx"/>
+                            <constraint firstAttribute="width" secondItem="8Ft-mC-4TJ" secondAttribute="width" id="AWz-hu-h7e"/>
+                            <constraint firstAttribute="height" secondItem="8Ft-mC-4TJ" secondAttribute="height" id="Dk3-E1-Pbt"/>
+                            <constraint firstItem="9YX-E0-ajR" firstAttribute="leading" secondItem="Gdw-38-U4i" secondAttribute="leading" id="FiN-4d-EzC"/>
+                            <constraint firstItem="5s5-JW-vVh" firstAttribute="top" secondItem="9YX-E0-ajR" secondAttribute="bottom" id="Oyc-qp-gbS"/>
+                            <constraint firstAttribute="trailing" secondItem="8Ft-mC-4TJ" secondAttribute="trailing" id="YuV-qw-QHP"/>
+                            <constraint firstItem="9YX-E0-ajR" firstAttribute="top" secondItem="Gdw-38-U4i" secondAttribute="top" id="jRo-gR-3Hz"/>
+                            <constraint firstItem="8Ft-mC-4TJ" firstAttribute="top" secondItem="Gdw-38-U4i" secondAttribute="top" id="qAd-9v-oyX"/>
+                            <constraint firstItem="8Ft-mC-4TJ" firstAttribute="leading" secondItem="Gdw-38-U4i" secondAttribute="leading" id="sKX-Ju-dqg"/>
+                            <constraint firstItem="5s5-JW-vVh" firstAttribute="top" secondItem="8Ft-mC-4TJ" secondAttribute="bottom" id="zCQ-fL-4tq"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="s3A-RO-Ei3" appends="YES" id="y49-Jc-Upp"/>
+                        </connections>
+                    </view>
+                    <connections>
+                        <outlet property="fadeView" destination="8Ft-mC-4TJ" id="meE-A4-1n4"/>
+                        <outlet property="scrollView" destination="9YX-E0-ajR" id="eeG-PH-5oZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JTD-56-18T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="s3A-RO-Ei3">
+                    <connections>
+                        <action selector="handleDismissTap:" destination="Hgp-7R-LJR" id="dso-D7-6EE"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="3781" y="-1252"/>
         </scene>
         <!--Front Page-->
         <scene sceneID="GKL-32-1aC">
@@ -1276,7 +1328,7 @@
                                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="590" translatesAutoresizingMaskIntoConstraints="NO" id="Qo5-4g-Uct">
                                                                     <rect key="frame" x="25" y="16" width="590" height="18"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="author" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PUL-nP-5NR">

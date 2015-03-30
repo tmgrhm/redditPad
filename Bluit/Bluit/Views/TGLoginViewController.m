@@ -57,6 +57,7 @@
 	self.passwordField.alpha = 0.5;
 	self.loginButton.alpha = 0.5;
 }
+
 - (IBAction)themeSegControlValueChanged:(UISegmentedControl *)sender
 {
 	NSString *title = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];

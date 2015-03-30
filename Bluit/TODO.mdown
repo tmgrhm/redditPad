@@ -1,0 +1,28 @@
+# TODO
+
+##General
+* session persistence
+* dark mode update UI
+* Onboarding experience (prompt login first time)
+
+##Listings
+* paging
+* pull-to-refresh
+* Swipe controls on LinkCells
+* add sorting options
+
+##Link View
+* Swipe controls on CommentCells
+* add sorting options
+
+##Subreddits
+* figure out how to get all user's subscribed subreddits
+* add default list of subreddits in Subreddits view
+
+##Search
+* Posts
+* Subreddits
+* Users
+
+##User
+* Account view when logged in

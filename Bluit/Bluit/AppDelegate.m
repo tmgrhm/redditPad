@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "ThemeManager.h"
+#import "TGRedditClient.h"
 
 @interface AppDelegate ()
 
@@ -20,32 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 	
-	[[UIApplication sharedApplication] setStatusBarStyle:[ThemeManager statusBarStyle]
-												animated:UIStatusBarAnimationFade]; // TODO
-	
-	UIView *selectedTableViewBG = [UIView new];
-	[selectedTableViewBG setBackgroundColor:[ThemeManager backgroundColor]];
-	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
-	[[UITableViewCell appearance] setBackgroundColor:[ThemeManager contentBackgroundColor]];
-	[[UITableView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
-	[[UITableView appearance] setSeparatorColor: [ThemeManager separatorColor]];
-	
-	[[UIScrollView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
-	[[UIWebView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
-	
-	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
-	 [[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName:[ThemeManager textColor]}];
-	[[UIToolbar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UIToolbar appearance] setTintColor:[ThemeManager tintColor]];
-	[[UITabBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UITabBar appearance] setTintColor:[ThemeManager tintColor]];
-	
-	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
-	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
-	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
-	
-	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
+	[self themeAppearance];
 	
     return YES;
 }
@@ -70,6 +46,38 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - Initialisation
+
+- (void) themeAppearance
+{
+	[[UIApplication sharedApplication] setStatusBarStyle:[ThemeManager statusBarStyle]
+												animated:UIStatusBarAnimationFade]; // TODO
+	
+	UIView *selectedTableViewBG = [UIView new];
+	[selectedTableViewBG setBackgroundColor:[ThemeManager backgroundColor]];
+	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
+	[[UITableViewCell appearance] setBackgroundColor:[ThemeManager contentBackgroundColor]];
+	[[UITableView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
+	[[UITableView appearance] setSeparatorColor: [ThemeManager separatorColor]];
+	
+	[[UIScrollView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
+	[[UIWebView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
+	
+	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
+	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
+	[[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName:[ThemeManager textColor]}];
+	[[UIToolbar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
+	[[UIToolbar appearance] setTintColor:[ThemeManager tintColor]];
+	[[UITabBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
+	[[UITabBar appearance] setTintColor:[ThemeManager tintColor]];
+	
+	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
+	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
+	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
+	
+	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
 }
 
 @end
