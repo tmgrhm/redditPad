@@ -11,7 +11,9 @@
 * Swipe controls on LinkCells
 * add sorting options
 
-##Link View
+##Comments View
+* UITextView for comments
+* improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
 

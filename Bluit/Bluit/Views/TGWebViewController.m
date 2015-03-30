@@ -10,7 +10,7 @@
 
 #import "ThemeManager.h"
 
-@interface TGWebViewController ()
+@interface TGWebViewController () <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
@@ -24,6 +24,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	[self.webView setDelegate:self];
 	
 	[self createShadow];
 	[self themeAppearance];
@@ -47,14 +48,12 @@
 	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
 	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
-	//	containerCALayer.shouldRasterize = YES;
-	//	containerCALayer.rasterizationScale = UIScreen.mainScreen.scale;
-	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
-	containerCALayer.shadowOpacity = 0.5f;
-	containerCALayer.shadowRadius = 6.0f;
 	CGRect bounds = self.shadowView.bounds;
 	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 2, bounds.size.width, bounds.size.height);
 	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
+	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
+	containerCALayer.shadowOpacity = 0.5f;
+	containerCALayer.shadowRadius = 6.0f;
 	
 	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
 	self.fadeView.alpha = 0.7f;
@@ -78,6 +77,12 @@
 					 completion:nil];
 	
 	// TODO if launchservices invalidationhandler called — http://stackoverflow.com/questions/25192313/sharing-via-uiactivityviewcontroller-to-twitter-facebook-etc-causing-crash
+}
+
+# pragma mark - WebView Delegate
+- (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+	NSLog(@"failed loading: %@ \n%@", webView.request.URL, error.description);
 }
 
 #pragma mark - Navigation

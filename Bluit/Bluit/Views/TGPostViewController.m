@@ -75,14 +75,12 @@
 	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
 	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
-	//	containerCALayer.shouldRasterize = YES;
-	//	containerCALayer.rasterizationScale = UIScreen.mainScreen.scale;
-	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
-	containerCALayer.shadowOpacity = 0.5f;
-	containerCALayer.shadowRadius = 6.0f;
 	CGRect bounds = self.shadowView.bounds;
 	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 2, bounds.size.width, bounds.size.height);
 	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
+	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
+	containerCALayer.shadowOpacity = 0.5f;
+	containerCALayer.shadowRadius = 6.0f;
 	
 	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
 	self.fadeView.alpha = 0.7f;
