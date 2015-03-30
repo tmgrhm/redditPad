@@ -852,8 +852,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfd-a0-yaF">
-                                <rect key="frame" x="150" y="150" width="300" height="300"/>
+                                <rect key="frame" x="150" y="42" width="300" height="300"/>
                                 <subviews>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Login Successful" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Rz-8W-Xfv">
+                                        <rect key="frame" x="83" y="0.0" width="135" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="transfuse" placeholder="username" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="I33-Fv-0wa">
                                         <rect key="frame" x="70" y="86" width="160" height="30"/>
                                         <constraints>
@@ -881,8 +887,17 @@
                                             <action selector="loginPressed:" destination="EBH-uB-JtY" eventType="touchUpInside" id="jP7-57-y4t"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WJ4-hq-RFN">
+                                        <rect key="frame" x="91" y="270" width="119" height="30"/>
+                                        <state key="normal" title="Login with OAuth">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="oAuthLoginPressed:" destination="EBH-uB-JtY" eventType="touchUpInside" id="W84-q2-UHo"/>
+                                        </connections>
+                                    </button>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="00M-zo-rwo">
-                                        <rect key="frame" x="60" y="0.0" width="180" height="29"/>
+                                        <rect key="frame" x="60" y="39" width="180" height="29"/>
                                         <segments>
                                             <segment title="Light"/>
                                             <segment title="Dark"/>
@@ -895,17 +910,20 @@
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="300" id="8bs-5u-N1M"/>
                                     <constraint firstAttribute="centerX" secondItem="I33-Fv-0wa" secondAttribute="centerX" id="D11-1m-eQV"/>
+                                    <constraint firstItem="WJ4-hq-RFN" firstAttribute="top" secondItem="GOV-Wn-Ba3" secondAttribute="bottom" constant="15" id="Gc5-F9-UAK"/>
                                     <constraint firstItem="GOV-Wn-Ba3" firstAttribute="top" secondItem="gUf-e8-fvz" secondAttribute="bottom" constant="40" id="Rxv-T9-RsV"/>
                                     <constraint firstAttribute="width" constant="300" id="SRc-SQ-oj7"/>
                                     <constraint firstAttribute="height" constant="300" id="Z4e-fD-6jj"/>
                                     <constraint firstItem="I33-Fv-0wa" firstAttribute="top" secondItem="bfd-a0-yaF" secondAttribute="top" constant="86" id="bvV-BD-m80"/>
-                                    <constraint firstItem="00M-zo-rwo" firstAttribute="top" secondItem="bfd-a0-yaF" secondAttribute="top" id="fg2-Q3-ncu"/>
+                                    <constraint firstAttribute="bottom" secondItem="WJ4-hq-RFN" secondAttribute="bottom" id="ejQ-Cy-8FZ"/>
+                                    <constraint firstItem="00M-zo-rwo" firstAttribute="top" secondItem="bfd-a0-yaF" secondAttribute="top" constant="39" id="fg2-Q3-ncu"/>
                                     <constraint firstAttribute="trailing" secondItem="00M-zo-rwo" secondAttribute="trailing" constant="60" id="kkY-dT-UG1"/>
                                     <constraint firstItem="00M-zo-rwo" firstAttribute="leading" secondItem="bfd-a0-yaF" secondAttribute="leading" constant="60" id="lY8-YS-9e4"/>
                                     <constraint firstAttribute="bottom" secondItem="GOV-Wn-Ba3" secondAttribute="bottom" constant="45" id="nAF-6C-8DM"/>
                                     <constraint firstAttribute="centerX" secondItem="GOV-Wn-Ba3" secondAttribute="centerX" id="r7J-VL-RT0"/>
                                     <constraint firstAttribute="centerX" secondItem="gUf-e8-fvz" secondAttribute="centerX" id="seD-f2-vJ3"/>
                                     <constraint firstItem="gUf-e8-fvz" firstAttribute="top" secondItem="I33-Fv-0wa" secondAttribute="bottom" constant="39" id="veZ-b3-TNG"/>
+                                    <constraint firstAttribute="centerX" secondItem="WJ4-hq-RFN" secondAttribute="centerX" constant="-0.5" id="ytN-UX-fQZ"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -913,27 +931,20 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login Successful" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Rz-8W-Xfv">
-                                <rect key="frame" x="233" y="181" width="135" height="21"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VAh-vD-KDs">
+                                <rect key="frame" x="0.0" y="350" width="600" height="201"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
                         </subviews>
+                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="bfd-a0-yaF" secondAttribute="centerX" id="CuZ-N4-gYg"/>
-                            <constraint firstAttribute="centerY" secondItem="bfd-a0-yaF" secondAttribute="centerY" id="GQA-aW-YqO"/>
-                            <constraint firstItem="I33-Fv-0wa" firstAttribute="top" secondItem="1Rz-8W-Xfv" secondAttribute="bottom" constant="19" id="IDI-3n-kCu"/>
-                            <constraint firstItem="bfd-a0-yaF" firstAttribute="top" secondItem="1Rz-8W-Xfv" secondAttribute="bottom" constant="-57" id="dGK-eO-KE3"/>
-                            <constraint firstItem="bfd-a0-yaF" firstAttribute="top" secondItem="1Rz-8W-Xfv" secondAttribute="bottom" constant="-52" id="fjV-1C-8ca"/>
-                            <constraint firstItem="bfd-a0-yaF" firstAttribute="centerX" secondItem="1Rz-8W-Xfv" secondAttribute="centerX" id="kts-Ql-wMO"/>
+                            <constraint firstAttribute="centerY" secondItem="bfd-a0-yaF" secondAttribute="centerY" constant="108" id="GQA-aW-YqO"/>
+                            <constraint firstItem="VAh-vD-KDs" firstAttribute="top" secondItem="bfd-a0-yaF" secondAttribute="bottom" constant="8" id="HDa-Va-vAk"/>
+                            <constraint firstAttribute="centerX" secondItem="VAh-vD-KDs" secondAttribute="centerX" id="M04-2S-CKI"/>
+                            <constraint firstItem="VAh-vD-KDs" firstAttribute="width" secondItem="dTq-ao-q9j" secondAttribute="width" id="bLn-Za-qIb"/>
+                            <constraint firstItem="bM6-RS-oFe" firstAttribute="top" secondItem="VAh-vD-KDs" secondAttribute="bottom" id="xc9-gc-rgP"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="dGK-eO-KE3"/>
-                                <exclude reference="IDI-3n-kCu"/>
-                            </mask>
-                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="User" image="User Icon - Inactive" id="5Bt-e0-NZt"/>
                     <connections>
@@ -942,6 +953,8 @@
                         <outlet property="passwordField" destination="gUf-e8-fvz" id="PaA-yG-VCQ"/>
                         <outlet property="themeSegControl" destination="00M-zo-rwo" id="qvP-Ny-PNY"/>
                         <outlet property="usernameField" destination="I33-Fv-0wa" id="wpM-9d-QsZ"/>
+                        <outlet property="webView" destination="VAh-vD-KDs" id="spE-Rf-AiJ"/>
+                        <segue destination="gFf-Ur-DKX" kind="presentation" identifier="loginWebView" modalPresentationStyle="overFullScreen" id="4Lf-pL-Cen"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DrQ-uS-2TK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1478,7 +1491,7 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="4Lf-pL-Cen"/>
         <segue reference="Xrt-m8-Eu0"/>
-        <segue reference="iGZ-e7-hTh"/>
     </inferredMetricsTieBreakers>
 </document>

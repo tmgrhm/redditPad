@@ -7,17 +7,18 @@
 //
 
 #import "TGLoginViewController.h"
-#import "TGRedditClient.h"
 
+#import "TGRedditClient.h"
 #import "ThemeManager.h"
 
-@interface TGLoginViewController ()
+@interface TGLoginViewController () <UIWebViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *usernameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (weak, nonatomic) IBOutlet UILabel *loginSuccessfulLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *themeSegControl;
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
 
 @end
 
@@ -50,6 +51,15 @@
 	}];
 }
 
+- (IBAction)oAuthLoginPressed:(id)sender
+{
+	TGRedditClient *client = [TGRedditClient sharedClient];
+	
+//	[self performSegueWithIdentifier:@"loginWebView" sender:self];
+	[self.webView setDelegate:self];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[client oAuthLoginURL]]];
+}
+
 - (void) loginSuccessful
 {
 	self.loginSuccessfulLabel.hidden = NO;
@@ -63,16 +73,46 @@
 	NSString *title = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
 	NSString *theme = [title isEqualToString:@"Light"] ? @"lightTheme" : @"darkTheme";
 	[[NSUserDefaults standardUserDefaults] setObject:theme forKey:@"theme"];
+	
+	NSArray *windows = [UIApplication sharedApplication].windows;
+	for (UIWindow *window in windows) {
+		for (UIView *view in window.subviews) {
+			[view removeFromSuperview];
+			[window addSubview:view];
+		}
+	}
 }
 
-/*
+#pragma mark - WebView Delegate
+- (BOOL) webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+	if (navigationType == UIWebViewNavigationTypeFormSubmitted)
+	{
+		NSURL *url = request.URL;
+		if ([[url scheme] isEqualToString:@"redditpad"]) {
+			[[TGRedditClient sharedClient] loginWithOAuthResponse:url];
+//			[[UIApplication sharedApplication] openURL:url]; // TODO handle response via delegate instead?
+			return NO; // don't let the webview process it
+		}
+	}
+	
+	return YES;
+}
+
 #pragma mark - Navigation
 
+/*
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+//     Get the new view controller using [segue destinationViewController].
+//     Pass the selected object to the new view controller.
+	
+	if ([[segue identifier] isEqualToString:@"loginWebView"])
+	{
+		TGWebViewController *webVC = [segue destinationViewController];
+		NSLog(@"%@", self.loginURL);
+		[webVC setUrl:self.loginURL];
+	}
+}*/
 
 @end

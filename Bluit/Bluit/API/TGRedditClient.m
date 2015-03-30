@@ -7,20 +7,33 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TGLink.h"
+
 #import "TGRedditClient.h"
+#import "TGLink.h"
+
+#import "TGWebViewController.h"
+
 #import <AFNetworking/AFHTTPRequestOperation.h>
 #import <AFNetworking/AFHTTPSessionManager.h>
 
 static NSString * const BaseURLString = @"http://www.reddit.com/";
 static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 
+// OAuth parameters
+static NSString * const client_id = @"l5iDc07xOgRpug";
+static NSString * const oAuthState = @"login";
+static NSString * const redirect_uri = @"redditpad://redirect";
+static NSString * const scope = @"identity,edit,history,mysubreddits,read,report,save,submit,subscribe,vote";
+
 @interface TGRedditClient ()
 
 @property (strong, nonatomic) AFHTTPRequestSerializer *serializer;
 @property (strong, nonatomic) AFHTTPSessionManager *manager;
+
 @property (strong, nonatomic) NSString *modhash;
 @property (strong, nonatomic) NSString *sessionIdentifier;
+@property (strong, nonatomic) NSString *accessToken;
+@property (strong, nonatomic) NSString *refreshToken;
 
 @property (strong, nonatomic) NSArray *userSubreddits;
 
@@ -162,7 +175,75 @@ static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 	 ];
 }
 
+- (NSURL *) oAuthLoginURL
+{
+	NSString *authURLString = [NSString stringWithFormat:@"api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@&duration=permanent&scope=%@", client_id, oAuthState, redirect_uri, scope];
+	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:authURLString];
+	NSURL *url = [NSURL URLWithString:urlString];
+	return url;
+}
 
+- (void) loginWithOAuthResponse:(NSURL *)url
+{
+	NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
+												resolvingAgainstBaseURL:NO];
+	NSArray *queryItems = urlComponents.queryItems;
+	NSString *error = [self valueForKey:@"error" fromQueryItems:queryItems];
+	
+	if (error)
+	{
+		NSLog(@"Error: %@", error);
+	}
+	
+	NSString *state = [self valueForKey:@"state" fromQueryItems:queryItems];
+	NSString *code = [self valueForKey:@"code" fromQueryItems:queryItems];
+	
+	if ([state isEqualToString:oAuthState])
+	{
+		NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
+		NSDictionary *parameters = @{@"grant_type":@"authorization_code",
+									 @"code":code,
+									 @"redirect_uri":redirect_uri};
+		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
+																	   password:@""]; // password empty due to being a confidential client
+		[self.manager POST:accessURL
+				parameters:parameters
+				   success:^(NSURLSessionDataTask *task, id responseObject) {
+					   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
+					   self.accessToken = responseObject[@"access_token"];
+					   self.refreshToken = responseObject[@"refresh_token"];
+					   // TODO set up refreshing — probably want to store responseObject[@"expires_in"]
+					   
+					   NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
+					   // TODO fucking cookie having no expiry date, sessionOnly=TRUE
+				   }
+				   failure:^(NSURLSessionDataTask *task, NSError *error) {
+					   NSLog(@"Error: %@", error.description);
+				   }];
+	}
+	else
+	{
+		NSLog(@"Error: state doesn't match oAuth state, ur bein haxed"); // TODO handle unsafe state
+	}
+}
+
+- (void) refreshOAuthToken // TODO use this
+{
+	NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
+	NSDictionary *parameters = @{@"grant_type":@"refresh_token",
+								 @"refresh_token":self.refreshToken};
+	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
+																   password:@""]; // password empty due to being a confidential client
+	[self.manager POST:accessURL
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
+				   self.accessToken = responseObject[@"access_token"];
+			   }
+			   failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   NSLog(@"Error: %@", error.description);
+			   }];
+}
 
 - (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion
 {
@@ -187,5 +268,16 @@ static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
 	 ];
 }
 
+#pragma mark Convenience
+
+- (NSString *)valueForKey:(NSString *)key
+		   fromQueryItems:(NSArray *)queryItems
+{
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name=%@", key];
+	NSURLQueryItem *queryItem = [[queryItems
+								  filteredArrayUsingPredicate:predicate]
+								 firstObject];
+	return queryItem.value;
+}
 
 @end
