@@ -116,7 +116,10 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 				  password:(NSString *)password
 			withCompletion:(void (^)(void))completion
 {
-	NSDictionary *parameters = @{@"user": username, @"passwd": password, @"api_type": @"json"};
+	NSDictionary *parameters = @{@"user": username,
+								 @"passwd": password,
+								 @"rem": @"on",
+								 @"api_type": @"json"};
 	
 	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:@"api/login"];
 	
@@ -214,8 +217,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 					   self.refreshToken = responseObject[@"refresh_token"];
 					   // TODO set up refreshing — probably want to store responseObject[@"expires_in"]
 					   
-					   NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
-					   // TODO fucking cookie having no expiry date, sessionOnly=TRUE
+					   // TODO use global notification centre to announce login
 				   }
 				   failure:^(NSURLSessionDataTask *task, NSError *error) {
 					   NSLog(@"Error: %@", error.description);
