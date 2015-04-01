@@ -7,14 +7,15 @@
 //
 
 #import "FrontPageViewController.h"
-#import "TGLink.h"
-#import "TGRedditClient.h"
+
 #import "TGListingTableViewCell.h"
 #import "TGWebViewController.h"
 #import "TGLinkViewController.h"
 #import "TGPostViewController.h"
 #import "TGImageViewController.h"
 
+#import "TGLink.h"
+#import "TGRedditClient.h"
 #import "ThemeManager.h"
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
@@ -33,6 +34,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+	[self themeAppearance];
 	
 	self.tableView.estimatedRowHeight = 80.0;
 	self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -43,7 +45,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self reloadTableViewData];
+	[self reloadTableView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,7 +57,12 @@
 #pragma mark - Setup & Appearance
 - (void) themeAppearance
 {
-	// empty
+	self.view.backgroundColor = [ThemeManager backgroundColor];
+	
+	UIView *headerView = self.tableView.tableHeaderView;
+	headerView.backgroundColor = [ThemeManager backgroundColor];
+	headerView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
+	headerView.layer.borderColor = [[ThemeManager separatorColor] CGColor]; // TODO change to 1px shadow
 }
 
 #pragma mark - IBAction
@@ -83,13 +90,13 @@
 	
 	[[TGRedditClient sharedClient] requestSubreddit:subredditURL withCompletion:^(NSArray *collection, NSError *error) {
 		self.listings = collection;
-		[self reloadTableViewData];
+		[self reloadTableView];
 	}];
 }
 
 
 #pragma mark - TableView
-- (void) reloadTableViewData
+- (void) reloadTableView
 {
 	[self.tableView beginUpdates];
 	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -149,16 +156,14 @@
 	self.selectedLink = self.listings[indexPath.row];
 	// Perform segue
 	
-	NSString *lastPathComponent = self.selectedLink.url.pathComponents.lastObject;
+/*	NSString *lastPathComponent = self.selectedLink.url.pathComponents.lastObject;
 	
 	if ([lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"] || [lastPathComponent hasSuffix:@".gif"])
 	{
-		[self performSegueWithIdentifier:@"listingToImageView" sender:self];
+		[self performSegueWithIdentifier:@"listingToImageView" sender:self]; // TODO better imageView
 	}
-	else
-	{
+	else */
 		[self performSegueWithIdentifier:@"listingToWebView" sender:self];
-	}
 }
 
 #pragma mark - Navigation

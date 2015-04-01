@@ -28,6 +28,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+	[self themeAppearance];
 	
 	NSString *theme = [ThemeManager sharedManager].theme[@"themeName"];
 	self.themeSegControl.selectedSegmentIndex = [theme isEqualToString:@"lightTheme"] ? 0 : 1;
@@ -38,6 +39,14 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Setup & Appearance
+- (void) themeAppearance
+{
+	self.view.backgroundColor = [ThemeManager backgroundColor];
+}
+
+#pragma mark - IBAction
 
 - (IBAction)loginPressed:(id)sender
 {
@@ -60,19 +69,13 @@
 	[self.webView loadRequest:[NSURLRequest requestWithURL:[client oAuthLoginURL]]];
 }
 
-- (void) loginSuccessful
-{
-	self.loginSuccessfulLabel.hidden = NO;
-	self.usernameField.alpha = 0.5;
-	self.passwordField.alpha = 0.5;
-	self.loginButton.alpha = 0.5;
-}
-
 - (IBAction)themeSegControlValueChanged:(UISegmentedControl *)sender
 {
 	NSString *title = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
 	NSString *theme = [title isEqualToString:@"Light"] ? @"lightTheme" : @"darkTheme";
 	[[NSUserDefaults standardUserDefaults] setObject:theme forKey:@"theme"];
+	
+	// TODO NSNotification themeDidChange
 	
 	NSArray *windows = [UIApplication sharedApplication].windows;
 	for (UIWindow *window in windows) {
@@ -81,6 +84,15 @@
 			[window addSubview:view];
 		}
 	}
+}
+
+#pragma mark -
+- (void) loginSuccessful
+{
+	self.loginSuccessfulLabel.hidden = NO;
+	self.usernameField.alpha = 0.5;
+	self.passwordField.alpha = 0.5;
+	self.loginButton.alpha = 0.5;
 }
 
 #pragma mark - WebView Delegate

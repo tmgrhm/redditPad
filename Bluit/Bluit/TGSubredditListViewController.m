@@ -7,8 +7,11 @@
 //
 
 #import "TGSubredditListViewController.h"
+
 #import "FrontPageViewController.h"
+
 #import "TGRedditClient.h"
+#import "ThemeManager.h"
 
 @interface TGSubredditListViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -24,6 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+	[self themeAppearance];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] retrieveUserSubscriptionsWithCompletion:^(NSArray *subreddits){
@@ -35,6 +39,12 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Setup & Appearance
+- (void) themeAppearance
+{
+	self.view.backgroundColor = [ThemeManager backgroundColor];
 }
 
 

@@ -1,9 +1,16 @@
 # TODO
 
+##Design
+* App Icon
+
 ##General
 * session persistence
 * dark mode update UI
 * Onboarding experience (prompt login first time)
+* create reusable styled modal window controller w/ fade and shadow
+
+###Theming
+* NSNotification themeDidChange, force reload views
 
 ##Listings
 * paging
@@ -12,10 +19,15 @@
 * add sorting options
 
 ##Comments View
+* Selftext body for selfposts
 * UITextView for comments
 * improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
+
+##Web View
+* Title from current webpage title
+* Button to view comments for current page if Link web view
 
 ##Subreddits
 * figure out how to get all user's subscribed subreddits
@@ -28,3 +40,7 @@
 
 ##User
 * Account view when logged in
+
+##Login/Authentication
+* NSNotification didLogIn, update views
+* Log Out

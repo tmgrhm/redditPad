@@ -20,8 +20,12 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="30" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="BZg-Up-pLI">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                                <color key="backgroundColor" red="0.91653972864151001" green="0.92888104915618896" blue="0.94151514768600464" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="a8f-GZ-1HC">
+                                    <rect key="frame" x="0.0" y="64" width="768" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </view>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TGListingTableViewCell" id="VAd-4k-Zge" customClass="TGListingTableViewCell">
                                         <autoresizingMask key="autoresizingMask"/>
@@ -811,27 +815,41 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Search" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PMB-um-Rcb">
-                                <rect key="frame" x="140" y="87" width="320" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="search"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TXo-Pe-0cn">
-                                <rect key="frame" x="277" y="182" width="46" height="30"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Tlr-Yq-aOC">
-                                <rect key="frame" x="140" y="134" width="320" height="29"/>
-                                <segments>
-                                    <segment title="Posts"/>
-                                    <segment title="Subreddits"/>
-                                    <segment title="Users"/>
-                                </segments>
-                            </segmentedControl>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M7X-h2-7Tp">
+                                <rect key="frame" x="120" y="102" width="360" height="165"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Search" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PMB-um-Rcb">
+                                        <rect key="frame" x="20" y="20" width="320" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="search"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TXo-Pe-0cn">
+                                        <rect key="frame" x="157" y="115" width="46" height="30"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Tlr-Yq-aOC">
+                                        <rect key="frame" x="20" y="67" width="320" height="29"/>
+                                        <segments>
+                                            <segment title="Posts"/>
+                                            <segment title="Subreddits"/>
+                                            <segment title="Users"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="360" id="2SH-MJ-GM8"/>
+                                    <constraint firstAttribute="height" constant="165" id="D8d-LY-XYf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="M7X-h2-7Tp" secondAttribute="centerX" id="9GF-OQ-RXm"/>
+                            <constraint firstItem="M7X-h2-7Tp" firstAttribute="top" secondItem="S7v-ym-71W" secondAttribute="bottom" constant="38" id="XRI-GA-t8l"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="9MC-z3-hid"/>
                 </viewController>
@@ -938,8 +956,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="bfd-a0-yaF" firstAttribute="top" secondItem="hlg-cD-kCx" secondAttribute="bottom" constant="22" id="CCB-Fm-fFg"/>
                             <constraint firstAttribute="centerX" secondItem="bfd-a0-yaF" secondAttribute="centerX" id="CuZ-N4-gYg"/>
-                            <constraint firstAttribute="centerY" secondItem="bfd-a0-yaF" secondAttribute="centerY" constant="108" id="GQA-aW-YqO"/>
                             <constraint firstItem="VAh-vD-KDs" firstAttribute="top" secondItem="bfd-a0-yaF" secondAttribute="bottom" constant="8" id="HDa-Va-vAk"/>
                             <constraint firstAttribute="centerX" secondItem="VAh-vD-KDs" secondAttribute="centerX" id="M04-2S-CKI"/>
                             <constraint firstItem="VAh-vD-KDs" firstAttribute="width" secondItem="dTq-ao-q9j" secondAttribute="width" id="bLn-Za-qIb"/>
@@ -1491,7 +1509,7 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="4Lf-pL-Cen"/>
         <segue reference="Xrt-m8-Eu0"/>
+        <segue reference="iGZ-e7-hTh"/>
     </inferredMetricsTieBreakers>
 </document>

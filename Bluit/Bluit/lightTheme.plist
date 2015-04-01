@@ -7,6 +7,8 @@
 	<key>statusBarStyle</key>
 	<string>darkStyle</string>
 	<key>backgroundColor</key>
+	<string>EAEDF0</string>
+	<key>lightBackgroundColor</key>
 	<string>F5F6F8</string>
 	<key>textColor</key>
 	<string>1A1A1A</string>
