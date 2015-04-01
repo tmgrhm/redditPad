@@ -77,7 +77,13 @@
 	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
 	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
 	
+	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
+	[[UITextField appearance] setTextColor:[ThemeManager textColor]];
+	
 	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
+	[[UISegmentedControl appearance] setTintColor:[ThemeManager tintColor]];
+	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager tintColor]} forState:UIControlStateNormal];
+	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
 }
 
 @end
