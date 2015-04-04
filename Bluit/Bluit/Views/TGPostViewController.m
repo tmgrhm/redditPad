@@ -282,13 +282,13 @@
  
 	[self configureCommentCell:sizingCell atIndexPath:indexPath];
 	
-	height = [self calculateHeightForConfiguredSizingCell:sizingCell];
+	height = [self calculateHeightForConfiguredCommentCell:sizingCell];
 //	NSLog(@"sizingCell: %f, %f, %@", sizingCell.bodyLabel.frame.size.height, sizingCell.bodyLabel.frame.size.width, comment.author);
 	[self.commentHeights setValue:@(height) forKey:comment.id]; // cache it
 	return height;
 }
 
-- (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell
+- (CGFloat)calculateHeightForConfiguredCommentCell:(UITableViewCell *)sizingCell
 {
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
 	
