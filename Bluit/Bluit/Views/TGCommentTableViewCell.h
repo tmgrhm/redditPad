@@ -20,11 +20,4 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *leftMargin;
 @property (assign, nonatomic) float originalLeftMargin;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMargin;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *midMargin;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *metaHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btmMargin;
-
-- (CGFloat) calculateHeightForConfiguredCell;
-
 @end

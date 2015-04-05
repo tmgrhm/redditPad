@@ -4,3 +4,4 @@ pod 'AFNetworking', '~> 2.5'
 # pod 'TSMarkdownParser'
 pod 'XNGMarkdownParser'
 # pod 'URBMediaFocusViewController'
+# pod 'Reveal-iOS-SDK', :configurations => ['Debug']

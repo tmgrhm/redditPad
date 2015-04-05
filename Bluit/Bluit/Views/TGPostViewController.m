@@ -292,12 +292,24 @@
 {
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
 
-//	[sizingCell setNeedsLayout];
-//	[sizingCell layoutIfNeeded];
-//	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	// constrain contentView.width to same as table.width
+	// required for correct height calculation with UITextView
+	// http://stackoverflow.com/questions/27064070/
+	UIView *contentView = sizingCell.contentView;
+	contentView.translatesAutoresizingMaskIntoConstraints = NO;
+	NSDictionary *metrics = @{@"tableWidth":@(self.commentTableView.frame.size.width)};
+	NSDictionary *views = NSDictionaryOfVariableBindings(contentView);
+	[contentView addConstraints:
+	 [NSLayoutConstraint constraintsWithVisualFormat:@"[contentView(tableWidth)]"
+											 options:0
+											 metrics:metrics
+											   views:views]];
 	
-	CGFloat height = [sizingCell calculateHeightForConfiguredCell];
-	return height + 1.0f; // Add 1.0f for the cell separator height
+	[sizingCell setNeedsLayout];
+	[sizingCell layoutIfNeeded];
+	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	
+	return size.height + 1.0f; // Add 1.0f for the cell separator height
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

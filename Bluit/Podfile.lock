@@ -29,7 +29,7 @@ DEPENDENCIES:
   - XNGMarkdownParser
 
 SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
+  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
   fmemopen: 54fc0cc9d9063de6103b40a24849818a53c8f1e5
   XNGMarkdownParser: 72c20da1aceec6df477acd78d2297fb9584e7771
 
