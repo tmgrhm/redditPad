@@ -14,13 +14,13 @@
 
 #import "TGRedditClient.h"
 #import "TGComment.h"
-#import "TGCommentCell.h"
+#import "TGCommentTableViewCell.h"
 
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
-@property (strong, nonatomic) TGCommentCell *sizingCell;
+@property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
@@ -206,9 +206,9 @@
 	return [self commentCellAtIndexPath:indexPath];
 }
 
-- (TGCommentCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
+- (TGCommentTableViewCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
 {
-	TGCommentCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentCell" forIndexPath:indexPath];
+	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
 	[self configureCommentCell:cell atIndexPath:indexPath];
 	
 	[cell setNeedsLayout];
@@ -218,7 +218,7 @@
 	return cell;
 }
 
-- (void)configureCommentCell:(TGCommentCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCommentCell:(TGCommentTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
 	TGComment *comment = self.comments[indexPath.row];
 	NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
@@ -246,12 +246,12 @@
 	if ([self.collapsedComments containsObject:comment])
 	{
 		cell.backgroundColor = [ThemeManager backgroundColor];
-		cell.bodyLabel.numberOfLines = 1;
+//		cell.bodyLabel.numberOfLines = 1;
 	}
 	else
 	{
 		cell.backgroundColor = [ThemeManager contentBackgroundColor];
-		cell.bodyLabel.numberOfLines = 0;
+//		cell.bodyLabel.numberOfLines = 0;
 	}
 	
 }
@@ -274,10 +274,10 @@
 		return height; // if cached, return cached height
 	}
 	
-	static TGCommentCell *sizingCell = nil;
+	static TGCommentTableViewCell *sizingCell = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentCell"];
+		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell"];
 	});
  
 	[self configureCommentCell:sizingCell atIndexPath:indexPath];
@@ -288,15 +288,16 @@
 	return height;
 }
 
-- (CGFloat)calculateHeightForConfiguredCommentCell:(UITableViewCell *)sizingCell
+- (CGFloat)calculateHeightForConfiguredCommentCell:(TGCommentTableViewCell *)sizingCell
 {
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
+
+//	[sizingCell setNeedsLayout];
+//	[sizingCell layoutIfNeeded];
+//	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
 	
-	[sizingCell setNeedsLayout];
-	[sizingCell layoutIfNeeded];
- 
-	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	return size.height + 1.0f; // Add 1.0f for the cell separator height
+	CGFloat height = [sizingCell calculateHeightForConfiguredCell];
+	return height + 1.0f; // Add 1.0f for the cell separator height
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

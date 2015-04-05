@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     // Initialization code
 	
-//	self.body.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
+	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0); // TODO
 	self.originalLeftMargin = self.leftMargin.constant;
 }
 
@@ -21,6 +21,20 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+- (CGFloat) calculateHeightForConfiguredCell
+{
+	[self.bodyLabel setNeedsLayout];
+	[self.bodyLabel layoutIfNeeded];
+	
+	CGFloat height = [self.bodyLabel sizeThatFits:CGSizeMake(CGRectGetWidth(self.bodyLabel.frame), FLT_MAX)].height;
+	height += self.topMargin.constant +
+				self.midMargin.constant +
+				self.metaHeight.constant +
+				self.btmMargin.constant;
+	
+	return height;
 }
 
 @end
