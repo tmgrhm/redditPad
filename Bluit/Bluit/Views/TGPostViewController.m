@@ -221,8 +221,10 @@
 - (void)configureCommentCell:(TGCommentTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
 	TGComment *comment = self.comments[indexPath.row];
+	NSLog(@"%@", cell.bodyLabel.text);
 	NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
 	[cell.bodyLabel setAttributedText:attrBody];
+	cell.bodyLabel.delegate = self;
 	
 	[cell.authorLabel setText:comment.author];
 	if ([comment.author isEqualToString:self.link.author])
@@ -351,6 +353,14 @@
 //{
 //	return self.headerView;
 //}
+
+#pragma mark - UITextView
+- (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
+{
+	self.urlFromCommentTapped = URL;
+	[self performSegueWithIdentifier:@"commentLinkTapped" sender:self];
+	return NO;
+}
 
 #pragma mark - Navigation
 
