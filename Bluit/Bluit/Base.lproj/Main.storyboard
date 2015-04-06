@@ -68,7 +68,7 @@
                                                     <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="highlightedColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="99B-01-QIo" userLabel="Thumbnail">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="99B-01-QIo" userLabel="Thumbnail">
                                                     <rect key="frame" x="627" y="15" width="68" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="68" id="u3y-g3-rJN"/>
@@ -850,47 +850,51 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="640" height="150"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVi-DC-ium">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVi-DC-ium" userLabel="BG">
                                                             <rect key="frame" x="0.0" y="0.0" width="640" height="120"/>
+                                                            <subviews>
+                                                                <label opaque="NO" contentMode="left" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="0 points, 0 comments in /r/subreddit" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="590" translatesAutoresizingMaskIntoConstraints="NO" id="S8Y-5G-b0n">
+                                                                    <rect key="frame" x="50" y="52" width="250" height="18"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                    <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MKo-9q-a2y">
+                                                                    <rect key="frame" x="50" y="19" width="540" height="33"/>
+                                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                                    <state key="normal" title="Title">
+                                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="titlePressed:" destination="ibe-ay-a9l" eventType="touchUpInside" id="33W-oC-HbS"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <label opaque="NO" contentMode="left" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="timestamp, by author" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="590" translatesAutoresizingMaskIntoConstraints="NO" id="Ot0-tS-ayL">
+                                                                    <rect key="frame" x="50" y="77" width="146" height="18"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                    <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
                                                             <color key="backgroundColor" red="0.99989169836044312" green="1" blue="0.99988096952438354" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <constraints>
+                                                                <constraint firstItem="S8Y-5G-b0n" firstAttribute="top" secondItem="MKo-9q-a2y" secondAttribute="bottom" id="9RH-br-cwp"/>
+                                                                <constraint firstAttribute="bottom" secondItem="Ot0-tS-ayL" secondAttribute="bottom" constant="25" id="AKr-jW-iww"/>
+                                                                <constraint firstItem="MKo-9q-a2y" firstAttribute="leading" secondItem="OVi-DC-ium" secondAttribute="leading" constant="50" id="CKr-cg-Qcy"/>
+                                                                <constraint firstItem="MKo-9q-a2y" firstAttribute="top" secondItem="OVi-DC-ium" secondAttribute="top" constant="19" id="SrZ-5Z-bGm"/>
+                                                                <constraint firstItem="Ot0-tS-ayL" firstAttribute="top" secondItem="S8Y-5G-b0n" secondAttribute="bottom" constant="7" id="dcb-y4-oDl"/>
+                                                                <constraint firstItem="S8Y-5G-b0n" firstAttribute="leading" secondItem="MKo-9q-a2y" secondAttribute="leading" id="jhc-AP-ryS"/>
+                                                                <constraint firstItem="MKo-9q-a2y" firstAttribute="leading" secondItem="Ot0-tS-ayL" secondAttribute="leading" id="pXT-aw-f1p"/>
+                                                                <constraint firstAttribute="trailing" secondItem="MKo-9q-a2y" secondAttribute="trailing" constant="50" id="xvn-rN-vbi"/>
+                                                            </constraints>
                                                         </view>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="0 points, 0 comments in /r/subreddit" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="590" translatesAutoresizingMaskIntoConstraints="NO" id="S8Y-5G-b0n">
-                                                            <rect key="frame" x="75" y="52" width="250" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="timestamp, by author" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="590" translatesAutoresizingMaskIntoConstraints="NO" id="Ot0-tS-ayL">
-                                                            <rect key="frame" x="75" y="80" width="146" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="MKo-9q-a2y">
-                                                            <rect key="frame" x="75" y="16" width="540" height="33"/>
-                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                            <state key="normal" title="Title">
-                                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                            </state>
-                                                            <connections>
-                                                                <action selector="titlePressed:" destination="ibe-ay-a9l" eventType="touchUpInside" id="33W-oC-HbS"/>
-                                                            </connections>
-                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.91701400279998779" green="0.92945897579193115" blue="0.94149339199066162" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="S8Y-5G-b0n" firstAttribute="leading" secondItem="MKo-9q-a2y" secondAttribute="leading" id="2Ns-rn-d5Y"/>
-                                                        <constraint firstAttribute="trailing" secondItem="MKo-9q-a2y" secondAttribute="trailing" constant="25" id="3om-I0-x6G"/>
                                                         <constraint firstItem="OVi-DC-ium" firstAttribute="leading" secondItem="41e-NU-WnR" secondAttribute="leading" id="8wl-Al-6oO"/>
                                                         <constraint firstItem="OVi-DC-ium" firstAttribute="top" secondItem="41e-NU-WnR" secondAttribute="top" id="9V2-Ry-wPK"/>
-                                                        <constraint firstItem="S8Y-5G-b0n" firstAttribute="top" secondItem="MKo-9q-a2y" secondAttribute="bottom" constant="3" id="CD6-D8-640"/>
                                                         <constraint firstAttribute="bottom" secondItem="OVi-DC-ium" secondAttribute="bottom" constant="30" id="VqD-wH-Vc8"/>
-                                                        <constraint firstItem="Ot0-tS-ayL" firstAttribute="top" secondItem="S8Y-5G-b0n" secondAttribute="bottom" constant="10" id="bhx-Dx-rxL"/>
-                                                        <constraint firstItem="Ot0-tS-ayL" firstAttribute="top" secondItem="OVi-DC-ium" secondAttribute="bottom" constant="-40" id="cdY-Cl-r7z"/>
-                                                        <constraint firstItem="Ot0-tS-ayL" firstAttribute="leading" secondItem="MKo-9q-a2y" secondAttribute="leading" id="eDe-6i-2gM"/>
                                                         <constraint firstAttribute="trailing" secondItem="OVi-DC-ium" secondAttribute="trailing" id="h3n-hX-LgL"/>
-                                                        <constraint firstItem="MKo-9q-a2y" firstAttribute="top" secondItem="41e-NU-WnR" secondAttribute="top" constant="16" id="k70-fk-2aK"/>
-                                                        <constraint firstItem="MKo-9q-a2y" firstAttribute="leading" secondItem="41e-NU-WnR" secondAttribute="leading" constant="75" id="oY6-VU-KHk"/>
                                                     </constraints>
                                                 </view>
                                                 <prototypes>
@@ -967,6 +971,9 @@
                                                                     </attributedString>
                                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
                                                                     <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                                    <connections>
+                                                                        <outlet property="delegate" destination="ibe-ay-a9l" id="cjt-C0-XvJ"/>
+                                                                    </connections>
                                                                 </textView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="timestamp" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ooq-Eg-Tky">
                                                                     <rect key="frame" x="159" y="49" width="62" height="16"/>

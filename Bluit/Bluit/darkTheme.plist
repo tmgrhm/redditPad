@@ -20,5 +20,9 @@
 	<string>434445</string>
 	<key>shadowColor</key>
 	<string>1A1A1A</string>
+	<key>shadowBorderColor</key>
+	<string>000000</string>
+	<key>shadeColor</key>
+	<string>000000</string>
 </dict>
 </plist>

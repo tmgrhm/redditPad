@@ -72,7 +72,7 @@
 - (void)createShadow
 {
 	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
+	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
 	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
 	CGRect bounds = self.shadowView.bounds;
@@ -82,7 +82,7 @@
 	containerCALayer.shadowOpacity = 0.5f;
 	containerCALayer.shadowRadius = 6.0f;
 	
-	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
+	self.fadeView.backgroundColor = [ThemeManager shadeColor];
 	self.fadeView.alpha = 0.7f;
 }
 
@@ -92,33 +92,32 @@
 	self.ptsCmtsSub.text = [NSString stringWithFormat:@"%lu points, %lu comments in /r/%@", (unsigned long)self.link.score, self.link.totalComments, self.link.subreddit];
 	self.timeAuthor.text = [NSString stringWithFormat:@"timestamp, by %@", self.link.author];
 	
-	self.headerContentBackgroundView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.headerContentBackgroundView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
-	self.headerView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.headerView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
 	// TODO size this thing properly
 	// currently systemLayoutSizeFittingSize: keeps the height at 150 and just extends horizontally as far as it needs
+	UIView *headerView = self.headerView;
 	
-	self.headerView.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(self.headerView.bounds));
+	headerView.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(headerView.bounds));
+//	headerView.translatesAutoresizingMaskIntoConstraints = NO;
+//	NSDictionary *metrics = @{@"tableWidth":@(self.commentTableView.frame.size.width)};
+//	NSDictionary *views = NSDictionaryOfVariableBindings(headerView);
+//	[headerView addConstraints:
+//	 [NSLayoutConstraint constraintsWithVisualFormat:@"[headerView(tableWidth)]"
+//											 options:0
+//											 metrics:metrics
+//											   views:views]];
 	
-	[self.headerView setNeedsLayout];
-	[self.headerView layoutIfNeeded];
+	[headerView setNeedsLayout];
+	[headerView layoutIfNeeded];
 	
-	CGSize size = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	
-	CGRect headerFrame = self.headerView.frame;
+	CGSize size = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	CGRect headerFrame = headerView.frame;
 	headerFrame.size.height = size.height;
-	self.headerView.frame = headerFrame;
-	[self.commentTableView setTableHeaderView:self.headerView];
+	headerView.frame = headerFrame;
+	[self.commentTableView setTableHeaderView:headerView];
 }
 
 - (void) themeAppearance
 {
-	self.commentTableView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.commentTableView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
 	self.headerView.backgroundColor = [ThemeManager backgroundColor];
 	self.headerContentBackgroundView.backgroundColor = [ThemeManager contentBackgroundColor];
 	self.ptsCmtsSub.textColor = [ThemeManager secondaryTextColor];

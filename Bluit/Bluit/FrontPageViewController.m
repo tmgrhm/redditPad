@@ -58,11 +58,7 @@
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
-	
-	UIView *headerView = self.tableView.tableHeaderView;
-	headerView.backgroundColor = [ThemeManager backgroundColor];
-	headerView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	headerView.layer.borderColor = [[ThemeManager separatorColor] CGColor]; // TODO change to 1px shadow
+	self.tableView.tableHeaderView.backgroundColor = [ThemeManager backgroundColor];
 }
 
 #pragma mark - IBAction

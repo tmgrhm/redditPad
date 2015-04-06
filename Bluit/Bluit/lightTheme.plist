@@ -7,20 +7,24 @@
 	<key>statusBarStyle</key>
 	<string>darkStyle</string>
 	<key>backgroundColor</key>
-	<string>EAEDF0</string>
+	<string>E9EAF0</string>
 	<key>lightBackgroundColor</key>
 	<string>F5F6F8</string>
 	<key>textColor</key>
-	<string>1A1A1A</string>
+	<string>323639</string>
 	<key>secondaryTextColor</key>
-	<string>949799</string>
+	<string>8A9399</string>
 	<key>contentBackgroundColor</key>
 	<string>FFFFFF</string>
 	<key>tintColor</key>
 	<string>037AFF</string>
 	<key>separatorColor</key>
-	<string>C6C9CC</string>
+	<string>E9EAF0</string>
 	<key>shadowColor</key>
+	<string>949799</string>
+	<key>shadowBorderColor</key>
+	<string>C6C9CC</string>
+	<key>shadeColor</key>
 	<string>C6C9CC</string>
 </dict>
 </plist>

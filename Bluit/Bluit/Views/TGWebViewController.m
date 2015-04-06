@@ -45,7 +45,7 @@
 - (void)createShadow
 {
 	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
+	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
 	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
 	CGRect bounds = self.shadowView.bounds;
@@ -55,7 +55,7 @@
 	containerCALayer.shadowOpacity = 0.5f;
 	containerCALayer.shadowRadius = 6.0f;
 	
-	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
+	self.fadeView.backgroundColor = [ThemeManager shadeColor];
 	self.fadeView.alpha = 0.7f;
 }
 
