@@ -10,10 +10,10 @@
 
 @interface TGCommentTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UITextView *body;
-@property (weak, nonatomic) IBOutlet UILabel *score;
-@property (weak, nonatomic) IBOutlet UILabel *timestamp;
-@property (weak, nonatomic) IBOutlet UILabel *author;
+@property (weak, nonatomic) IBOutlet UITextView *bodyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *pointsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timestampLabel;
+@property (weak, nonatomic) IBOutlet UILabel *authorLabel;
 
 @property (nonatomic, getter=isCollapsed) BOOL collapsed;
 

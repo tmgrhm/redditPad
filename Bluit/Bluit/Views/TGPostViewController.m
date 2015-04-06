@@ -14,13 +14,13 @@
 
 #import "TGRedditClient.h"
 #import "TGComment.h"
-#import "TGCommentCell.h"
+#import "TGCommentTableViewCell.h"
 
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
-@property (strong, nonatomic) TGCommentCell *sizingCell;
+@property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
@@ -72,7 +72,7 @@
 - (void)createShadow
 {
 	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[ThemeManager separatorColor] CGColor];
+	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
 	containerCALayer.borderWidth = 0.6f;
 	// TODO get a performant shadow
 	CGRect bounds = self.shadowView.bounds;
@@ -82,7 +82,7 @@
 	containerCALayer.shadowOpacity = 0.5f;
 	containerCALayer.shadowRadius = 6.0f;
 	
-	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
+	self.fadeView.backgroundColor = [ThemeManager shadeColor];
 	self.fadeView.alpha = 0.7f;
 }
 
@@ -92,33 +92,32 @@
 	self.ptsCmtsSub.text = [NSString stringWithFormat:@"%lu points, %lu comments in /r/%@", (unsigned long)self.link.score, self.link.totalComments, self.link.subreddit];
 	self.timeAuthor.text = [NSString stringWithFormat:@"timestamp, by %@", self.link.author];
 	
-	self.headerContentBackgroundView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.headerContentBackgroundView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
-	self.headerView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.headerView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
 	// TODO size this thing properly
 	// currently systemLayoutSizeFittingSize: keeps the height at 150 and just extends horizontally as far as it needs
+	UIView *headerView = self.headerView;
 	
-	self.headerView.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(self.headerView.bounds));
+	headerView.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(headerView.bounds));
+//	headerView.translatesAutoresizingMaskIntoConstraints = NO;
+//	NSDictionary *metrics = @{@"tableWidth":@(self.commentTableView.frame.size.width)};
+//	NSDictionary *views = NSDictionaryOfVariableBindings(headerView);
+//	[headerView addConstraints:
+//	 [NSLayoutConstraint constraintsWithVisualFormat:@"[headerView(tableWidth)]"
+//											 options:0
+//											 metrics:metrics
+//											   views:views]];
 	
-	[self.headerView setNeedsLayout];
-	[self.headerView layoutIfNeeded];
+	[headerView setNeedsLayout];
+	[headerView layoutIfNeeded];
 	
-	CGSize size = [self.headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	
-	CGRect headerFrame = self.headerView.frame;
+	CGSize size = [headerView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	CGRect headerFrame = headerView.frame;
 	headerFrame.size.height = size.height;
-	self.headerView.frame = headerFrame;
-	[self.commentTableView setTableHeaderView:self.headerView];
+	headerView.frame = headerFrame;
+	[self.commentTableView setTableHeaderView:headerView];
 }
 
 - (void) themeAppearance
 {
-	self.commentTableView.layer.borderWidth = 1.0/[[UIScreen mainScreen] scale];
-	self.commentTableView.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	
 	self.headerView.backgroundColor = [ThemeManager backgroundColor];
 	self.headerContentBackgroundView.backgroundColor = [ThemeManager contentBackgroundColor];
 	self.ptsCmtsSub.textColor = [ThemeManager secondaryTextColor];
@@ -206,9 +205,9 @@
 	return [self commentCellAtIndexPath:indexPath];
 }
 
-- (TGCommentCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
+- (TGCommentTableViewCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
 {
-	TGCommentCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentCell" forIndexPath:indexPath];
+	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
 	[self configureCommentCell:cell atIndexPath:indexPath];
 	
 	[cell setNeedsLayout];
@@ -218,9 +217,11 @@
 	return cell;
 }
 
-- (void)configureCommentCell:(TGCommentCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCommentCell:(TGCommentTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
 	TGComment *comment = self.comments[indexPath.row];
+	
+	cell.bodyLabel.delegate = self;	// re-set the delegate *before* setting attrText to prevent null delegate crash
 	NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
 	[cell.bodyLabel setAttributedText:attrBody];
 	
@@ -246,12 +247,12 @@
 	if ([self.collapsedComments containsObject:comment])
 	{
 		cell.backgroundColor = [ThemeManager backgroundColor];
-		cell.bodyLabel.numberOfLines = 1;
+//		cell.bodyLabel.numberOfLines = 1;
 	}
 	else
 	{
 		cell.backgroundColor = [ThemeManager contentBackgroundColor];
-		cell.bodyLabel.numberOfLines = 0;
+//		cell.bodyLabel.numberOfLines = 0;
 	}
 	
 }
@@ -274,10 +275,10 @@
 		return height; // if cached, return cached height
 	}
 	
-	static TGCommentCell *sizingCell = nil;
+	static TGCommentTableViewCell *sizingCell = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentCell"];
+		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell"];
 	});
  
 	[self configureCommentCell:sizingCell atIndexPath:indexPath];
@@ -288,14 +289,27 @@
 	return height;
 }
 
-- (CGFloat)calculateHeightForConfiguredCommentCell:(UITableViewCell *)sizingCell
+- (CGFloat)calculateHeightForConfiguredCommentCell:(TGCommentTableViewCell *)sizingCell
 {
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
+
+	// constrain contentView.width to same as table.width
+	// required for correct height calculation with UITextView
+	// http://stackoverflow.com/questions/27064070/
+	UIView *contentView = sizingCell.contentView;
+	contentView.translatesAutoresizingMaskIntoConstraints = NO;
+	NSDictionary *metrics = @{@"tableWidth":@(self.commentTableView.frame.size.width)};
+	NSDictionary *views = NSDictionaryOfVariableBindings(contentView);
+	[contentView addConstraints:
+	 [NSLayoutConstraint constraintsWithVisualFormat:@"[contentView(tableWidth)]"
+											 options:0
+											 metrics:metrics
+											   views:views]];
 	
 	[sizingCell setNeedsLayout];
 	[sizingCell layoutIfNeeded];
- 
 	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	
 	return size.height + 1.0f; // Add 1.0f for the cell separator height
 }
 
@@ -338,6 +352,14 @@
 //{
 //	return self.headerView;
 //}
+
+#pragma mark - UITextView
+- (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
+{
+	self.urlFromCommentTapped = URL;
+	[self performSegueWithIdentifier:@"commentLinkTapped" sender:self];
+	return NO;
+}
 
 #pragma mark - Navigation
 

@@ -81,5 +81,13 @@
 	return [self colorForKey:@"shadowColor"];
 }
 
++ (UIColor *) shadowBorderColor {
+	return [self colorForKey:@"shadowBorderColor"];
+}
+
++ (UIColor *) shadeColor {
+	return [self colorForKey:@"shadeColor"];
+}
+
 
 @end

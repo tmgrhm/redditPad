@@ -8,6 +8,7 @@
 * dark mode update UI
 * Onboarding experience (prompt login first time)
 * create reusable styled modal window controller w/ fade and shadow
+* intercept + open reddit.com & redd.it URLs
 
 ###Theming
 * NSNotification themeDidChange, force reload views
@@ -17,6 +18,7 @@
 * pull-to-refresh
 * Swipe controls on LinkCells
 * add sorting options
+* fix thumbnails causing one-line titles to display as two-line cells
 
 ##Comments View
 * Selftext body for selfposts
@@ -24,10 +26,13 @@
 * improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
+* remove trailing \n from comments?
 
 ##Web View
+* Increase Size
 * Title from current webpage title
 * Button to view comments for current page if Link web view
+* Try theme loading backgroundColor (prevent white flash when in dark theme)
 
 ##Subreddits
 * figure out how to get all user's subscribed subreddits
@@ -37,10 +42,12 @@
 * Posts
 * Subreddits
 * Users
+* Recent Search History
 
 ##User
 * Account view when logged in
 
 ##Login/Authentication
 * NSNotification didLogIn, update views
+* create some isLoggedIn variable (TGRedditClient?) and use to customise UI appropriately
 * Log Out

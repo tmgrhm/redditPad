@@ -189,15 +189,15 @@
 {
 	TGComment *comment = ((TGComment *)self.comments[indexPath.row]);
 	
-	cell.body.attributedText = [self attributedStringFromMarkdown:comment.body];
-	cell.body.delegate = self;
+//	cell.body.attributedText = [self attributedStringFromMarkdown:comment.body];
+//	cell.body.delegate = self;
 	//	if ([self.collapsedComments containsObject:comment])
 	//	{
 	//		cell.body.textContainer.maximumNumberOfLines = 1; //  TOOD reenable at some point
 	//	}
 	
-	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
-	cell.author.text = comment.author;
+//	cell.score.text = [NSString stringWithFormat:@"%lu points", (unsigned long) comment.score];
+//	cell.author.text = comment.author;
 	
 	cell.indentationLevel = comment.indentationLevel;
 	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);

@@ -33,5 +33,7 @@ static NSString * const darkTheme = @"darkTheme";
 
 + (UIColor *) separatorColor;
 + (UIColor *) shadowColor;
++ (UIColor *) shadowBorderColor;
++ (UIColor *) shadeColor;
 
 @end

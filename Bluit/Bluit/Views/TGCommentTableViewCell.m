@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     // Initialization code
 	
-//	self.body.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
+	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0); // TODO
 	self.originalLeftMargin = self.leftMargin.constant;
 }
 
