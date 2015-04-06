@@ -221,10 +221,10 @@
 - (void)configureCommentCell:(TGCommentTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
 	TGComment *comment = self.comments[indexPath.row];
-	NSLog(@"%@", cell.bodyLabel.text);
+	
+	cell.bodyLabel.delegate = self;	// re-set the delegate *before* setting attrText to prevent null delegate crash
 	NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
 	[cell.bodyLabel setAttributedText:attrBody];
-	cell.bodyLabel.delegate = self;
 	
 	[cell.authorLabel setText:comment.author];
 	if ([comment.author isEqualToString:self.link.author])
