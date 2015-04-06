@@ -24,6 +24,7 @@
 		E24514721AA6448500B80D2E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E24514701AA6448500B80D2E /* LaunchScreen.xib */; };
 		E245147E1AA6448500B80D2E /* redditPadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E245147D1AA6448500B80D2E /* redditPadTests.m */; };
 		E24514881AA64C1200B80D2E /* TGRedditClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514871AA64C1200B80D2E /* TGRedditClient.m */; };
+		E288CBA11AD2EABB0059855E /* NSDate+RelativeDateString.m in Sources */ = {isa = PBXBuildFile; fileRef = E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */; };
 		E28BB7ED1AAFA305005E47B8 /* TGLink.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EC1AAFA305005E47B8 /* TGLink.m */; };
 		E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */; };
 		E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */; };
@@ -85,6 +86,8 @@
 		E245147D1AA6448500B80D2E /* redditPadTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = redditPadTests.m; sourceTree = "<group>"; };
 		E24514871AA64C1200B80D2E /* TGRedditClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGRedditClient.m; path = API/TGRedditClient.m; sourceTree = "<group>"; };
 		E25C5E5D1AA6541100690896 /* TGRedditClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TGRedditClient.h; path = API/TGRedditClient.h; sourceTree = "<group>"; };
+		E288CB9F1AD2EABB0059855E /* NSDate+RelativeDateString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RelativeDateString.h"; sourceTree = "<group>"; };
+		E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RelativeDateString.m"; sourceTree = "<group>"; };
 		E28BB7EB1AAFA305005E47B8 /* TGLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLink.h; path = Model/TGLink.h; sourceTree = "<group>"; };
 		E28BB7EC1AAFA305005E47B8 /* TGLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLink.m; path = Model/TGLink.m; sourceTree = "<group>"; };
 		E28BB7EE1AAFB0B7005E47B8 /* TGListingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGListingTableViewCell.h; path = Views/TGListingTableViewCell.h; sourceTree = "<group>"; };
@@ -287,6 +290,8 @@
 				E2A512961AC4AC990007A842 /* ThemeManager.m */,
 				E2A5129A1AC4B6030007A842 /* UIColor+HexColors.h */,
 				E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */,
+				E288CB9F1AD2EABB0059855E /* NSDate+RelativeDateString.h */,
+				E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */,
+				E288CBA11AD2EABB0059855E /* NSDate+RelativeDateString.m in Sources */,
 				E2FBF7231AC5A7D00031C957 /* TGImageViewController.m in Sources */,
 				E245146A1AA6448500B80D2E /* TGSubredditListViewController.m in Sources */,
 				E2A5128E1AC354D50007A842 /* TGLinkPostCell.m in Sources */,

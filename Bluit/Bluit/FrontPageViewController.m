@@ -18,6 +18,8 @@
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
+#import "NSDate+RelativeDateString.h"
+
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -74,17 +76,9 @@
 
 #pragma mark - IBAction
 
-- (IBAction)refreshButtonPressed:(id)sender
-{
-	[self loadFrontPage];
-}
+
 
 #pragma mark - Loading Data
-
-- (void)loadFrontPage
-{
-	[self loadSubreddit:@"hot"];
-}
 
 - (void)loadSubreddit:(NSString *)subredditURL
 {
@@ -124,7 +118,7 @@
 - (void) reloadTableView
 {
 	[self.tableView beginUpdates];
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop]; // TODO get good animation
 	[self.tableView endUpdates];
 }
 
@@ -147,6 +141,7 @@
 	cell.title.text = link.title;
 	cell.score.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.score];
 	cell.subreddit.text = link.subreddit;
+	cell.timestamp.text = [link.creationDate relativeDateString];
 	cell.author.text = link.author;
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
 	cell.commentsButton.tag = indexPath.row; // TODO better way
@@ -195,38 +190,9 @@
 }
 
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	// Get the new view controller using [segue destinationViewController].
-	// Pass the selected object to the new view controller.
-	
-	if ([segue.identifier isEqualToString:@"listingToWebView"])
-	{
-		TGWebViewController *webVC = segue.destinationViewController;
-		webVC.link = self.selectedLink;
-	}
-	else if ([segue.identifier isEqualToString:@"listingToImageView"])
-	{
-		TGImageViewController *imageVC = segue.destinationViewController;
-		imageVC.imageURL = self.selectedLink.url;
-	}
-	else if ([segue.identifier isEqualToString:@"listingToLinkView"])
-	{
-		TGLinkViewController *linkVC = segue.destinationViewController;
-		
-		NSInteger indexPathRow = 0;
-		if ([sender isKindOfClass:[UIButton class]])
-		{
-			UIButton *commentsButton = (UIButton *)sender;
-			indexPathRow = commentsButton.tag;
-			// TODO change how the row is identified
-			// http://stackoverflow.com/questions/23784630/
-		}
-		linkVC.link = self.listings[indexPathRow];
-	}
-	else if ([segue.identifier isEqualToString:@"listingToPostView"])
+	if ([segue.identifier isEqualToString:@"listingToPostView"])
 	{
 		TGPostViewController *linkVC = segue.destinationViewController;
 		
@@ -239,6 +205,16 @@
 			// http://stackoverflow.com/questions/23784630/
 		}
 		linkVC.link = self.listings[indexPathRow];
+	}
+	else if ([segue.identifier isEqualToString:@"listingToWebView"])
+	{
+		TGWebViewController *webVC = segue.destinationViewController;
+		webVC.link = self.selectedLink;
+	}
+	else if ([segue.identifier isEqualToString:@"listingToImageView"])
+	{
+		TGImageViewController *imageVC = segue.destinationViewController;
+		imageVC.imageURL = self.selectedLink.url;
 	}
 
 }

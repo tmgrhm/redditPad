@@ -7,6 +7,7 @@
 //
 
 #import "TGWebViewController.h"
+#import "TGPostViewController.h"
 
 #import "ThemeManager.h"
 
@@ -17,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *commentsButton;
 
 @end
 
@@ -34,13 +36,14 @@
 	// TODO fix webView being wrong-size for sites like imgur and youtube
 	
 //	self.titleLabel.text = self.link.title; // TODO make dynamic per webview
-	
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Setup & Customisation
 
 - (void)createShadow
 {
@@ -62,6 +65,20 @@
 - (void) themeAppearance
 {
 	// empty
+}
+
+#pragma mark - IBActions
+
+- (IBAction)closePressed:(id)sender
+{	// TODO
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)commentsPressed:(id)sender
+{
+	if (self.link) // TODO handle by removing comments button
+	{
+		[self performSegueWithIdentifier:@"webViewToPostView" sender:self];
+	}
 }
 
 - (IBAction)sharePressed:(id)sender
@@ -86,16 +103,15 @@
 }
 
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+	
+	if ([segue.identifier isEqualToString:@"webViewToPostView"])
+	{
+		TGPostViewController *postVC = [segue destinationViewController];
+		postVC.link = self.link;
+	}
 }
 
-- (IBAction)closePressed:(id)sender
-{	// TODO
-	[self dismissViewControllerAnimated:YES completion:nil];
-}
+
 
 @end

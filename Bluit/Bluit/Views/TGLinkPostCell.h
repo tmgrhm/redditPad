@@ -10,8 +10,11 @@
 
 @interface TGLinkPostCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIButton *title;
-@property (weak, nonatomic) IBOutlet UILabel *ptsCmtsSub;
-@property (weak, nonatomic) IBOutlet UILabel *timeAuthor;
+@property (weak, nonatomic) IBOutlet UITextView *title;
+@property (weak, nonatomic) IBOutlet UITextView *content;
+@property (weak, nonatomic) IBOutlet UILabel *metadata;
+@property (weak, nonatomic) IBOutlet UILabel *numComments;
+
+@property (weak, nonatomic) IBOutlet UIView *separator;
 
 @end

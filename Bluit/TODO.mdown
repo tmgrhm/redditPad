@@ -4,11 +4,15 @@
 * App Icon
 
 ##General
-* session persistence
-* dark mode update UI
-* Onboarding experience (prompt login first time)
-* create reusable styled modal window controller w/ fade and shadow
+* switching themes updates instantly (NSNotification?)
 * intercept + open reddit.com & redd.it URLs
+* empty states
+* loading states
+* create reusable styled modal window controller w/ fade and shadow
+* prevent UITextView picking up "filepaths" (e.g. "e.g") as links
+* timezone localization for NSDate+RelativeDateString
+* Onboarding experience (prompt login first time)
+* session persistence (remembering where a user was after cold launch)
 
 ###Theming
 * NSNotification themeDidChange, force reload views
@@ -16,22 +20,26 @@
 ##Listings
 * paging
 * pull-to-refresh
+* custom refreshControl (http://ios-blog.co.uk/tutorials/how-to-add-a-custom-pull-to-refresh-in-your-ios-application/)
 * Swipe controls on LinkCells
 * add sorting options
-* fix thumbnails causing one-line titles to display as two-line cells
+
+* --fix thumbnails causing one-line titles to display as two-line cells--
 
 ##Comments View
-* Selftext body for selfposts
-* UITextView for comments
 * improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
-* remove trailing \n from comments?
+* design for selfpost where body is empty
+
+* --Selftext body for selfposts--
+* --UITextView for comments--
+* --remove trailing \n from comments--
 
 ##Web View
 * Increase Size
 * Title from current webpage title
-* Button to view comments for current page if Link web view
+* Button to view comments for current page *if Link web view*
 * Try theme loading backgroundColor (prevent white flash when in dark theme)
 
 ##Subreddits
@@ -43,11 +51,20 @@
 * Subreddits
 * Users
 * Recent Search History
+	* swipe to delete
 
 ##User
 * Account view when logged in
 
+##Inbox
+* messages
+
 ##Login/Authentication
+* refresh access token
+* Log Out
 * NSNotification didLogIn, update views
 * create some isLoggedIn variable (TGRedditClient?) and use to customise UI appropriately
-* Log Out
+
+##Design Implementation
+* Comments left-bars
+* Navigational restructure
