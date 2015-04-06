@@ -16,6 +16,8 @@
 #import "TGComment.h"
 #import "TGCommentTableViewCell.h"
 
+#import "NSDate+RelativeDateString.h"
+
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
@@ -235,7 +237,7 @@
 	}
 	
 	[cell.pointsLabel setText:[NSString stringWithFormat:@"%lu points", comment.score]];
-	[cell.timestampLabel setText:[NSString stringWithFormat:@"%lu", comment.indentationLevel]]; // TODO update
+	[cell.timestampLabel setText:[NSString stringWithFormat:@"%@", [comment.creationDate relativeDateString]]];
 	
 	cell.indentationLevel = comment.indentationLevel;
 	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);

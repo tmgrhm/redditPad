@@ -26,12 +26,12 @@
 	NSDictionary *data = dict[@"data"];
 	
 	_id = data[@"id"];
-	[self setBody: data[@"body"]];
+	_body = data[@"body"];
 	_bodyHTML = data[@"body_html"];
 	_score = [data[@"score"] integerValue]; // TODO deal with negative values
 	_scoreHidden = data[@"score_hidden"];
 	_author = data[@"author"];
-	//	_creationDate = [NSDate ]; TODO
+	_creationDate = [NSDate dateWithTimeIntervalSince1970:[data[@"created_utc"] integerValue]];
 	_edited = data[@"edited"];
 	//	_editDate;
 	_saved = data[@"saved"];
@@ -58,17 +58,6 @@
 	}
 
 	return self;
-}
-
-- (void) setBody:(NSString *)body
-{
-	NSString *newBody = body;
-	while ([newBody hasSuffix:@"\n"])
-		newBody = [newBody substringToIndex:newBody.length-1];
-	
-	newBody = [newBody stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
-	
-	_body = newBody;
 }
 
 - (NSUInteger) numReplies

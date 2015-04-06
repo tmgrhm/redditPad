@@ -34,10 +34,10 @@
 	_url = [NSURL URLWithString:data[@"url"]];
 	_selfText = data[@"selftext"];
 	_selfTextHTML = data[@"body_html"];
-//	_creationDate = [NSDate ]; TODO
+	_creationDate = [NSDate dateWithTimeIntervalSince1970:[data[@"created_utc"] integerValue]];
 	_edited = data[@"edited"];
 //	_editDate;
-	_selfpost = [_domain containsString:[NSString stringWithFormat:@"self.%@", _subreddit]]; // TODO make safer?
+	_selfpost = [_domain containsString:[NSString stringWithFormat:@"self.%@", _subreddit]]; // TODO make safer
 	_saved = data[@"saved"];
 	_nsfw = data[@"over_18"];
 	_sticky = data[@"stickied"];
