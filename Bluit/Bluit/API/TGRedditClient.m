@@ -66,29 +66,38 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void) requestFrontPageWithCompletionBlock:(TGListingCompletionBlock)completion
 {
-    [self request:@"hot" withCompletionBlock:completion];
+    [self requestSubreddit:@"hot" withCompletion:completion];
 }
 
 - (void) requestSubreddit:(NSString *)subredditURL withCompletion:(TGListingCompletionBlock)completion
 {
-	[self request:subredditURL withCompletionBlock:completion];
+	[self requestSubreddit:subredditURL after:nil withCompletion:completion];
+}
+
+- (void) requestSubreddit:(NSString *)subredditURL after:(TGLink *)link withCompletion:(TGListingCompletionBlock)completion
+{
+	NSString *path = [subredditURL stringByAppendingString:@".json"];
+	if (link)
+	{
+		path = [NSString stringWithFormat:@"%@?after=t3_%@", path, link.id]; // TODO better than "?after="
+	}
+	[self request:path withCompletionBlock:completion];
 }
 
 - (void) request:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)completion	// TODO improve
 {
-    NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", BaseURLString, path, @".json"]];
+	NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", BaseURLString, path]];
 	
-	NSLog(@"Client requesting: %@", [NSString stringWithFormat:@"%@%@%@", BaseURLString, path, @".json"]);
+	NSLog(@"Client requesting: %@", [NSString stringWithFormat:@"%@%@", BaseURLString, path]);
     
 	NSURLRequest *request = [NSURLRequest requestWithURL:URL];
 	
 	AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
 	operation.responseSerializer = [AFJSONResponseSerializer serializer];
 	
-	[operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//		NSLog(@"%@", responseObject);
+	[operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+	{
 		NSDictionary *responseDict = (NSDictionary *)responseObject;
-		
 		NSMutableArray *listing = [NSMutableArray new];
 		
 		for (id item in responseDict[@"data"][@"children"])

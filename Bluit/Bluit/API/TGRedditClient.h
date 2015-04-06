@@ -18,12 +18,18 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 - (void) requestFrontPageWithCompletionBlock:(TGListingCompletionBlock)block;
 - (void) requestSubreddit:(NSString *)subredditURL withCompletion:(TGListingCompletionBlock)completion;
-- (void) request:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)block;
+- (void) requestSubreddit:(NSString *)subredditURL after:(TGLink *)link withCompletion:(TGListingCompletionBlock)completion;
+
+- (void) request:(NSString *)request withCompletionBlock:(TGListingCompletionBlock)block;
+
 - (void) loginWithUsername:(NSString *)username password:(NSString *)password withCompletion:(void (^)(void))completion;
 - (NSURL *) oAuthLoginURL;
 - (void) loginWithOAuthResponse:(NSURL *)url;
+
 - (void) setSerializerHTTPHeaders:(NSString *)modhash and:(NSString *)sessionIdentifier;
+
 - (void) retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion;
+
 - (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion;
 
 
