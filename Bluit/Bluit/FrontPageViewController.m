@@ -23,6 +23,8 @@
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
+
 @property (strong, nonatomic) NSArray *listings;
 @property (strong, nonatomic) TGLink *selectedLink;
 
@@ -38,6 +40,15 @@
 	
 	self.tableView.estimatedRowHeight = 80.0;
 	self.tableView.rowHeight = UITableViewAutomaticDimension;
+	
+	// TODO custom refreshControl
+	self.refreshControl = [UIRefreshControl new];
+	self.refreshControl.backgroundColor = [ThemeManager backgroundColor];
+	self.refreshControl.tintColor = [ThemeManager secondaryTextColor]; // TODO get better colour
+	[self.refreshControl addTarget:self
+					   action:@selector(refreshData)
+			 forControlEvents:UIControlEventValueChanged];
+	[self.tableView addSubview:self.refreshControl];
 	
 	[self loadSubreddit:self.subreddit];
 }
@@ -78,18 +89,36 @@
 - (void)loadSubreddit:(NSString *)subredditURL
 {
 	NSLog(@"fpVC.subreddit: %@", self.subreddit);
-	
-	self.title = subredditURL;
-	
 	if ([subredditURL length] == 0)	subredditURL = @"hot";
+	
+	self.subreddit = subredditURL;
+	self.title = subredditURL;
 	if ([subredditURL isEqualToString:@"hot"])	self.title = @"Front Page";
 	
-	[[TGRedditClient sharedClient] requestSubreddit:subredditURL withCompletion:^(NSArray *collection, NSError *error) {
-		self.listings = collection;
-		[self reloadTableView];
+	[self loadSubreddit:subredditURL after:nil];
+}
+
+- (void) loadSubreddit:(NSString *)subredditURL after:(TGLink *)link
+{
+	__weak __typeof(self)weakSelf = self;
+	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:link withCompletion:^(NSArray *collection, NSError *error)
+	{
+		[weakSelf.refreshControl endRefreshing];
+		if (weakSelf.listings)	weakSelf.listings = [weakSelf.listings arrayByAddingObjectsFromArray:collection];
+		else weakSelf.listings = collection;
+		[weakSelf reloadTableView];
 	}];
 }
 
+- (void) loadMore
+{
+	[self loadSubreddit:self.subreddit after:self.listings.lastObject];
+}
+
+- (void)refreshData
+{
+	[self loadSubreddit:self.subreddit];
+}
 
 #pragma mark - TableView
 - (void) reloadTableView
@@ -140,6 +169,9 @@
 	cell.author.textColor = [ThemeManager secondaryTextColor];
 	cell.domain.textColor = [ThemeManager secondaryTextColor];
 	cell.totalComments.textColor = [ThemeManager tintColor];
+	
+	if (indexPath.row == self.listings.count-3)
+		[self loadMore];
 	
 	return cell;
 }
