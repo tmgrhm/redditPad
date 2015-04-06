@@ -4,18 +4,18 @@
 <dict>
 	<key>themeName</key>
 	<string>lightTheme</string>
-	<key>statusBarStyle</key>
-	<string>darkStyle</string>
+	<key>darkOrLight</key>
+	<string>light</string>
 	<key>backgroundColor</key>
 	<string>E9EAF0</string>
-	<key>lightBackgroundColor</key>
-	<string>F5F6F8</string>
+	<key>contentBackgroundColor</key>
+	<string>FFFFFF</string>
 	<key>textColor</key>
 	<string>323639</string>
 	<key>secondaryTextColor</key>
 	<string>8A9399</string>
-	<key>contentBackgroundColor</key>
-	<string>FFFFFF</string>
+	<key>smallcapsHeaderColor</key>
+	<string>597080</string>
 	<key>tintColor</key>
 	<string>037AFF</string>
 	<key>separatorColor</key>

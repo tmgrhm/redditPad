@@ -65,6 +65,7 @@
 //	[[UIScrollView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
 	[[UIWebView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
 	
+	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
 	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
 	[[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName:[ThemeManager textColor]}];

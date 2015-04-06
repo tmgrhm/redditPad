@@ -19,15 +19,20 @@ static NSString * const darkTheme = @"darkTheme";
 
 + (ThemeManager *)sharedManager;
 
++ (NSString *) stringForKey:(NSString *)key;
 + (UIColor *) colorForKey:(NSString *)key;
 
++ (NSString *) darkOrLight;
+
 + (UIStatusBarStyle) statusBarStyle;
++ (UIBarStyle) uiBarStyle;
 
 + (UIColor *) backgroundColor;
++ (UIColor *) contentBackgroundColor;
 
 + (UIColor *) textColor;
 + (UIColor *) secondaryTextColor;
-+ (UIColor *) contentBackgroundColor;
++ (UIColor *) smallcapsHeaderColor;
 
 + (UIColor *) tintColor;
 

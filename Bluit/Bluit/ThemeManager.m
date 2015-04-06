@@ -38,23 +38,42 @@
 	return self;
 }
 
-+ (UIStatusBarStyle) statusBarStyle // TODO returntype
+#pragma mark - Utility
++ (NSString *) stringForKey:(NSString *)key
 {
-	NSString *themeName = [self sharedManager].theme[@"themeName"];
-	
-	return [themeName isEqualToString:darkTheme] ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+	NSDictionary *theme = [self sharedManager].theme;
+	return [theme objectForKey:key];
 }
 
 + (UIColor *) colorForKey:(NSString *)key
 {
-	NSDictionary *theme = [self sharedManager].theme;
-	NSString *hexString = [theme objectForKey:key];
-	UIColor *color = [UIColor colorWithHexString:hexString];
+	UIColor *color = [UIColor colorWithHexString:[self stringForKey:key]];
 	return color;
+}
+
+#pragma mark - Data Accessors
+
++ (NSString *) darkOrLight
+{
+	return [self stringForKey:@"darkOrLight"];
+}
+
++ (UIStatusBarStyle) statusBarStyle // TODO enum
+{
+	return [[self darkOrLight] isEqualToString:@"dark"] ? UIStatusBarStyleLightContent : UIStatusBarStyleDefault;
+}
+
++ (UIBarStyle) uiBarStyle // TODO enum
+{
+	return [[self darkOrLight] isEqualToString:@"dark"] ? UIBarStyleBlack : UIBarStyleDefault;
 }
 
 + (UIColor *) backgroundColor {
 	return [self colorForKey:@"backgroundColor"];
+}
+
++ (UIColor *) contentBackgroundColor {
+	return [self colorForKey:@"contentBackgroundColor"];
 }
 
 + (UIColor *) textColor {
@@ -65,8 +84,8 @@
 	return [self colorForKey:@"secondaryTextColor"];
 }
 
-+ (UIColor *) contentBackgroundColor {
-	return [self colorForKey:@"contentBackgroundColor"];
++ (UIColor *) smallcapsHeaderColor {
+	return [self colorForKey:@"smallcapsHeaderColor"];
 }
 
 + (UIColor *) tintColor {
