@@ -25,6 +25,9 @@
 		E245147E1AA6448500B80D2E /* redditPadTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E245147D1AA6448500B80D2E /* redditPadTests.m */; };
 		E24514881AA64C1200B80D2E /* TGRedditClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514871AA64C1200B80D2E /* TGRedditClient.m */; };
 		E288CBA11AD2EABB0059855E /* NSDate+RelativeDateString.m in Sources */ = {isa = PBXBuildFile; fileRef = E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */; };
+		E288CBD61AD50C070059855E /* TGVotable.m in Sources */ = {isa = PBXBuildFile; fileRef = E288CBD51AD50C070059855E /* TGVotable.m */; };
+		E288CBD91AD50CF30059855E /* TGThing.m in Sources */ = {isa = PBXBuildFile; fileRef = E288CBD81AD50CF30059855E /* TGThing.m */; };
+		E288CBDC1AD50D110059855E /* TGCreated.m in Sources */ = {isa = PBXBuildFile; fileRef = E288CBDB1AD50D110059855E /* TGCreated.m */; };
 		E28BB7ED1AAFA305005E47B8 /* TGLink.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EC1AAFA305005E47B8 /* TGLink.m */; };
 		E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */; };
 		E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */; };
@@ -88,6 +91,12 @@
 		E25C5E5D1AA6541100690896 /* TGRedditClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TGRedditClient.h; path = API/TGRedditClient.h; sourceTree = "<group>"; };
 		E288CB9F1AD2EABB0059855E /* NSDate+RelativeDateString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RelativeDateString.h"; sourceTree = "<group>"; };
 		E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RelativeDateString.m"; sourceTree = "<group>"; };
+		E288CBD41AD50C070059855E /* TGVotable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGVotable.h; path = Model/TGVotable.h; sourceTree = "<group>"; };
+		E288CBD51AD50C070059855E /* TGVotable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGVotable.m; path = Model/TGVotable.m; sourceTree = "<group>"; };
+		E288CBD71AD50CF30059855E /* TGThing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGThing.h; path = Model/TGThing.h; sourceTree = "<group>"; };
+		E288CBD81AD50CF30059855E /* TGThing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGThing.m; path = Model/TGThing.m; sourceTree = "<group>"; };
+		E288CBDA1AD50D110059855E /* TGCreated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCreated.h; path = Model/TGCreated.h; sourceTree = "<group>"; };
+		E288CBDB1AD50D110059855E /* TGCreated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCreated.m; path = Model/TGCreated.m; sourceTree = "<group>"; };
 		E28BB7EB1AAFA305005E47B8 /* TGLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLink.h; path = Model/TGLink.h; sourceTree = "<group>"; };
 		E28BB7EC1AAFA305005E47B8 /* TGLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLink.m; path = Model/TGLink.m; sourceTree = "<group>"; };
 		E28BB7EE1AAFB0B7005E47B8 /* TGListingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGListingTableViewCell.h; path = Views/TGListingTableViewCell.h; sourceTree = "<group>"; };
@@ -230,6 +239,12 @@
 				E28BB7EC1AAFA305005E47B8 /* TGLink.m */,
 				E210FEA51AB2DBA50000E739 /* TGComment.h */,
 				E210FEA61AB2DBA50000E739 /* TGComment.m */,
+				E288CBD41AD50C070059855E /* TGVotable.h */,
+				E288CBD51AD50C070059855E /* TGVotable.m */,
+				E288CBD71AD50CF30059855E /* TGThing.h */,
+				E288CBD81AD50CF30059855E /* TGThing.m */,
+				E288CBDA1AD50D110059855E /* TGCreated.h */,
+				E288CBDB1AD50D110059855E /* TGCreated.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -445,9 +460,12 @@
 				E210FEAA1AB2DEF40000E739 /* TGLinkViewController.m in Sources */,
 				E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */,
 				E2A512971AC4AC990007A842 /* ThemeManager.m in Sources */,
+				E288CBD91AD50CF30059855E /* TGThing.m in Sources */,
 				E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */,
+				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
 				E20F193D1AB77BC900210A58 /* TGSelfpostView.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,
+				E288CBDC1AD50D110059855E /* TGCreated.m in Sources */,
 				E28BB7ED1AAFA305005E47B8 /* TGLink.m in Sources */,
 				E210FEB01AB49AD10000E739 /* TGSelfPostHeaderViewController.m in Sources */,
 				E24514881AA64C1200B80D2E /* TGRedditClient.m in Sources */,

@@ -103,7 +103,7 @@
 - (void) reloadCommentTableViewData
 {
 	[self.commentTableView beginUpdates];
-	[self.commentTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+	[self.commentTableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
 	[self.commentTableView endUpdates];
 }
 
@@ -156,7 +156,8 @@
 	cell.title.attributedText = mutAttrTitle;
 	cell.title.selectable = NO;
 	
-	cell.metadata.text = [NSString stringWithFormat:@"%lu points in /r/%@ %@, by %@", (unsigned long)self.link.score, self.link.subreddit, [self.link.creationDate relativeDateString], self.link.author];
+	NSString *edited = [self.link isEdited] ? [NSString stringWithFormat:@" (edited %@)", [self.link.editDate relativeDateString]] : @""; // TODO better edit indicator
+	cell.metadata.text = [NSString stringWithFormat:@"%ld points in /r/%@ %@%@, by %@", (long)self.link.score, self.link.subreddit, [self.link.creationDate relativeDateString], edited, self.link.author];
 	cell.metadata.textColor = [ThemeManager secondaryTextColor];
 	
 	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
@@ -200,8 +201,10 @@
 		cell.authorLabel.textColor = [ThemeManager textColor];
 	}
 	
-	[cell.pointsLabel setText:[NSString stringWithFormat:@"%lu points", comment.score]];
-	[cell.timestampLabel setText:[NSString stringWithFormat:@"%@", [comment.creationDate relativeDateString]]];
+	[cell.pointsLabel setText:[NSString stringWithFormat:@"%ld points", (long)comment.score]];
+	
+	NSString *edited = [comment isEdited] ? [NSString stringWithFormat:@" (edited %@)", [comment.editDate relativeDateString]] : @""; // TODO better edit indicator
+	[cell.timestampLabel setText:[NSString stringWithFormat:@"%@%@", [comment.creationDate relativeDateString], edited]];
 	
 	cell.indentationLevel = comment.indentationLevel;
 	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
@@ -267,11 +270,7 @@
 {
 	TGComment *comment = self.comments[indexPath.row];
 	CGFloat height;
-	if ([self.collapsedComments containsObject:comment])
-	{
-		return 80.0f; // TODO probably wanna create a NSMutableDictionary *collapsedCommentHeights; — doesn't work for comments which begin with, e.g., a header
-	}
-	else if ((height = [[self.commentHeights objectForKey:comment.id] floatValue]))
+	if ((height = [[self.commentHeights objectForKey:comment.id] floatValue]))
 	{
 		return height; // if cached, return cached height
 	}
@@ -330,7 +329,7 @@
 	}
 }
 
-- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath
+- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath	// TODO look at using beginUpdates endUpdates instead of reloadData so only the relevant comments animate
 {
 	TGComment *comment = self.comments[indexPath.row];
 	NSMutableArray *newComments = [self.comments mutableCopy];

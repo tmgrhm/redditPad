@@ -153,7 +153,7 @@
 	TGLink *link = ((TGLink *)self.listings[indexPath.row]);
 	
 	cell.title.text = link.title;
-	cell.score.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.score];
+	cell.score.text = [NSString stringWithFormat:@"%ld", (long)link.score];
 	cell.subreddit.text = link.subreddit;
 	cell.timestamp.text = [link.creationDate relativeDateString];
 	cell.author.text = link.author;
