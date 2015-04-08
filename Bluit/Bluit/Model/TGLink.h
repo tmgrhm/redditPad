@@ -6,20 +6,17 @@
 //  Copyright (c) 2015 Tom Graham. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "TGVotable.h"
 
-@interface TGLink : NSObject
+@interface TGLink : TGVotable
 
 // TODO flair
 // TODO gilded
 // TODO reported
 // TODO vote ratio
 // TODO archived
-// TODO voteStatus
 
-@property (nonatomic, copy, readonly) NSString *id;
 @property (nonatomic, copy, readonly) NSString *title;
-@property (nonatomic, assign, readonly) NSUInteger score;
 @property (nonatomic, assign, readonly) NSUInteger totalComments;
 @property (nonatomic, copy, readonly) NSString *subreddit;
 @property (nonatomic, copy, readonly) NSString *domain;
@@ -28,7 +25,6 @@
 @property (nonatomic, copy, readonly) NSString *selfText;
 @property (nonatomic, copy, readonly) NSString *selfTextHTML;
 @property (nonatomic, copy, readonly) NSURL *thumbnailURL;
-@property (nonatomic, copy, readonly) NSDate *creationDate;
 @property (nonatomic, assign, readonly, getter=isEdited) BOOL edited;
 @property (nonatomic, copy, readonly) NSDate *editDate;
 @property (nonatomic, assign, readonly, getter=isSelfpost) BOOL selfpost;
