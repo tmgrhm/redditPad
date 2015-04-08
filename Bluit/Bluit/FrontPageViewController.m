@@ -27,7 +27,7 @@
 
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 
-@property (strong, nonatomic) NSArray *listings;
+@property (strong, nonatomic) NSMutableArray *listings;
 @property (strong, nonatomic) TGLink *selectedLink;
 
 @end
@@ -38,6 +38,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+	self.listings = [NSMutableArray new];
+	
 	[self themeAppearance];
 	
 	self.tableView.estimatedRowHeight = 80.0;
@@ -58,7 +60,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	[self reloadTableView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,7 +77,10 @@
 
 #pragma mark - IBAction
 
-
+- (void)refreshData	// pull-to-refresh
+{
+	[self loadSubreddit:self.subreddit];
+}
 
 #pragma mark - Loading Data
 
@@ -97,10 +101,25 @@
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:link withCompletion:^(NSArray *collection, NSError *error)
 	{
-		[weakSelf.refreshControl endRefreshing];
-		if (weakSelf.listings)	weakSelf.listings = [weakSelf.listings arrayByAddingObjectsFromArray:collection];
-		else weakSelf.listings = collection;
-		[weakSelf reloadTableView];
+		if (weakSelf.refreshControl.refreshing)		// if refreshing, end refresh and replace existing listings
+		{
+			[weakSelf.refreshControl endRefreshing];
+			weakSelf.listings = [collection mutableCopy];
+			[weakSelf reloadTableView];
+		}
+		else										// else insert the new listings
+		{
+			NSMutableArray *indexPaths = [NSMutableArray array];
+			NSInteger currentCount = weakSelf.listings.count;
+			for (int i = 0; i < collection.count; i++) {
+				[indexPaths addObject:[NSIndexPath indexPathForRow:currentCount+i inSection:0]];
+			}
+			
+			[weakSelf.tableView beginUpdates];
+			[weakSelf.listings addObjectsFromArray:collection];
+			[weakSelf.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+			[weakSelf.tableView endUpdates];
+		}
 	}];
 }
 
@@ -109,16 +128,11 @@
 	[self loadSubreddit:self.subreddit after:self.listings.lastObject];
 }
 
-- (void)refreshData
-{
-	[self loadSubreddit:self.subreddit];
-}
-
 #pragma mark - TableView
 - (void) reloadTableView
 {
 	[self.tableView beginUpdates];
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationTop]; // TODO get good animation
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic]; // TODO get good animation
 	[self.tableView endUpdates];
 }
 
@@ -165,7 +179,7 @@
 	cell.domain.textColor = [ThemeManager secondaryTextColor];
 	cell.totalComments.textColor = [ThemeManager tintColor];
 	
-	if (indexPath.row == self.listings.count-3)
+	if (indexPath.row == self.listings.count-10)
 		[self loadMore];
 	
 	return cell;
