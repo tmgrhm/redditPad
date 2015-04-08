@@ -191,15 +191,18 @@
    [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 	
 	self.selectedLink = self.listings[indexPath.row];
-	// Perform segue
 	
 /*	NSString *lastPathComponent = self.selectedLink.url.pathComponents.lastObject;
 	
 	if ([lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"] || [lastPathComponent hasSuffix:@".gif"])
 	{
 		[self performSegueWithIdentifier:@"listingToImageView" sender:self]; // TODO better imageView
+	} else */
+	if ([self.selectedLink isSelfpost])
+	{
+		[self performSegueWithIdentifier:@"listingToPostView" sender:self];
 	}
-	else */
+	else
 		[self performSegueWithIdentifier:@"listingToWebView" sender:self];
 }
 
