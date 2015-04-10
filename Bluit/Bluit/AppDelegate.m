@@ -11,7 +11,10 @@
 #import "ThemeManager.h"
 #import "TGRedditClient.h"
 
-@interface AppDelegate ()
+#import "FrontPageViewController.h"
+#import "TGSubredditListViewController.h"
+
+@interface AppDelegate () <UISplitViewControllerDelegate>
 
 @end
 
@@ -22,6 +25,15 @@
     // Override point for customization after application launch.
 	
 	[self themeAppearance];
+	
+	UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+	UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
+	navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+	splitViewController.delegate = self;
+	
+	FrontPageViewController *listingVC = (FrontPageViewController *) [[splitViewController.viewControllers lastObject] topViewController];
+	TGSubredditListViewController *subredditVC = (TGSubredditListViewController *) [[splitViewController.viewControllers objectAtIndex:0] topViewController];
+	subredditVC.delegate = listingVC;
 	
     return YES;
 }
@@ -68,7 +80,9 @@
 	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
 	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
-	[[UINavigationBar appearance] setTitleTextAttributes: @{NSForegroundColorAttributeName:[ThemeManager textColor]}];
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:		[ThemeManager textColor],
+								 NSFontAttributeName:				[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
+	[[UINavigationBar appearance] setTitleTextAttributes:attributes];
 	[[UIToolbar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UIToolbar appearance] setTintColor:[ThemeManager tintColor]];
 	[[UITabBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];

@@ -16,7 +16,7 @@
 @interface TGSubredditListViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) NSArray *subreddits;
-@property (strong, nonatomic) NSString *selectedRow;
+@property (strong, nonatomic) NSString *selectedSubreddit;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -78,18 +78,13 @@
 {
 	// When user selects a row
    [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
-	
 //	self.selectedSubreddit = self.subreddits[indexPath.row];
-	// Perform segue
 	
-	self.selectedRow = self.subreddits[indexPath.row][@"data"][@"url"];
+	self.selectedSubreddit = self.subreddits[indexPath.row][@"data"][@"url"];
+	[self.delegate didSelectSubreddit:self.selectedSubreddit];
+	
 	NSLog(@"Selected %@", self.subreddits[indexPath.row][@"data"][@"url"]);
-	[self performSegueWithIdentifier:@"subredditListToListing" sender:self];
-	
-//	[self performSegueWithIdentifier:@"listingToWebView" sender:self];
-//	[tableView selectRowAtIndexPath:nil
-//						   animated:NO
-//					 scrollPosition:UITableViewScrollPositionNone];	// TODO better way?
+//	[self performSegueWithIdentifier:@"subredditListToListing" sender:self];
 }
 
 #pragma mark - Navigation
@@ -102,9 +97,9 @@
 	
 	if ([segue.identifier isEqualToString:@"subredditListToListing"])
 	{
-		NSLog(@"SubredditListVC requesting fpVC for: %@", self.selectedRow);
+		NSLog(@"SubredditListVC requesting fpVC for: %@", self.selectedSubreddit);
 		FrontPageViewController *fpVC = segue.destinationViewController;
-		fpVC.subreddit = self.selectedRow;
+		fpVC.subreddit = self.selectedSubreddit;
 //		webVC.link = self.selectedLink;
 	}
 }

@@ -10,7 +10,6 @@
 
 #import "TGListingTableViewCell.h"
 #import "TGWebViewController.h"
-#import "TGLinkViewController.h"
 #import "TGPostViewController.h"
 #import "TGImageViewController.h"
 

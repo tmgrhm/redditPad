@@ -11,19 +11,25 @@
 * create reusable styled modal window controller w/ fade and shadow
 * prevent UITextView picking up "filepaths" (e.g. "e.g") as links
 * timezone localization for NSDate+RelativeDateString
+* handle HTTP errors (esp 503 unavailable)
 * Onboarding experience (prompt login first time)
 * session persistence (remembering where a user was after cold launch)
 
 ###Theming
 * NSNotification themeDidChange, force reload views
 
+##Things
+* archived
+* voteStatus
+* lots more
+
 ##Listings
-* paging
-* pull-to-refresh
 * custom refreshControl (http://ios-blog.co.uk/tutorials/how-to-add-a-custom-pull-to-refresh-in-your-ios-application/)
 * Swipe controls on LinkCells
 * add sorting options
 
+* --paging--
+* --pull-to-refresh--
 * --fix thumbnails causing one-line titles to display as two-line cells--
 
 ##Comments View
@@ -32,6 +38,7 @@
 * add sorting options
 * design for selfpost where body is empty
 
+* --negative scores--
 * --Selftext body for selfposts--
 * --UITextView for comments--
 * --remove trailing \n from comments--

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TGSubredditListViewController.h"
 
-@interface FrontPageViewController : UIViewController
+@interface FrontPageViewController : UIViewController <SubredditDelegate>
 
 @property (strong, nonatomic) NSString *subreddit;
 

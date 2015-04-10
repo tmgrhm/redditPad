@@ -11,14 +11,12 @@
 
 #import "ThemeManager.h"
 
-@interface TGWebViewController () <UIWebViewDelegate>
+@interface TGWebViewController () <UIWebViewDelegate, UIGestureRecognizerDelegate, UINavigationBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UIView *fadeView;
-@property (weak, nonatomic) IBOutlet UIView *shadowView;
+@property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *commentsButton;
 
 @end
 
@@ -26,10 +24,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self.webView setDelegate:self];
 	
-	[self createShadow];
+	[self configureContentInsets];
 	[self themeAppearance];
+	[self configureGestureRecognizer];
+
 	
 	if (!self.url) self.url = self.link.url;
 	[self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
@@ -45,26 +44,31 @@
 
 #pragma mark - Setup & Customisation
 
-- (void)createShadow
+- (void) configureContentInsets
 {
-	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
-	containerCALayer.borderWidth = 0.6f;
-	// TODO get a performant shadow
-	CGRect bounds = self.shadowView.bounds;
-	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 2, bounds.size.width, bounds.size.height);
-	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
-	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
-	containerCALayer.shadowOpacity = 0.5f;
-	containerCALayer.shadowRadius = 6.0f;
+	// TODO fix contentInsets-sized black bar at bottom before pageload
+	float navBarHeight = CGRectGetHeight(self.navigationBar.frame);
+	CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+	CGFloat statusBarHeight = MIN(statusBarSize.width, statusBarSize.height);
 	
-	self.fadeView.backgroundColor = [ThemeManager shadeColor];
-	self.fadeView.alpha = 0.7f;
+	float toolbarHeight = CGRectGetHeight(self.toolbar.frame);
+	
+	self.webView.scrollView.contentInset = UIEdgeInsetsMake(navBarHeight + statusBarHeight, 0, toolbarHeight, 0);
+	self.webView.scrollView.scrollIndicatorInsets = self.webView.scrollView.contentInset;
 }
 
 - (void) themeAppearance
 {
 	// empty
+}
+
+- (void) configureGestureRecognizer
+{
+	UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self  action:@selector(swipeDown:)];
+	swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+	swipeDown.numberOfTouchesRequired = 2;
+	swipeDown.delegate = self;
+	[self.webView addGestureRecognizer:swipeDown];
 }
 
 #pragma mark - IBActions
@@ -73,6 +77,7 @@
 {	// TODO
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
+
 - (IBAction)commentsPressed:(id)sender
 {
 	if (self.link) // TODO handle by removing comments button
@@ -96,10 +101,38 @@
 	// TODO if launchservices invalidationhandler called — http://stackoverflow.com/questions/25192313/sharing-via-uiactivityviewcontroller-to-twitter-facebook-etc-causing-crash
 }
 
-# pragma mark - WebView Delegate
+- (void) swipeDown:(id)sender
+{
+//	NSLog(@"Swipe down");
+	[self closePressed:sender];
+}
+
+#pragma mark - WebView Delegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+	self.navigationBar.topItem.title = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+}
+
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
 	NSLog(@"failed loading: %@ \n%@", webView.request.URL, error.description);
+}
+
+#pragma mark - GestureRecognizer Delegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{	// allow swipeDown gesture to be recognised over webView
+//	NSLog(@"Gesture:%@ \n\tOther: %@", gestureRecognizer, otherGestureRecognizer);
+	return YES;
+}
+
+#pragma mark - NavigationBar Delegate
+
+- (UIBarPosition)positionForBar:(id <UIBarPositioning>)bar
+{
+	return UIBarPositionTopAttached;		// attach the navbar to the top of the window
 }
 
 #pragma mark - Navigation

@@ -8,7 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SubredditDelegate <NSObject>
+
+-(void) didSelectSubreddit:(NSString *) subreddit;
+
+@end
+
 @interface TGSubredditListViewController : UIViewController
+
+@property (nonatomic,retain) id<SubredditDelegate> delegate;
 
 - (void) reloadTableViewData;
 
