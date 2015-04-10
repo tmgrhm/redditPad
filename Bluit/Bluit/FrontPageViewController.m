@@ -220,8 +220,9 @@
 			indexPathRow = commentsButton.tag;
 			// TODO change how the row is identified
 			// http://stackoverflow.com/questions/23784630/
+			self.selectedLink = self.listings[indexPathRow];
 		}
-		linkVC.link = self.listings[indexPathRow];
+		linkVC.link = self.selectedLink;
 	}
 	else if ([segue.identifier isEqualToString:@"listingToWebView"])
 	{
