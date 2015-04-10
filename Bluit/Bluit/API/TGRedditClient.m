@@ -109,12 +109,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	}
 	 failure:^(AFHTTPRequestOperation *operation, NSError *error)
 	 {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Error"
-															message:[error localizedDescription]
-														   delegate:nil
-												  cancelButtonTitle:@"OK"
-												  otherButtonTitles:nil];
-		 [alertView show];
+		 [self failureWithError:error];
 		 completion(nil, error);
 	 }];
 	
@@ -153,7 +148,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		}
 			   failure:^(NSURLSessionDataTask *task, NSError *error)
 		{
-			NSLog(@"%@", error.description);
+			[self failureWithError:error];
 		}
 	 ];
 }
@@ -182,7 +177,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error){
 				   // TODO
-				   NSLog(@"%@", error.description);
+				   [self failureWithError:error];
 			   }
 	 ];
 }
@@ -229,7 +224,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 					   // TODO use global notification centre to announce login
 				   }
 				   failure:^(NSURLSessionDataTask *task, NSError *error) {
-					   NSLog(@"Error: %@", error.description);
+					   [self failureWithError:error];
 				   }];
 	}
 	else
@@ -252,7 +247,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 				   self.accessToken = responseObject[@"access_token"];
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   NSLog(@"Error: %@", error.description);
+				   [self failureWithError:error];
 			   }];
 }
 
@@ -274,7 +269,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			  }
 			  failure:^(NSURLSessionDataTask *task, NSError *error){
 				  // TODO
-				  NSLog(@"%@", error.description);
+				  [self failureWithError:error];
 			  }
 	 ];
 }
@@ -289,6 +284,16 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 								  filteredArrayUsingPredicate:predicate]
 								 firstObject];
 	return queryItem.value;
+}
+
+- (void) failureWithError:(NSError *)error
+{
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Error"
+														message:[error localizedDescription]
+													   delegate:nil
+											  cancelButtonTitle:@"OK"
+											  otherButtonTitles:nil];
+	[alertView show];
 }
 
 @end
