@@ -1,7 +1,8 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '7.0'
-pod 'AFNetworking', '~> 2.5'
+pod 'fmemopen', :inhibit_warnings => true
+pod 'AFNetworking', '~> 2.5', :inhibit_warnings => true
 # pod 'TSMarkdownParser'
-pod 'XNGMarkdownParser'
+pod 'XNGMarkdownParser', :inhibit_warnings => true
 # pod 'URBMediaFocusViewController'
 # pod 'Reveal-iOS-SDK', :configurations => ['Debug']

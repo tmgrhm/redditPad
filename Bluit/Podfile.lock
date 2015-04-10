@@ -26,6 +26,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
+  - fmemopen
   - XNGMarkdownParser
 
 SPEC CHECKSUMS:
