@@ -93,7 +93,18 @@
 	self.title = subredditURL;
 	if ([subredditURL isEqualToString:@"hot"])	self.title = @"Front Page";
 	
-	[self loadSubreddit:subredditURL after:nil];
+	__weak __typeof(self)weakSelf = self;
+	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:nil withCompletion:^(NSArray *collection, NSError *error)
+	{
+		[weakSelf setPosts:collection];
+	}];
+}
+
+- (void) setPosts:(NSArray *)posts
+{
+	[self.refreshControl endRefreshing];
+	self.listings = [posts mutableCopy];
+	[self reloadTableView];
 }
 
 - (void) loadSubreddit:(NSString *)subredditURL after:(TGLink *)link
@@ -101,25 +112,7 @@
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:link withCompletion:^(NSArray *collection, NSError *error)
 	{
-		if (weakSelf.refreshControl.refreshing)		// if refreshing, end refresh and replace existing listings
-		{
-			[weakSelf.refreshControl endRefreshing];
-			weakSelf.listings = [collection mutableCopy];
-			[weakSelf reloadTableView];
-		}
-		else										// else insert the new listings
-		{
-			NSMutableArray *indexPaths = [NSMutableArray array];
-			NSInteger currentCount = weakSelf.listings.count;
-			for (int i = 0; i < collection.count; i++) {
-				[indexPaths addObject:[NSIndexPath indexPathForRow:currentCount+i inSection:0]];
-			}
-			
-			[weakSelf.tableView beginUpdates];
-			[weakSelf.listings addObjectsFromArray:collection];
-			[weakSelf.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-			[weakSelf.tableView endUpdates];
-		}
+		[weakSelf appendPosts:collection];
 	}];
 }
 
@@ -128,7 +121,30 @@
 	[self loadSubreddit:self.subreddit after:self.listings.lastObject];
 }
 
+- (void) appendPosts:(NSArray *)posts
+{
+	NSMutableArray *indexPaths = [NSMutableArray array];
+	NSInteger currentCount = self.listings.count;
+	for (int i = 0; i < posts.count; i++) {
+		[indexPaths addObject:[NSIndexPath indexPathForRow:currentCount+i inSection:0]];
+	}
+	
+	[self.tableView beginUpdates];
+	[self.listings addObjectsFromArray:posts];
+	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView endUpdates];
+}
+
+#pragma mark - Subreddit Delegate (SVC)
+
+- (void) didSelectSubreddit:(NSString *)subreddit
+{
+	[self loadSubreddit:subreddit];
+	[self.tableView setContentOffset:CGPointMake(0, 0 - self.tableView.contentInset.top) animated:YES]; // scroll to top
+}
+
 #pragma mark - TableView
+
 - (void) reloadTableView
 {
 	[self.tableView beginUpdates];
