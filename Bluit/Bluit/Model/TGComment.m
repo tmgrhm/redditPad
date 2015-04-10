@@ -12,18 +12,14 @@
 
 - (instancetype) initCommentFromDictionary:(NSDictionary *)dict
 {
-	self = [super init];
+	self = [super initFromDictionary:dict];
 	if (!self) {
 		return nil;
 	}
 	
-	if (![@"t1" isEqualToString:dict[@"kind"]]) // TODO don't use literal string, typedef
-	{
-//		NSLog(@"TGComment got passed a !t1 object");
-		return nil; // TODO handle error better
+	if (self.type != TGThingComment) {
+		return nil;
 	}
-	
-	// BOOLs aren't being handled properly — all become YES even if value is 0
 	
 	NSDictionary *data = dict[@"data"];
 	
@@ -31,16 +27,11 @@
 	_bodyHTML =			data[@"body_html"];
 	_scoreHidden =		[data[@"score_hidden"]  boolValue];
 	_author =			data[@"author"];
-	_edited =			[data[@"edited"] boolValue]; // TODO test
-	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] integerValue]] : nil; // TODO test
+	_edited =			[data[@"edited"] boolValue];
+	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] integerValue]] : nil;
 	_saved =			[data[@"saved"] boolValue];
 	_parentID =			data[@"parent_id"];
 	_indentationLevel = [data[@"indentationLevel"] integerValue];
-	
-	self.id =			data[@"id"];
-	self.score =		[data[@"score"] integerValue];
-	self.archived =		[data[@"archived"] boolValue];
-	self.creationDate = [NSDate dateWithTimeIntervalSince1970:[data[@"created_utc"] integerValue]];
 	
 	if ([data[@"replies"] isKindOfClass:NSDictionary.class])
 	{

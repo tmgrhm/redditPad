@@ -8,14 +8,15 @@
 
 #import "TGPostViewController.h"
 
-#import "TGWebViewController.h"
-
 #import "ThemeManager.h"
 
 #import "TGRedditClient.h"
-#import "TGLinkPostCell.h"
 #import "TGComment.h"
+#import "TGMoreComments.h"
+
 #import "TGCommentTableViewCell.h"
+#import "TGWebViewController.h"
+#import "TGLinkPostCell.h"
 
 #import "NSDate+RelativeDateString.h"
 
@@ -319,13 +320,11 @@
 	
 	switch(indexPath.section) {
 		case 1:
-		{
 			// TODO header tapped
-		}
+			break;
 		case 2:
-		{
 			[self collapseCommentsAtIndexPath:indexPath];
-		}
+			break;
 	}
 }
 
@@ -385,7 +384,7 @@
 
 #pragma mark - Utility
 
-- (void) commentsFromResponse:(NSArray *)responseArray
+- (void) commentsFromResponse:(NSArray *)responseArray	// TODO move this into the MODEL - tgredditclient
 {
 	NSMutableArray *comments = [NSMutableArray array];
 	

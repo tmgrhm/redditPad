@@ -10,6 +10,23 @@
 
 @implementation TGVotable
 
+- (instancetype) initFromDictionary:(NSDictionary *)dict
+{
+	self = [super initFromDictionary:dict];
+	if (!self) {
+		return nil;
+	}
+	
+	_score = [dict[@"data"][@"score"] integerValue];
+	
+	id likes = dict[@"data"][@"likes"];
+	if (likes == [NSNull null])			_voteStatus = TGVoteStatusNone;
+	else if ([likes boolValue] == YES)	_voteStatus = TGVoteStatusUpvoted;
+	else								_voteStatus = TGVoteStatusDownvoted;
+	
+	return self;
+}
+
 - (BOOL) upvoted
 {
 	return self.voteStatus == TGVoteStatusUpvoted;

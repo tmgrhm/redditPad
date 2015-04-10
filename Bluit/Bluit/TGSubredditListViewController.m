@@ -13,8 +13,18 @@
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
+NSString * const kFrontPageDisplayName = @"Front Page";
+NSString * const kAllSubredditsDisplayName = @"All";
+NSString * const kRandomSubreddit = @"Random Subreddit";
+NSString * const kDiscoverSubreddits = @"Discover Subreddits";
+NSString * const kFrontPageURL = @"hot";
+NSString * const kAllSubredditsURL = @"/r/all";
+NSString * const kRandomSubredditURL = @"/r/random";
+
+
 @interface TGSubredditListViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (strong, nonatomic) NSArray *navigationOptions;
 @property (strong, nonatomic) NSArray *subreddits;
 @property (strong, nonatomic) NSString *selectedSubreddit;
 
@@ -28,6 +38,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 	[self themeAppearance];
+	
+	self.navigationOptions = @[kFrontPageDisplayName,
+							   kAllSubredditsDisplayName,
+							   kRandomSubreddit,
+							   kDiscoverSubreddits];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] retrieveUserSubscriptionsWithCompletion:^(NSArray *subreddits){
@@ -52,24 +67,40 @@
 - (void) reloadTableViewData
 {
 	[self.tableView beginUpdates];
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+	NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]); // all sections
+	NSIndexSet *sections = [NSIndexSet indexSetWithIndexesInRange:range];
+	[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
 	[self.tableView endUpdates];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 1;
+	return 2;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return self.subreddits.count;
+	switch(section)
+	{
+		case 0:		return self.navigationOptions.count;
+		case 1:		return self.subreddits.count;
+		default:	return 0;
+	}
 }
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TGSubredditTableViewCell" forIndexPath:indexPath];
-	cell.textLabel.text = self.subreddits[indexPath.row][@"data"][@"url"];
+	
+	switch(indexPath.section)
+	{
+		case 0:
+			cell.textLabel.text = self.navigationOptions[indexPath.row];
+			break;
+		case 1:
+			cell.textLabel.text = self.subreddits[indexPath.row][@"data"][@"url"];
+			break;
+	}
 	
 	return cell;
 }
@@ -77,13 +108,29 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	// When user selects a row
-   [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
-//	self.selectedSubreddit = self.subreddits[indexPath.row];
+	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 	
-	self.selectedSubreddit = self.subreddits[indexPath.row][@"data"][@"url"];
+	switch(indexPath.section)
+	{
+		case 0:
+		{
+			NSString *selectedString = self.navigationOptions[indexPath.row];
+			if ([selectedString isEqualToString:kFrontPageDisplayName])
+				self.selectedSubreddit = kFrontPageURL;			// TODO make @"" and pass the sort method with the requestURL
+			else if ([selectedString isEqualToString:kAllSubredditsDisplayName])
+				self.selectedSubreddit = kAllSubredditsURL;
+			else if ([selectedString isEqualToString:kRandomSubreddit])
+				self.selectedSubreddit = kRandomSubredditURL;	// TODO set the listing navbar title correctly
+			break;
+		}
+		case 1:
+			self.selectedSubreddit = self.subreddits[indexPath.row][@"data"][@"url"];
+			break;
+	}
+	
 	[self.delegate didSelectSubreddit:self.selectedSubreddit];
 	
-	NSLog(@"Selected %@", self.subreddits[indexPath.row][@"data"][@"url"]);
+	NSLog(@"Selected %@", self.selectedSubreddit);
 //	[self performSegueWithIdentifier:@"subredditListToListing" sender:self];
 }
 

@@ -14,14 +14,16 @@ typedef NS_ENUM(NSUInteger, TGThingType)
 	TGThingUser,
 	TGThingLink,
 	TGThingMessage,
-	TGThingSubreddit
+	TGThingSubreddit,
+	TGThingMore
 };
 
 @interface TGThing : NSObject
 
 @property (nonatomic, strong) NSString *id;
 @property (nonatomic) TGThingType type;
+@property (nonatomic, getter=isArchived) BOOL archived;
 
-@property (nonatomic, getter=isArchived) BOOL archived; // TODO viability - probably not, probably need to move back to link+comment
+- (instancetype) initFromDictionary:(NSDictionary *)dict;
 
 @end

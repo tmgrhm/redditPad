@@ -10,4 +10,16 @@
 
 @implementation TGCreated
 
+- (instancetype) initFromDictionary:(NSDictionary *)dict
+{
+	self = [super initFromDictionary:dict];
+	if (!self) {
+		return nil;
+	}
+	
+	self.creationDate = [NSDate dateWithTimeIntervalSince1970:[dict[@"data"][@"created_utc"] integerValue]];
+	
+	return self;
+}
+
 @end

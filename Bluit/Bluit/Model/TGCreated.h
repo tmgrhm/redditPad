@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) NSDate *creationDate;
 
+- (instancetype) initFromDictionary:(NSDictionary *)dict;
+
 @end

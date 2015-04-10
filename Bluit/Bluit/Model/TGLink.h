@@ -29,7 +29,7 @@
 @property (nonatomic, copy, readonly) NSDate *editDate;
 @property (nonatomic, assign, readonly, getter=isSelfpost) BOOL selfpost;
 @property (nonatomic, assign, readonly, getter=isSaved) BOOL saved;
-@property (nonatomic, assign, readonly, getter=isNsfw) BOOL nsfw;
+@property (nonatomic, assign, readonly, getter=isNSFW) BOOL nsfw;
 @property (nonatomic, assign, readonly, getter=isSticky) BOOL sticky;
 @property (nonatomic, assign, readonly, getter=isDistinguished) BOOL distinguished; // TODO typedef
 @property (nonatomic, assign, readonly, getter=isViewed) BOOL viewed; // TODO
