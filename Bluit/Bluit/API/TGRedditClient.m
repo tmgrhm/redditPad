@@ -164,7 +164,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 - (void)retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion {
 	NSLog(@"retrievingUserSubs");
 	
-	NSString *urlString = [BaseURLString stringByAppendingString:@"subreddits/mine/subscriber.json"];
+	NSString *urlString = [BaseURLString stringByAppendingString:@"subreddits/mine/subscriber.json?limit=100"]; // TODO get all
 	
 	__weak __typeof(self)weakSelf = self;
 	
@@ -257,14 +257,10 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		
 	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", BaseURLString, link.subreddit, link.id];
 	
-//	__weak __typeof(self)weakSelf = self;
-	
 	[self.manager GET:urlString
 		   parameters:nil
 			  success:^(NSURLSessionDataTask *task, id responseObject){
 				  id comments = [responseObject lastObject][@"data"][@"children"];
-//				  NSLog(@"comments data children: %@", comments);
-				  
 				  completion(comments);
 			  }
 			  failure:^(NSURLSessionDataTask *task, NSError *error){
