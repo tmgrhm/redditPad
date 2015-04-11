@@ -19,9 +19,10 @@
 * NSNotification themeDidChange, force reload views
 
 ##Things
-* archived
-* voteStatus
 * lots more
+* --distinguished--
+* --archived--
+* --voteStatus--
 
 ##Listings
 * custom refreshControl (http://ios-blog.co.uk/tutorials/how-to-add-a-custom-pull-to-refresh-in-your-ios-application/)
@@ -74,4 +75,10 @@
 
 ##Design Implementation
 * Comments left-bars
-* Navigational restructure
+* vote status
+* distinguished votables
+* gilded votables
+* archived things
+* private subreddits
+
+* --Navigational restructure--

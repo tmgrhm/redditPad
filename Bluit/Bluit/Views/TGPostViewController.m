@@ -29,6 +29,8 @@
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *savePostButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 
 @property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
@@ -88,6 +90,23 @@
 	// empty
 }
 
+- (void) updateSaveButton
+{
+	self.savePostButton.tintColor = self.link.isSaved ? [ThemeManager saveColor] : [ThemeManager inactiveColor];
+}
+
+- (void) updateHideButton
+{
+	if (self.link.isHidden)
+	{
+		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Active"];	// TODO consts?
+		self.hidePostButton.tintColor = [ThemeManager tintColor];					// TODO not working
+	} else {
+		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Inactive"];
+		self.hidePostButton.tintColor = [ThemeManager inactiveColor];
+	}
+}
+
 #pragma mark - IBActions
 
 - (IBAction)closePressed:(id)sender {
@@ -96,6 +115,29 @@
 
 - (IBAction)titlePressed:(id)sender {
 	[self performSegueWithIdentifier:@"linkViewToWebView" sender:self];
+}
+
+- (IBAction)savePostPressed:(id)sender
+{
+	NSLog(@"Save post");
+	// TODO API call with success&failure blocks
+	[self updateSaveButton];
+}
+
+- (IBAction)hidePostPressed:(id)sender {
+	NSLog(@"Hide post");
+	// TODO API call with success&failure blocks
+	[self updateHideButton];
+}
+
+- (IBAction)reportPostPressed:(id)sender {
+	NSLog(@"Reprot post");
+	// TODO API call with success&failure blocks
+}
+
+- (IBAction)sharePostPressed:(id)sender {
+	NSLog(@"Share post");
+	// TODO share sheet
 }
 
 #pragma mark - TableView
@@ -144,6 +186,9 @@
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
+	[self updateSaveButton];
+	[self updateHideButton];
+	
 	// clear the delegates to prevent crashes — TODO solve?
 	cell.title.delegate = self;
 	cell.content.delegate = self;
@@ -315,14 +360,13 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
-	
-	
 	switch(indexPath.section) {
-		case 1:
+		case 0:
+			[tableView deselectRowAtIndexPath:indexPath animated:NO];
 			// TODO header tapped
 			break;
-		case 2:
+		case 1:
+			[tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[self collapseCommentsAtIndexPath:indexPath];
 			break;
 	}

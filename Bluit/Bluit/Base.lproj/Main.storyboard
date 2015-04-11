@@ -971,16 +971,35 @@
                                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ArW-f8-L6R" userLabel="Top Toolbar">
                                                 <rect key="frame" x="0.0" y="0.0" width="640" height="44"/>
                                                 <items>
-                                                    <barButtonItem systemItem="stop" id="BOr-8M-H49">
+                                                    <barButtonItem image="Icon-Close" id="BOr-8M-H49" userLabel="Close">
                                                         <connections>
                                                             <action selector="closePressed:" destination="ibe-ay-a9l" id="GZT-as-nsk"/>
                                                         </connections>
                                                     </barButtonItem>
                                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="1na-lF-ArO"/>
-                                                    <barButtonItem title="Save" id="Vfb-ku-gBd"/>
-                                                    <barButtonItem title="Hide" id="oBS-dF-3Hu"/>
-                                                    <barButtonItem title="Report" id="ENf-sy-o9H"/>
-                                                    <barButtonItem systemItem="action" id="b9V-pB-qqY"/>
+                                                    <barButtonItem image="Icon-Post-Save-Inactive" id="Vfb-ku-gBd" userLabel="Save">
+                                                        <connections>
+                                                            <action selector="savePostPressed:" destination="ibe-ay-a9l" id="0Y6-si-Jdr"/>
+                                                        </connections>
+                                                    </barButtonItem>
+                                                    <barButtonItem width="18" style="plain" systemItem="fixedSpace" id="tID-45-AT9"/>
+                                                    <barButtonItem image="Icon-Post-Hide-Inactive" id="oBS-dF-3Hu" userLabel="Hide">
+                                                        <connections>
+                                                            <action selector="hidePostPressed:" destination="ibe-ay-a9l" id="58l-If-bcD"/>
+                                                        </connections>
+                                                    </barButtonItem>
+                                                    <barButtonItem width="18" style="plain" systemItem="fixedSpace" id="psr-dZ-2jH"/>
+                                                    <barButtonItem image="Icon-Post-Report" id="ENf-sy-o9H" userLabel="Report">
+                                                        <connections>
+                                                            <action selector="reportPostPressed:" destination="ibe-ay-a9l" id="McE-lO-vPy"/>
+                                                        </connections>
+                                                    </barButtonItem>
+                                                    <barButtonItem width="18" style="plain" systemItem="fixedSpace" id="Tcd-Zd-eqx"/>
+                                                    <barButtonItem image="Icon-Post-Share" id="b9V-pB-qqY" userLabel="Share">
+                                                        <connections>
+                                                            <action selector="sharePostPressed:" destination="ibe-ay-a9l" id="Gbk-BY-2RB"/>
+                                                        </connections>
+                                                    </barButtonItem>
                                                 </items>
                                             </toolbar>
                                         </subviews>
@@ -1045,6 +1064,8 @@
                     <connections>
                         <outlet property="commentTableView" destination="JTU-WL-hlf" id="ZJo-ri-EHp"/>
                         <outlet property="fadeView" destination="RAf-W0-8H9" id="Xgf-7N-Pqx"/>
+                        <outlet property="hidePostButton" destination="oBS-dF-3Hu" id="jRX-4x-G86"/>
+                        <outlet property="savePostButton" destination="Vfb-ku-gBd" id="7j9-Gs-kMP"/>
                         <outlet property="shadowView" destination="YWD-s7-gm1" id="Lse-2s-fzT"/>
                         <outlet property="topToolbar" destination="ArW-f8-L6R" id="vSI-0b-ohg"/>
                         <segue destination="gFf-Ur-DKX" kind="presentation" identifier="linkViewToWebView" id="F0Z-Ku-XRv"/>
@@ -1180,8 +1201,8 @@
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="fpp-1x-YNn"/>
                                                 <exclude reference="Erx-Y8-1UD"/>
+                                                <exclude reference="fpp-1x-YNn"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -1235,6 +1256,11 @@
         <image name="Comments-Icon" width="19" height="17"/>
         <image name="Downvote-Inactive" width="11" height="7"/>
         <image name="Home Icon - Inactive" width="20" height="17"/>
+        <image name="Icon-Close" width="12" height="12"/>
+        <image name="Icon-Post-Hide-Inactive" width="20" height="14"/>
+        <image name="Icon-Post-Report" width="13" height="18"/>
+        <image name="Icon-Post-Save-Inactive" width="17" height="16"/>
+        <image name="Icon-Post-Share" width="15" height="22"/>
         <image name="Multis Icon - Inactive" width="18" height="12"/>
         <image name="Search Icon - Inactive" width="16" height="16"/>
         <image name="Upvote-Inactive" width="11" height="7"/>
