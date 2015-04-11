@@ -25,6 +25,7 @@
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
+@property (strong, nonatomic) TGLinkPostCell *postHeader;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
@@ -107,6 +108,25 @@
 	}
 }
 
+- (void) updateVoteButtons
+{
+	switch (self.link.voteStatus)
+	{
+		case TGVoteStatusNone:
+			self.postHeader.upvoteButton.selected = NO;
+			self.postHeader.downvoteButton.selected = NO;
+			break;
+		case TGVoteStatusDownvoted:
+			self.postHeader.upvoteButton.selected = NO;
+			self.postHeader.downvoteButton.selected = YES;
+			break;
+		case TGVoteStatusUpvoted:
+			self.postHeader.upvoteButton.selected = YES;
+			self.postHeader.downvoteButton.selected = NO;
+			break;
+	}
+}
+
 #pragma mark - IBActions
 
 - (IBAction)closePressed:(id)sender {
@@ -121,11 +141,13 @@
 {
 	NSLog(@"Save post");
 	// TODO API call with success&failure blocks
+	self.link.saved = !self.link.saved;
 	[self updateSaveButton];
 }
 
 - (IBAction)hidePostPressed:(id)sender {
 	NSLog(@"Hide post");
+	self.link.hidden = !self.link.hidden;
 	// TODO API call with success&failure blocks
 	[self updateHideButton];
 }
@@ -138,6 +160,24 @@
 - (IBAction)sharePostPressed:(id)sender {
 	NSLog(@"Share post");
 	// TODO share sheet
+}
+
+- (IBAction)upvoteButtonPressed:(id)sender {
+	// TODO API call with success&failure blocks
+	
+	if (self.link.isUpvoted)	self.link.voteStatus = TGVoteStatusNone;
+	else						self.link.voteStatus = TGVoteStatusUpvoted;
+	
+	[self updateVoteButtons];
+}
+
+- (IBAction)downvoteButtonPressed:(id)sender {
+	// TODO API call with success&failure blocks
+	
+	if (self.link.isDownvoted)	self.link.voteStatus = TGVoteStatusNone;
+	else						self.link.voteStatus = TGVoteStatusDownvoted;
+	
+	[self updateVoteButtons];
 }
 
 #pragma mark - TableView
@@ -167,9 +207,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	switch(indexPath.section) {
-		case 0: return [self postHeaderCell];
-		case 1: return [self commentCellAtIndexPath:indexPath];
-		default: return nil;
+		case 0:
+			self.postHeader = [self postHeaderCell];
+			return self.postHeader;
+		case 1:
+			return [self commentCellAtIndexPath:indexPath];
+		default:
+			return nil;
 	}
 }
 
@@ -188,6 +232,7 @@
 {
 	[self updateSaveButton];
 	[self updateHideButton];
+	[self updateVoteButtons];
 	
 	// clear the delegates to prevent crashes — TODO solve?
 	cell.title.delegate = self;
@@ -209,6 +254,11 @@
 	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
 	cell.numComments.textColor = [ThemeManager smallcapsHeaderColor];
 	cell.numComments.alpha = 0.5f;
+	NSMutableAttributedString *mutAttrComms = [cell.numComments.attributedText mutableCopy];
+	[mutAttrComms addAttribute:NSKernAttributeName
+						 value:@(1.5)
+						 range:NSMakeRange(0, mutAttrComms.length)];
+	cell.numComments.attributedText = mutAttrComms;
 	
 	cell.separator.backgroundColor = [ThemeManager backgroundColor];
 	

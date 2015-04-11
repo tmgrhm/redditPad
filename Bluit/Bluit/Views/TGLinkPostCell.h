@@ -15,6 +15,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *metadata;
 @property (weak, nonatomic) IBOutlet UILabel *numComments;
 
+@property (weak, nonatomic) IBOutlet UIButton *upvoteButton;
+@property (weak, nonatomic) IBOutlet UIButton *downvoteButton;
+
 @property (weak, nonatomic) IBOutlet UIView *separator;
 
 @end
