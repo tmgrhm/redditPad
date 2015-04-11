@@ -18,6 +18,10 @@
 	<string>597080</string>
 	<key>tintColor</key>
 	<string>037AFF</string>
+	<key>saveColor</key>
+	<string>FFBF00</string>
+	<key>inactiveColor</key>
+	<string>8A9399</string>
 	<key>separatorColor</key>
 	<string>E9EAF0</string>
 	<key>shadowColor</key>

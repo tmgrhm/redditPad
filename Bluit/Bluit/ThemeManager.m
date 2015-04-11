@@ -92,6 +92,14 @@
 	return [self colorForKey:@"tintColor"];
 }
 
++ (UIColor *) saveColor {
+	return [self colorForKey:@"saveColor"];
+}
+
++ (UIColor *) inactiveColor {
+	return [self colorForKey:@"inactiveColor"];
+}
+
 + (UIColor *) separatorColor {
 	return [self colorForKey:@"separatorColor"];
 }

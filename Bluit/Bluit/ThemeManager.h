@@ -35,6 +35,8 @@ static NSString * const darkTheme = @"darkTheme";
 + (UIColor *) smallcapsHeaderColor;
 
 + (UIColor *) tintColor;
++ (UIColor *) saveColor;
++ (UIColor *) inactiveColor;
 
 + (UIColor *) separatorColor;
 + (UIColor *) shadowColor;
