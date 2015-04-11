@@ -14,6 +14,7 @@
 #import "TGImageViewController.h"
 
 #import "TGLink.h"
+#import "TGSubreddit.h"
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
@@ -25,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *sortControl;
 
 @property (strong, nonatomic) NSMutableArray *listings;
 @property (strong, nonatomic) TGLink *selectedLink;
@@ -43,6 +45,7 @@
 	
 	self.tableView.estimatedRowHeight = 80.0;
 	self.tableView.rowHeight = UITableViewAutomaticDimension;
+	[self scrollToTopWithAnimation:NO];
 	
 	// TODO custom refreshControl
 	self.refreshControl = [UIRefreshControl new];
@@ -81,7 +84,27 @@
 	[self loadSubreddit:self.subreddit];
 }
 
+- (IBAction)sortChanged:(UISegmentedControl *)sender
+{
+	NSString *sort = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
+	
+	TGSubredditSort sortType;
+	if		([sort isEqualToString:kTGSubredditSortStringHot])				sortType = TGSubredditSortHot;
+	else if ([sort isEqualToString:kTGSubredditSortStringNew])				sortType = TGSubredditSortNew;
+	else if ([sort isEqualToString:kTGSubredditSortStringRising])			sortType = TGSubredditSortRising;
+	else if ([sort isEqualToString:kTGSubredditSortStringControversial])		sortType = TGSubredditSortControversial;
+	else if ([sort isEqualToString:kTGSubredditSortStringTop])				sortType = TGSubredditSortTop;
+	
+	[self loadSubreddit:self.subreddit withSort:sortType];
+}
+
 #pragma mark - Loading Data
+
+- (void)loadSubreddit:(NSString *)subredditURL withSort:(TGSubredditSort)sort
+{
+	// TODO make proper API calls
+	[self loadSubreddit:subredditURL];
+}
 
 - (void)loadSubreddit:(NSString *)subredditURL
 {
@@ -139,7 +162,7 @@
 - (void) didSelectSubreddit:(NSString *)subreddit
 {
 	[self loadSubreddit:subreddit];
-	[self.tableView setContentOffset:CGPointMake(0, 0 - self.tableView.contentInset.top) animated:YES]; // scroll to top
+	[self scrollToTopWithAnimation:YES];
 }
 
 #pragma mark - TableView
@@ -221,7 +244,13 @@
 		[self performSegueWithIdentifier:@"listingToWebView" sender:self];
 }
 
+- (void) scrollToTopWithAnimation:(BOOL)animated
+{
+	[self.tableView setContentOffset:CGPointMake(0, 0 - self.tableView.contentInset.top + 66) animated:animated];
+}
+
 #pragma mark - Navigation
+
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if ([segue.identifier isEqualToString:@"listingToPostView"])
