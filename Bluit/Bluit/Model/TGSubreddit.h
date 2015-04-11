@@ -24,6 +24,21 @@ typedef NS_ENUM(NSUInteger, TGSubmissionType)
 	TGSubmissionText
 };
 
+typedef NS_ENUM(NSUInteger, TGSubredditSort)
+{
+	TGSubredditSortHot,
+	TGSubredditSortNew,
+	TGSubredditSortRising,
+	TGSubredditSortControversial,
+	TGSubredditSortTop
+};
+
+static NSString * const kTGSubredditSortStringHot =				@"Hot";
+static NSString * const kTGSubredditSortStringNew =				@"New";
+static NSString * const kTGSubredditSortStringRising =			@"Rising";
+static NSString * const kTGSubredditSortStringControversial =	@"Controversial";
+static NSString * const kTGSubredditSortStringTop =				@"Top";
+
 @interface TGSubreddit : TGCreated
 
 @property (nonatomic, copy, readonly) NSString *displayName;
