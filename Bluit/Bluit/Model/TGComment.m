@@ -25,7 +25,7 @@
 	
 	_body =				data[@"body"];
 	_bodyHTML =			data[@"body_html"];
-	_scoreHidden =		[data[@"score_hidden"]  boolValue];
+	_scoreHidden =		[data[@"score_hidden"] boolValue];
 	_author =			data[@"author"];
 	_edited =			[data[@"edited"] boolValue];
 	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] integerValue]] : nil;
@@ -52,7 +52,7 @@
 		
 		_children = children;
 	}
-
+	
 	return self;
 }
 

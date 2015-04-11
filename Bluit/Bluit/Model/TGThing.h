@@ -18,6 +18,13 @@ typedef NS_ENUM(NSUInteger, TGThingType)
 	TGThingMore
 };
 
+static NSString * const kTGThingCommentString =		@"t1";
+static NSString * const kTGThingUserString =		@"t2";
+static NSString * const kTGThingLinkString =		@"t3";
+static NSString * const kTGThingMessageString =		@"t4";
+static NSString * const kTGThingSubredditString =	@"t5";
+static NSString * const kTGThingMoreString =		@"more";
+
 @interface TGThing : NSObject
 
 @property (nonatomic, strong) NSString *id;

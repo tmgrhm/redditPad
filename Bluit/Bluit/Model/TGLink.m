@@ -16,9 +16,9 @@
 	if (!self) {
 		return nil;
 	}
-		
+	
 	NSDictionary *data = dict[@"data"];
-
+	
 	_title =			data[@"title"];
 	_totalComments =	[data[@"num_comments"] unsignedIntegerValue];
 	_subreddit =		data[@"subreddit"];
@@ -27,13 +27,13 @@
 	_url =				[NSURL URLWithString:data[@"url"]];
 	_selfText =			data[@"selftext"];
 	_selfTextHTML =		data[@"body_html"];
-	_edited =			[data[@"edited"] boolValue]; // TODO test
-	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] unsignedIntegerValue]] : nil; // TODO test
-	_selfpost =			[_domain containsString:[NSString stringWithFormat:@"self.%@", _subreddit]]; // TODO make safer
+	_edited =			[data[@"edited"] boolValue];
+	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] unsignedIntegerValue]] : nil;
+	_selfpost =			[data[@"is_self"] boolValue];
+	_hidden =			[data[@"hidden"] boolValue];
 	_saved =			[data[@"saved"] boolValue];
 	_nsfw =				[data[@"over_18"] boolValue];
 	_sticky =			[data[@"stickied"] boolValue];
-	_distinguished =	data[@"distinguished"]; // TODO handle
 	_viewed =			[data[@"visited"] boolValue];
 	
 	_thumbnailURL = _selfpost ? nil : [NSURL URLWithString:data[@"thumbnail"]];

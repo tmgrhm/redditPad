@@ -15,10 +15,20 @@ typedef NS_ENUM(NSUInteger, TGVoteStatus)
 	TGVoteStatusDownvoted
 };
 
+typedef NS_ENUM(NSUInteger, TGVotableDistinguished)
+{
+	TGVotableDistinguishedNone,
+	TGVotableDistinguishedMod,
+	TGVotableDistinguishedAdmin,
+	TGVotableDistinguishedSpecial
+};
+
 @interface TGVotable : TGCreated
 
 @property (nonatomic, assign) NSInteger score;
 @property (nonatomic) TGVoteStatus voteStatus;
+@property (nonatomic) TGVotableDistinguished distinguished;
+@property (nonatomic, assign) NSInteger gilded;
 
 - (instancetype) initFromDictionary:(NSDictionary *)dict;
 
