@@ -27,13 +27,14 @@ typedef NS_ENUM(NSUInteger, TGVotableDistinguished)
 
 @property (nonatomic, assign) NSInteger score;
 @property (nonatomic) TGVoteStatus voteStatus;
+@property (nonatomic, assign, getter=isSaved) BOOL saved;
 @property (nonatomic) TGVotableDistinguished distinguished;
 @property (nonatomic, assign) NSInteger gilded;
 
 - (instancetype) initFromDictionary:(NSDictionary *)dict;
 
-- (BOOL) upvoted;
-- (BOOL) downvoted;
-- (BOOL) voted;
+- (BOOL) isUpvoted;
+- (BOOL) isDownvoted;
+- (BOOL) isVoted;
 
 @end

@@ -29,7 +29,6 @@
 	_author =			data[@"author"];
 	_edited =			[data[@"edited"] boolValue];
 	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] integerValue]] : nil;
-	_saved =			[data[@"saved"] boolValue];
 	_parentID =			data[@"parent_id"];
 	_indentationLevel = [data[@"indentationLevel"] integerValue];
 	

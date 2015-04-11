@@ -26,11 +26,10 @@
 @property (nonatomic, assign, readonly, getter=isEdited) BOOL edited;
 @property (nonatomic, copy, readonly) NSDate *editDate;
 @property (nonatomic, assign, readonly, getter=isSelfpost) BOOL selfpost;
-@property (nonatomic, assign, readonly, getter=isHidden) BOOL hidden;
-@property (nonatomic, assign, readonly, getter=isSaved) BOOL saved;
-@property (nonatomic, assign, readonly, getter=isNSFW) BOOL nsfw;
-@property (nonatomic, assign, readonly, getter=isSticky) BOOL sticky;
-@property (nonatomic, assign, readonly, getter=isViewed) BOOL viewed; // TODO set when viewed
+@property (nonatomic, assign, getter=isNSFW) BOOL nsfw;
+@property (nonatomic, assign, getter=isSticky) BOOL sticky;
+@property (nonatomic, assign, getter=isHidden) BOOL hidden;
+@property (nonatomic, assign, getter=isViewed) BOOL viewed; // TODO set when viewed
 
 @property (nonatomic, copy, readonly) NSURL *permalink;
 

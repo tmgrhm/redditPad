@@ -16,7 +16,6 @@
 @property (nonatomic, copy, readonly) NSString *author;
 @property (nonatomic, assign, readonly, getter=isEdited) BOOL edited;
 @property (nonatomic, copy, readonly) NSDate *editDate;
-@property (nonatomic, assign, readonly, getter=isSaved) BOOL saved;
 
 @property (nonatomic, strong) NSString	*parentID;
 @property (nonatomic, strong) NSArray *children;

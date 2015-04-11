@@ -31,7 +31,6 @@
 	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] unsignedIntegerValue]] : nil;
 	_selfpost =			[data[@"is_self"] boolValue];
 	_hidden =			[data[@"hidden"] boolValue];
-	_saved =			[data[@"saved"] boolValue];
 	_nsfw =				[data[@"over_18"] boolValue];
 	_sticky =			[data[@"stickied"] boolValue];
 	_viewed =			[data[@"visited"] boolValue];

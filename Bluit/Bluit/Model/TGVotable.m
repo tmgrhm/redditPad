@@ -23,6 +23,7 @@ NSString * const kTGVotableDistinguishedSpecial = @"special";
 	
 	NSDictionary *data = dict[@"data"];
 	_score =	[data[@"score"] integerValue];
+	_saved =	[data[@"saved"] boolValue];
 	_gilded =	[data[@"gilded"] integerValue];
 	
 	id likes = data[@"likes"];
@@ -39,17 +40,17 @@ NSString * const kTGVotableDistinguishedSpecial = @"special";
 	return self;
 }
 
-- (BOOL) upvoted
+- (BOOL) isUpvoted
 {
 	return self.voteStatus == TGVoteStatusUpvoted;
 }
 
-- (BOOL) downvoted
+- (BOOL) isDownvoted
 {
 	return self.voteStatus == TGVoteStatusDownvoted;
 }
 
-- (BOOL) voted
+- (BOOL) isVoted
 {
 	return !(self.voteStatus == TGVoteStatusNone);
 }
