@@ -7,14 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E20F193D1AB77BC900210A58 /* TGSelfpostView.m in Sources */ = {isa = PBXBuildFile; fileRef = E20F193C1AB77BC900210A58 /* TGSelfpostView.m */; };
 		E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */; };
 		E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA61AB2DBA50000E739 /* TGComment.m */; };
-		E210FEAA1AB2DEF40000E739 /* TGLinkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */; };
-		E210FEAD1AB48B7E0000E739 /* TGLinkHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEAC1AB48B7E0000E739 /* TGLinkHeaderViewController.m */; };
-		E210FEB01AB49AD10000E739 /* TGSelfPostHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEAF1AB49AD10000E739 /* TGSelfPostHeaderViewController.m */; };
-		E210FEB31AB4C0620000E739 /* TGLinkHeaderContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEB21AB4C0620000E739 /* TGLinkHeaderContainerViewController.m */; };
-		E210FEB61AB4CE9F0000E739 /* EmptySegue.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEB51AB4CE9F0000E739 /* EmptySegue.m */; };
 		E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */ = {isa = PBXBuildFile; fileRef = E22047FF1AD8342200A5FACF /* TGSubreddit.m */; };
 		E22048031AD85DA200A5FACF /* TGMoreComments.m in Sources */ = {isa = PBXBuildFile; fileRef = E22048021AD85DA200A5FACF /* TGMoreComments.m */; };
 		E24514611AA6448500B80D2E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514601AA6448500B80D2E /* main.m */; };
@@ -58,22 +52,10 @@
 /* Begin PBXFileReference section */
 		836F63B2190BA5E760A4B1E6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		AEE5257E68B4E4BFA4A6ED8A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		E20F193B1AB77BC900210A58 /* TGSelfpostView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSelfpostView.h; path = Views/TGSelfpostView.h; sourceTree = "<group>"; };
-		E20F193C1AB77BC900210A58 /* TGSelfpostView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSelfpostView.m; path = Views/TGSelfpostView.m; sourceTree = "<group>"; };
 		E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCommentTableViewCell.h; path = Views/TGCommentTableViewCell.h; sourceTree = "<group>"; };
 		E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCommentTableViewCell.m; path = Views/TGCommentTableViewCell.m; sourceTree = "<group>"; };
 		E210FEA51AB2DBA50000E739 /* TGComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGComment.h; path = Model/TGComment.h; sourceTree = "<group>"; };
 		E210FEA61AB2DBA50000E739 /* TGComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGComment.m; path = Model/TGComment.m; sourceTree = "<group>"; };
-		E210FEA81AB2DEF40000E739 /* TGLinkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLinkViewController.h; path = Views/TGLinkViewController.h; sourceTree = "<group>"; };
-		E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLinkViewController.m; path = Views/TGLinkViewController.m; sourceTree = "<group>"; };
-		E210FEAB1AB48B7E0000E739 /* TGLinkHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLinkHeaderViewController.h; path = Views/TGLinkHeaderViewController.h; sourceTree = "<group>"; };
-		E210FEAC1AB48B7E0000E739 /* TGLinkHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLinkHeaderViewController.m; path = Views/TGLinkHeaderViewController.m; sourceTree = "<group>"; };
-		E210FEAE1AB49AD10000E739 /* TGSelfPostHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSelfPostHeaderViewController.h; path = Views/TGSelfPostHeaderViewController.h; sourceTree = "<group>"; };
-		E210FEAF1AB49AD10000E739 /* TGSelfPostHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSelfPostHeaderViewController.m; path = Views/TGSelfPostHeaderViewController.m; sourceTree = "<group>"; };
-		E210FEB11AB4C0620000E739 /* TGLinkHeaderContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGLinkHeaderContainerViewController.h; sourceTree = "<group>"; };
-		E210FEB21AB4C0620000E739 /* TGLinkHeaderContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGLinkHeaderContainerViewController.m; sourceTree = "<group>"; };
-		E210FEB41AB4CE9F0000E739 /* EmptySegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptySegue.h; sourceTree = "<group>"; };
-		E210FEB51AB4CE9F0000E739 /* EmptySegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptySegue.m; sourceTree = "<group>"; };
 		E22047FE1AD8342200A5FACF /* TGSubreddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSubreddit.h; path = Model/TGSubreddit.h; sourceTree = "<group>"; };
 		E22047FF1AD8342200A5FACF /* TGSubreddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSubreddit.m; path = Model/TGSubreddit.m; sourceTree = "<group>"; };
 		E22048011AD85DA200A5FACF /* TGMoreComments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGMoreComments.h; path = Model/TGMoreComments.h; sourceTree = "<group>"; };
@@ -273,10 +255,6 @@
 				E2A512861AC0CEF80007A842 /* TGCommentCell.m */,
 				E2A5128C1AC354D50007A842 /* TGLinkPostCell.h */,
 				E2A5128D1AC354D50007A842 /* TGLinkPostCell.m */,
-				E20F193B1AB77BC900210A58 /* TGSelfpostView.h */,
-				E20F193C1AB77BC900210A58 /* TGSelfpostView.m */,
-				E210FEB41AB4CE9F0000E739 /* EmptySegue.h */,
-				E210FEB51AB4CE9F0000E739 /* EmptySegue.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -292,14 +270,6 @@
 				E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */,
 				E2A512881AC0D42C0007A842 /* TGPostViewController.h */,
 				E2A512891AC0D42C0007A842 /* TGPostViewController.m */,
-				E210FEA81AB2DEF40000E739 /* TGLinkViewController.h */,
-				E210FEA91AB2DEF40000E739 /* TGLinkViewController.m */,
-				E210FEB11AB4C0620000E739 /* TGLinkHeaderContainerViewController.h */,
-				E210FEB21AB4C0620000E739 /* TGLinkHeaderContainerViewController.m */,
-				E210FEAB1AB48B7E0000E739 /* TGLinkHeaderViewController.h */,
-				E210FEAC1AB48B7E0000E739 /* TGLinkHeaderViewController.m */,
-				E210FEAE1AB49AD10000E739 /* TGSelfPostHeaderViewController.h */,
-				E210FEAF1AB49AD10000E739 /* TGSelfPostHeaderViewController.m */,
 				E28BB7F11AB0D98C005E47B8 /* TGWebViewController.h */,
 				E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */,
 				E2FBF7211AC5A7D00031C957 /* TGImageViewController.h */,
@@ -464,27 +434,21 @@
 				E2FBF7231AC5A7D00031C957 /* TGImageViewController.m in Sources */,
 				E245146A1AA6448500B80D2E /* TGSubredditListViewController.m in Sources */,
 				E2A5128E1AC354D50007A842 /* TGLinkPostCell.m in Sources */,
-				E210FEAD1AB48B7E0000E739 /* TGLinkHeaderViewController.m in Sources */,
-				E210FEB31AB4C0620000E739 /* TGLinkHeaderContainerViewController.m in Sources */,
 				E28BB7F61AB17ED2005E47B8 /* TGLoginViewController.m in Sources */,
-				E210FEAA1AB2DEF40000E739 /* TGLinkViewController.m in Sources */,
 				E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */,
 				E2A512971AC4AC990007A842 /* ThemeManager.m in Sources */,
 				E288CBD91AD50CF30059855E /* TGThing.m in Sources */,
 				E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */,
 				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
-				E20F193D1AB77BC900210A58 /* TGSelfpostView.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,
 				E288CBDC1AD50D110059855E /* TGCreated.m in Sources */,
 				E28BB7ED1AAFA305005E47B8 /* TGLink.m in Sources */,
-				E210FEB01AB49AD10000E739 /* TGSelfPostHeaderViewController.m in Sources */,
 				E24514881AA64C1200B80D2E /* TGRedditClient.m in Sources */,
 				E22048031AD85DA200A5FACF /* TGMoreComments.m in Sources */,
 				E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */,
 				E2A5128A1AC0D42C0007A842 /* TGPostViewController.m in Sources */,
 				E24514671AA6448500B80D2E /* FrontPageViewController.m in Sources */,
 				E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */,
-				E210FEB61AB4CE9F0000E739 /* EmptySegue.m in Sources */,
 				E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */,
 				E2A512871AC0CEF80007A842 /* TGCommentCell.m in Sources */,
 				E24514611AA6448500B80D2E /* main.m in Sources */,
@@ -617,6 +581,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = redditPad;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -630,6 +595,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = redditPad;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
