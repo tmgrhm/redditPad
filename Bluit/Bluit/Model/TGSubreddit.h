@@ -52,7 +52,7 @@ static NSString * const kTGSubredditSortStringTop =				@"Top";
 
 @property (nonatomic, assign, readonly, getter=isNSFW) BOOL nsfw;
 
-@property (nonatomic, assign, readonly) NSUInteger activeUsers;
+@property (nonatomic, assign, readonly) NSInteger activeUsers;
 @property (nonatomic, assign, readonly) NSUInteger subscribers;
 @property (nonatomic, copy, readonly) NSString *sidebar;
 @property (nonatomic, copy, readonly) NSString *sidebarHTML;
@@ -66,6 +66,6 @@ static NSString * const kTGSubredditSortStringTop =				@"Top";
 @property (nonatomic, assign, readonly) BOOL userIsModerator;
 @property (nonatomic, assign, readonly) BOOL userIsBanned;
 
-- (instancetype) initLinkFromDictionary:(NSDictionary *)dict;
+- (instancetype) initSubredditFromDictionary:(NSDictionary *)dict;
 
 @end

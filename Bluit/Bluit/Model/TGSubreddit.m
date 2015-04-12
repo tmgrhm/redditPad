@@ -10,7 +10,7 @@
 
 @implementation TGSubreddit
 
-- (instancetype) initLinkFromDictionary:(NSDictionary *)dict
+- (instancetype) initSubredditFromDictionary:(NSDictionary *)dict
 {
 	self = [super initFromDictionary:dict];
 	if (!self) {
@@ -25,7 +25,6 @@
 	_publicDescription	=		data[@"public_description"];
 	_publicDescriptionHTML =	data[@"public_description_html"];
 	_nsfw =						[data[@"over18"] boolValue];
-	_activeUsers =				[data[@"accounts_active"] unsignedIntegerValue];
 	_subscribers =				[data[@"subscribers"] unsignedIntegerValue];
 	_sidebar =					data[@"description"];
 	_sidebarHTML =				data[@"description_html"];
@@ -36,6 +35,8 @@
 	_userIsContributor =		[data[@"user_is_contributor"] boolValue];
 	_userIsModerator =			[data[@"user_is_moderator"] boolValue];
 	_userIsBanned =				[data[@"user_is_banned"] boolValue];
+	
+	_activeUsers =				data[@"accounts_active"] == [NSNull null] ? -1 : [data[@"accounts_active"] integerValue];
 	
 	if ([data[@"subreddit_type"] isEqualToString:@"public"])
 		_subredditType =		TGSubredditPublic;
