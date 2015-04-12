@@ -18,10 +18,12 @@
 	<string>949799</string>
 	<key>tintColor</key>
 	<string>4099FF</string>
-	<key>saveColor</key>
-	<string>FFBF00</string>
 	<key>inactiveColor</key>
 	<string>949799</string>
+	<key>downvoteColor</key>
+	<string>FF4501</string>
+	<key>saveColor</key>
+	<string>FFBF00</string>
 	<key>separatorColor</key>
 	<string>434445</string>
 	<key>shadowColor</key>
