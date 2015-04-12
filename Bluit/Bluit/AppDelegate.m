@@ -90,6 +90,7 @@
 	
 	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
 	
+	[[UITextField appearance] setFont:[UIFont fontWithName:@"AvenirNext-Medium" size:15.0f]];
 	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
 	[[UITextField appearance] setTextColor:[ThemeManager textColor]];
 	
