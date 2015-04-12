@@ -10,6 +10,7 @@
 
 #import "FrontPageViewController.h"
 
+#import "TGSubreddit.h"
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
@@ -26,7 +27,7 @@ NSString * const kRandomSubredditURL = @"/r/random";
 
 @property (strong, nonatomic) NSArray *navigationOptions;
 @property (strong, nonatomic) NSArray *subreddits;
-@property (strong, nonatomic) NSString *selectedSubreddit;
+@property (strong, nonatomic) NSString *selectedSubreddit; // TODO should be a TGSubreddit?
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -45,8 +46,15 @@ NSString * const kRandomSubredditURL = @"/r/random";
 							   kDiscoverSubreddits];
 	
 	__weak __typeof(self)weakSelf = self;
-	[[TGRedditClient sharedClient] retrieveUserSubscriptionsWithCompletion:^(NSArray *subreddits){
-		weakSelf.subreddits = subreddits;
+	[[TGRedditClient sharedClient] retrieveUserSubscriptionsWithCompletion:^(NSArray *subreddits)
+	{
+		weakSelf.subreddits = [subreddits sortedArrayUsingComparator:^NSComparisonResult(TGSubreddit *sub1, TGSubreddit *sub2)
+		{
+			NSString *string1 = [[sub1.url absoluteString] lowercaseString];
+			NSString *string2 = [[sub2.url absoluteString] lowercaseString];
+			return [string1 compare:string2];
+		}];
+		
 		[weakSelf reloadTableViewData];
 	}];
 }
@@ -98,8 +106,11 @@ NSString * const kRandomSubredditURL = @"/r/random";
 			cell.textLabel.text = self.navigationOptions[indexPath.row];
 			break;
 		case 1:
-			cell.textLabel.text = self.subreddits[indexPath.row][@"data"][@"url"];
+		{
+			TGSubreddit *sub = self.subreddits[indexPath.row];
+			cell.textLabel.text = [sub.url absoluteString];
 			break;
+		}
 	}
 	
 	return cell;
@@ -124,8 +135,11 @@ NSString * const kRandomSubredditURL = @"/r/random";
 			break;
 		}
 		case 1:
-			self.selectedSubreddit = self.subreddits[indexPath.row][@"data"][@"url"];
+		{
+			TGSubreddit *sub = self.subreddits[indexPath.row];
+			self.selectedSubreddit = [sub.url absoluteString];
 			break;
+		}
 	}
 	
 	[self.delegate didSelectSubreddit:self.selectedSubreddit];
