@@ -211,6 +211,14 @@
 		cell.domain.hidden = NO;
 	}
 	
+	cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Inactive"];
+	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Inactive"];
+	
+	if (link.isUpvoted)
+		cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Active"];		// TODO consts?
+	else if (link.isDownvoted)
+		cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Active"];
+	
 	cell.score.textColor = [ThemeManager secondaryTextColor];
 	cell.timestamp.textColor = [ThemeManager secondaryTextColor];
 	cell.author.textColor = [ThemeManager secondaryTextColor];

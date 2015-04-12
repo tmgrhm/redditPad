@@ -41,7 +41,7 @@
 		{
 			NSMutableDictionary *mutableChild = [child mutableCopy];
 			mutableChild[@"data"] = [mutableChild[@"data"] mutableCopy];
-			mutableChild[@"data"][@"indentationLevel"] = [NSString stringWithFormat:@"%lu", self.indentationLevel + 1];
+			mutableChild[@"data"][@"indentationLevel"] = [NSString stringWithFormat:@"%ld", self.indentationLevel + 1];
 			TGComment *comment = [[TGComment new] initCommentFromDictionary:mutableChild];
 			if (comment)
 			{
@@ -84,7 +84,7 @@
 
 - (NSString *) description
 {
-	return [NSString stringWithFormat:@"body: %@ \n author:%@ \n indent:%lu \n \t children: %lu", self.body, self.author, self.indentationLevel, self.children.count];
+	return [NSString stringWithFormat:@"body: %@ \n author:%@ \n indent:%lu \n \t children: %lu", self.body, self.author, (long)self.indentationLevel, (unsigned long)self.children.count];
 }
 
 @end

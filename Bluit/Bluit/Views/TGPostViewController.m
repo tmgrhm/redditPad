@@ -497,7 +497,7 @@
 	
 	[self reloadCommentTableViewData];
 	
-	NSLog(@"Found %lu comments", self.comments.count);
+	NSLog(@"Found %lu comments", (unsigned long)self.comments.count);
 }
 
 - (NSAttributedString *) attributedStringFromMarkdown:(NSString *)markdown

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface TGListingTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *upvoteIndicator;
+@property (weak, nonatomic) IBOutlet UIImageView *downvoteIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *score;
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UILabel *subreddit;

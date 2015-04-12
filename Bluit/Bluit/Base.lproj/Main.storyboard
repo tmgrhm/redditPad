@@ -123,7 +123,7 @@
                                                     <color key="textColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <color key="highlightedColor" red="0.57998436689376831" green="0.5920947790145874" blue="0.60038077831268311" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Comments-Icon" translatesAutoresizingMaskIntoConstraints="NO" id="gro-lN-J0s">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-Listing-Comments" translatesAutoresizingMaskIntoConstraints="NO" id="gro-lN-J0s">
                                                     <rect key="frame" x="722" y="25" width="19" height="17"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="17" id="Lez-Vw-bOc"/>
@@ -135,7 +135,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Upvote-Inactive" translatesAutoresizingMaskIntoConstraints="NO" id="1Fs-8f-5pd">
+                                                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-Listing-Upvote-Inactive" translatesAutoresizingMaskIntoConstraints="NO" id="1Fs-8f-5pd">
                                                     <rect key="frame" x="30" y="17" width="11" height="7"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="11" id="I0p-j0-vCb"/>
@@ -155,7 +155,7 @@
                                                         </mask>
                                                     </variation>
                                                 </imageView>
-                                                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Downvote-Inactive" translatesAutoresizingMaskIntoConstraints="NO" id="EHU-hO-NG1">
+                                                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-Listing-Downvote-Inactive" translatesAutoresizingMaskIntoConstraints="NO" id="EHU-hO-NG1">
                                                     <rect key="frame" x="30" y="56" width="11" height="7"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="17" id="Bp2-2Y-3RO"/>
@@ -236,12 +236,14 @@
                                             <outlet property="author" destination="5Ic-0H-vFQ" id="i2J-NP-ndz"/>
                                             <outlet property="commentsButton" destination="pqY-hE-bjs" id="O2W-vP-b54"/>
                                             <outlet property="domain" destination="vt8-LS-zno" id="WEq-pf-XY0"/>
+                                            <outlet property="downvoteIndicator" destination="EHU-hO-NG1" id="FhF-DB-Quv"/>
                                             <outlet property="score" destination="3Wd-14-WL1" id="qAV-5l-If1"/>
                                             <outlet property="subreddit" destination="EOJ-8X-ezr" id="jK1-Al-qI5"/>
                                             <outlet property="thumbnail" destination="99B-01-QIo" id="rmu-YW-Irv"/>
                                             <outlet property="timestamp" destination="faW-jO-vMa" id="9fC-GO-DCV"/>
                                             <outlet property="title" destination="F4j-Pr-Eee" id="VH4-NF-ygD"/>
                                             <outlet property="totalComments" destination="MrZ-DP-CdX" id="p52-4z-t63"/>
+                                            <outlet property="upvoteIndicator" destination="1Fs-8f-5pd" id="sBL-od-ZAp"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -259,7 +261,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Front Page" id="r5f-Og-iem">
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="tUO-ax-iqZ">
+                        <barButtonItem key="rightBarButtonItem" image="Icon-Navbar-Search" id="tUO-ax-iqZ">
                             <connections>
                                 <segue destination="wce-mI-FbR" kind="showDetail" identifier="searchListing" id="H0A-0C-fmZ"/>
                             </connections>
@@ -301,12 +303,12 @@
                                 <rect key="frame" x="0.0" y="20" width="768" height="44"/>
                                 <items>
                                     <navigationItem id="bSO-EA-jcX">
-                                        <barButtonItem key="leftBarButtonItem" image="Icon-Close" id="kzg-ue-yuT">
+                                        <barButtonItem key="leftBarButtonItem" image="Icon-Navbar-Close" id="kzg-ue-yuT">
                                             <connections>
                                                 <action selector="closePressed:" destination="gFf-Ur-DKX" id="wWD-wa-9ej"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" image="Comments-Icon" id="ceq-Yi-hSr">
+                                        <barButtonItem key="rightBarButtonItem" image="Icon-Navbar-Comments" id="ceq-Yi-hSr">
                                             <connections>
                                                 <action selector="commentsPressed:" destination="gFf-Ur-DKX" id="ksz-7f-1Gp"/>
                                             </connections>
@@ -320,25 +322,25 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WgH-ao-0H9">
                                 <rect key="frame" x="0.0" y="980" width="768" height="44"/>
                                 <items>
-                                    <barButtonItem title="Back" id="XYZ-Ye-Bfl">
+                                    <barButtonItem image="Icon-Navbar-WebBack" id="XYZ-Ye-Bfl">
                                         <connections>
                                             <action selector="goBack" destination="sy1-Ii-pln" id="sUq-em-RuG"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="GZP-A8-NkK"/>
-                                    <barButtonItem title="Forward" id="HjB-oS-xPc">
+                                    <barButtonItem image="Icon-Navbar-WebForward" id="HjB-oS-xPc">
                                         <connections>
                                             <action selector="goForward" destination="sy1-Ii-pln" id="jAa-cY-mS9"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="btk-sY-vEf"/>
-                                    <barButtonItem systemItem="refresh" id="gnX-3G-009">
+                                    <barButtonItem image="Icon-Navbar-Refresh" id="gnX-3G-009">
                                         <connections>
                                             <action selector="reload" destination="sy1-Ii-pln" id="Gu3-09-MDO"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="gM8-hU-Abb"/>
-                                    <barButtonItem image="Icon-Post-Share" id="BQc-w2-5eD">
+                                    <barButtonItem image="Icon-Navbar-Share" id="BQc-w2-5eD">
                                         <connections>
                                             <action selector="sharePressed:" destination="gFf-Ur-DKX" id="Kfj-Ei-zG1"/>
                                         </connections>
@@ -419,7 +421,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="C0o-Vy-OV4">
-                        <barButtonItem key="rightBarButtonItem" title="Profile" id="DoD-z7-24r">
+                        <barButtonItem key="rightBarButtonItem" image="Icon-Navbar-UserProfile" id="DoD-z7-24r">
                             <connections>
                                 <segue destination="EBH-uB-JtY" kind="show" id="rfc-XM-dTH"/>
                             </connections>
@@ -429,7 +431,6 @@
                     <size key="freeformSize" width="276" height="1024"/>
                     <connections>
                         <outlet property="tableView" destination="JFe-PZ-Ue8" id="hin-8L-zPB"/>
-                        <segue destination="9pv-A4-QxB" kind="show" identifier="subredditListToListing" id="Xrt-m8-Eu0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
@@ -991,7 +992,7 @@
                                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ArW-f8-L6R" userLabel="Top Toolbar">
                                                 <rect key="frame" x="0.0" y="0.0" width="640" height="44"/>
                                                 <items>
-                                                    <barButtonItem image="Icon-Close" id="BOr-8M-H49" userLabel="Close">
+                                                    <barButtonItem image="Icon-Navbar-Close" id="BOr-8M-H49" userLabel="Close">
                                                         <connections>
                                                             <action selector="closePressed:" destination="ibe-ay-a9l" id="GZT-as-nsk"/>
                                                         </connections>
@@ -1015,7 +1016,7 @@
                                                         </connections>
                                                     </barButtonItem>
                                                     <barButtonItem width="18" style="plain" systemItem="fixedSpace" id="Tcd-Zd-eqx"/>
-                                                    <barButtonItem image="Icon-Post-Share" id="b9V-pB-qqY" userLabel="Share">
+                                                    <barButtonItem image="Icon-Navbar-Share" id="b9V-pB-qqY" userLabel="Share">
                                                         <connections>
                                                             <action selector="sharePostPressed:" destination="ibe-ay-a9l" id="Gbk-BY-2RB"/>
                                                         </connections>
@@ -1273,24 +1274,29 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Comments-Icon" width="19" height="17"/>
-        <image name="Downvote-Inactive" width="11" height="7"/>
         <image name="Home Icon - Inactive" width="20" height="17"/>
-        <image name="Icon-Close" width="12" height="12"/>
+        <image name="Icon-Listing-Comments" width="19" height="17"/>
+        <image name="Icon-Listing-Downvote-Inactive" width="11" height="7"/>
+        <image name="Icon-Listing-Upvote-Inactive" width="11" height="7"/>
+        <image name="Icon-Navbar-Close" width="12" height="12"/>
+        <image name="Icon-Navbar-Comments" width="19" height="17"/>
+        <image name="Icon-Navbar-Refresh" width="16" height="18"/>
+        <image name="Icon-Navbar-Search" width="16" height="16"/>
+        <image name="Icon-Navbar-Share" width="15" height="22"/>
+        <image name="Icon-Navbar-UserProfile" width="15" height="19"/>
+        <image name="Icon-Navbar-WebBack" width="9" height="16"/>
+        <image name="Icon-Navbar-WebForward" width="9" height="16"/>
         <image name="Icon-Post-Downvote-Active" width="12" height="17"/>
         <image name="Icon-Post-Downvote-Inactive" width="12" height="16"/>
         <image name="Icon-Post-Hide-Inactive" width="20" height="14"/>
         <image name="Icon-Post-Report" width="13" height="18"/>
         <image name="Icon-Post-Save-Inactive" width="17" height="16"/>
-        <image name="Icon-Post-Share" width="15" height="22"/>
         <image name="Icon-Post-Upvote-Active" width="12" height="17"/>
         <image name="Icon-Post-Upvote-Inactive" width="12" height="16"/>
         <image name="Multis Icon - Inactive" width="18" height="12"/>
-        <image name="Upvote-Inactive" width="11" height="7"/>
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Xrt-m8-Eu0"/>
         <segue reference="iGZ-e7-hTh"/>
         <segue reference="YFw-Df-Uep"/>
     </inferredMetricsTieBreakers>

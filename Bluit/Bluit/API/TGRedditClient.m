@@ -172,7 +172,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			parameters:nil
 			   success:^(NSURLSessionDataTask *task, id responseObject){
 				   weakSelf.userSubreddits = responseObject[@"data"][@"children"];
-				   NSLog(@"Retrieved %lu subreddits", weakSelf.userSubreddits.count);
+				   NSLog(@"Retrieved %lu subreddits", (unsigned long)weakSelf.userSubreddits.count);
 				   completion(weakSelf.userSubreddits);
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error){
