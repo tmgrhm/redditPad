@@ -80,24 +80,27 @@
 	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
 	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
-	NSDictionary *attributes = @{NSForegroundColorAttributeName:		[ThemeManager textColor],
-								 NSFontAttributeName:				[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:	[ThemeManager textColor],
+								 NSFontAttributeName:			[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	[[UINavigationBar appearance] setTitleTextAttributes:attributes];
 	[[UIToolbar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UIToolbar appearance] setTintColor:[ThemeManager tintColor]];
 	[[UITabBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
 	[[UITabBar appearance] setTintColor:[ThemeManager tintColor]];
 	
-	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
-	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
 	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
 	
 	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
 	[[UITextField appearance] setTextColor:[ThemeManager textColor]];
 	
+	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
+
 	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
+	
 	[[UISegmentedControl appearance] setTintColor:[ThemeManager tintColor]];
-	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager tintColor]} forState:UIControlStateNormal];
+	attributes = @{NSFontAttributeName:				[UIFont fontWithName:@"AvenirNext-Medium" size:14.0f],
+				   NSForegroundColorAttributeName:	[ThemeManager tintColor]};
+	[[UISegmentedControl appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
 	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
 }
 
