@@ -10,6 +10,7 @@
 
 #import "TGRedditClient.h"
 #import "TGLink.h"
+#import "TGSubreddit.h"
 
 #import "TGWebViewController.h"
 
@@ -34,8 +35,6 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 @property (strong, nonatomic) NSString *sessionIdentifier;
 @property (strong, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSString *refreshToken;
-
-@property (strong, nonatomic) NSArray *userSubreddits;
 
 @end
 
@@ -64,6 +63,8 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	return self;
 }
 
+#pragma mark - Listings
+
 - (void) requestFrontPageWithCompletionBlock:(TGListingCompletionBlock)completion
 {
     [self requestSubreddit:@"hot" withCompletion:completion];
@@ -81,77 +82,55 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	{
 		path = [NSString stringWithFormat:@"%@?after=t3_%@", path, link.id]; // TODO better than "?after="
 	}
-	[self request:path withCompletionBlock:completion];
+	[self requestListing:path withCompletionBlock:completion];
 }
 
-- (void) request:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)completion	// TODO improve
+- (void) requestListing:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)completion	// TODO improve
 {
-	NSURL *URL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", BaseURLString, path]];
+	NSString *urlString = [NSString stringWithFormat:@"%@%@", BaseURLString, path];
+	NSLog(@"Client requesting: %@", urlString);
 	
-	NSLog(@"Client requesting: %@", [NSString stringWithFormat:@"%@%@", BaseURLString, path]);
-    
-	NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-	
-	AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-	operation.responseSerializer = [AFJSONResponseSerializer serializer];
-	
-	[operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
-	{
-		NSDictionary *responseDict = (NSDictionary *)responseObject;
-		NSMutableArray *listing = [NSMutableArray new];
-		
-		for (id item in responseDict[@"data"][@"children"])
-		{
-			[listing addObject:[[TGLink new] initLinkFromDictionary:item]];
-		}
-		
-		completion([NSArray arrayWithArray:listing], nil);
-	}
-	 failure:^(AFHTTPRequestOperation *operation, NSError *error)
-	 {
-		 [self failureWithError:error];
-		 completion(nil, error);
-	 }];
-	
-	[operation start];
+	[self.manager GET:urlString
+		   parameters:nil
+			  success:^(NSURLSessionDataTask *task, id responseObject) {
+				  NSDictionary *responseDict = (NSDictionary *)responseObject;
+				  NSMutableArray *listing = [NSMutableArray new];
+				  
+				  for (id item in responseDict[@"data"][@"children"])
+				  {
+					  [listing addObject:[[TGLink new] initLinkFromDictionary:item]];
+				  }
+				  
+				  completion([NSArray arrayWithArray:listing], nil);
+			  }
+			  failure:^(NSURLSessionDataTask *task, NSError *error) {
+				  [self failureWithError:error];
+				  completion(nil, error);
+			  }];
 }
 
-- (void) loginWithUsername:(NSString *)username
-				  password:(NSString *)password
-			withCompletion:(void (^)(void))completion
+#pragma mark - Links
+
+- (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion
 {
-	NSDictionary *parameters = @{@"user": username,
-								 @"passwd": password,
-								 @"rem": @"on",
-								 @"api_type": @"json"};
+	NSLog(@"requesting comments for: %@", link.id);
 	
-	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:@"api/login"];
+	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", BaseURLString, link.subreddit, link.id];
 	
-	__weak __typeof(self)weakSelf = self;
-	
-	[self.manager POST:urlString
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject)
-		{
-			NSDictionary *data = (NSDictionary *)responseObject[@"json"][@"data"];
-			weakSelf.modhash = data[@"modhash"];
-			weakSelf.sessionIdentifier = data[@"cookie"] ?
-			[NSString stringWithFormat:@"reddit_session=%@", [data[@"cookie"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] : nil;
-			
-			NSLog(@"got new session: \"%@\" \nsessionID: \"%@\"", weakSelf.modhash, weakSelf.sessionIdentifier);
-			
-			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.modhash forKey:@"modhash"];
-			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.sessionIdentifier forKey:@"sessionIdentifier"];
-			
-			[weakSelf setSerializerHTTPHeaders:weakSelf.modhash and:weakSelf.sessionIdentifier];
-			completion();
-		}
-			   failure:^(NSURLSessionDataTask *task, NSError *error)
-		{
-			[self failureWithError:error];
-		}
+	[self.manager GET:urlString
+		   parameters:nil
+			  success:^(NSURLSessionDataTask *task, id responseObject){
+				  id comments = [responseObject lastObject][@"data"][@"children"];
+				  completion(comments);
+			  }
+			  failure:^(NSURLSessionDataTask *task, NSError *error){
+				  // TODO
+				  [self failureWithError:error];
+			  }
 	 ];
 }
+
+#pragma mark - Subreddits
 
 - (void) setSerializerHTTPHeaders:(NSString *)modhash and:(NSString *)sessionIdentifier
 {
@@ -161,26 +140,41 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSLog(@"set headers: \"%@\" \nsessionID: \"%@\"", modhash, sessionIdentifier);
 }
 
-- (void)retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion {
+- (void)retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion
+{
 	NSLog(@"retrievingUserSubs");
 	
-	NSString *urlString = [BaseURLString stringByAppendingString:@"subreddits/mine/subscriber.json?limit=100"]; // TODO get all
-	
-	__weak __typeof(self)weakSelf = self;
-	
-	[self.manager GET:urlString
+	NSString *urlString = @"mine/subscriber.json?limit=100"; // TODO get all
+	[self retrieveSubreddits:urlString withCompletion:completion];
+}
+
+- (void)retrieveSubreddits:(NSString *)path withCompletion:(void (^)(NSArray *subreddits))completion
+{
+	NSString *url = [BaseURLString stringByAppendingString:[NSString stringWithFormat:@"subreddits/%@", path]];
+	[self.manager GET:url
 			parameters:nil
-			   success:^(NSURLSessionDataTask *task, id responseObject){
-				   weakSelf.userSubreddits = responseObject[@"data"][@"children"];
-				   NSLog(@"Retrieved %lu subreddits", (unsigned long)weakSelf.userSubreddits.count);
-				   completion(weakSelf.userSubreddits);
-			   }
-			   failure:^(NSURLSessionDataTask *task, NSError *error){
+			   success:^(NSURLSessionDataTask *task, id responseObject)
+				{
+					NSArray *responseSubs = responseObject[@"data"][@"children"];
+					NSMutableArray *subreddits = [NSMutableArray new];
+					for (NSDictionary *child in responseSubs)
+					{
+						TGSubreddit *sub = [[TGSubreddit alloc] initSubredditFromDictionary:child];
+						[subreddits addObject:sub];
+					}
+					
+					NSLog(@"Retrieved %lu subreddits", (unsigned long)subreddits.count);
+					completion(subreddits);
+				}
+			   failure:^(NSURLSessionDataTask *task, NSError *error)
+				{
 				   // TODO
 				   [self failureWithError:error];
 			   }
 	 ];
 }
+
+#pragma mark - Authentication
 
 - (NSURL *) oAuthLoginURL
 {
@@ -251,22 +245,40 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			   }];
 }
 
-- (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion
+- (void) loginWithUsername:(NSString *)username
+				  password:(NSString *)password
+			withCompletion:(void (^)(void))completion		// TODO remove, deprecated
 {
-	NSLog(@"requesting comments for: %@", link.id);
-		
-	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", BaseURLString, link.subreddit, link.id];
+	NSDictionary *parameters = @{@"user": username,
+								 @"passwd": password,
+								 @"rem": @"on",
+								 @"api_type": @"json"};
 	
-	[self.manager GET:urlString
-		   parameters:nil
-			  success:^(NSURLSessionDataTask *task, id responseObject){
-				  id comments = [responseObject lastObject][@"data"][@"children"];
-				  completion(comments);
-			  }
-			  failure:^(NSURLSessionDataTask *task, NSError *error){
-				  // TODO
-				  [self failureWithError:error];
-			  }
+	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:@"api/login"];
+	
+	__weak __typeof(self)weakSelf = self;
+	
+	[self.manager POST:urlString
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject)
+		{
+			NSDictionary *data = (NSDictionary *)responseObject[@"json"][@"data"];
+			weakSelf.modhash = data[@"modhash"];
+			weakSelf.sessionIdentifier = data[@"cookie"] ?
+			[NSString stringWithFormat:@"reddit_session=%@", [data[@"cookie"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] : nil;
+			
+			NSLog(@"got new session: \"%@\" \nsessionID: \"%@\"", weakSelf.modhash, weakSelf.sessionIdentifier);
+			
+			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.modhash forKey:@"modhash"];
+			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.sessionIdentifier forKey:@"sessionIdentifier"];
+			
+			[weakSelf setSerializerHTTPHeaders:weakSelf.modhash and:weakSelf.sessionIdentifier];
+			completion();
+		}
+			   failure:^(NSURLSessionDataTask *task, NSError *error)
+		{
+			[self failureWithError:error];
+		}
 	 ];
 }
 
