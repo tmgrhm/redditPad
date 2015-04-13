@@ -22,7 +22,6 @@
 
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
-@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
@@ -55,6 +54,7 @@
 	
 	[self createShadow];
 	[self themeAppearance];
+	[self configureGestureRecognizer];
 	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
@@ -93,6 +93,20 @@
 //	[self.topToolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 //	[self.topToolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
 }
+
+- (void) configureGestureRecognizer
+{
+	UISwipeGestureRecognizer *singleSwipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self  action:@selector(singleSwipeLeft:)];
+	singleSwipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+	singleSwipeLeft.numberOfTouchesRequired = 1;
+	singleSwipeLeft.delegate = self;
+	[self.commentTableView addGestureRecognizer:singleSwipeLeft];
+	
+	UISwipeGestureRecognizer *doubleSwipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self  action:@selector(doubleSwipeLeft:)];
+	doubleSwipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+	doubleSwipeLeft.numberOfTouchesRequired = 2;
+	doubleSwipeLeft.delegate = self;
+	[self.commentTableView addGestureRecognizer:doubleSwipeLeft];
 }
 
 - (void) updateSaveButton
@@ -182,6 +196,18 @@
 	else						self.link.voteStatus = TGVoteStatusDownvoted;
 	
 	[self updateVoteButtons];
+}
+
+- (void) singleSwipeLeft: (UIGestureRecognizer *)sender
+{
+	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
+	[self collapseCommentsAtIndexPath:indexPath];
+}
+
+- (void) doubleSwipeLeft: (UIGestureRecognizer *)sender
+{
+	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
+	[self collapseCommentsAtIndexPath:indexPath andParents:YES];
 }
 
 #pragma mark - TableView
@@ -414,7 +440,8 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	switch(indexPath.section) {
+	[tableView deselectRowAtIndexPath:indexPath animated:NO];
+/*	switch(indexPath.section) {
 		case 0:
 			[tableView deselectRowAtIndexPath:indexPath animated:NO];
 			// TODO header tapped
@@ -423,7 +450,26 @@
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
 			[self collapseCommentsAtIndexPath:indexPath];
 			break;
+	}*/
+}
+
+- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath andParents:(BOOL)collapseParents
+{
+	NSIndexPath *collapseRootIndex = indexPath;
+	
+	if (collapseParents)
+	{
+		NSInteger row = indexPath.row;
+		TGComment *currentComment = self.comments[row];
+		while (currentComment.indentationLevel != 0)
+		{
+			row--;
+			currentComment = self.comments[row];
+		}
+		collapseRootIndex = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
 	}
+	
+	[self collapseCommentsAtIndexPath:collapseRootIndex];
 }
 
 - (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath	// TODO look at using beginUpdates endUpdates instead of reloadData so only the relevant comments animate
