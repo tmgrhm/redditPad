@@ -23,6 +23,7 @@
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
+@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
@@ -88,7 +89,10 @@
 
 - (void) themeAppearance
 {
-	// empty
+	// TODO figure out how to get custom shadowImage without changing backgroundImage
+//	[self.topToolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+//	[self.topToolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+}
 }
 
 - (void) updateSaveButton
@@ -456,6 +460,16 @@
 	self.urlFromCommentTapped = URL;
 	[self performSegueWithIdentifier:@"openLink" sender:self];
 	return NO;
+}
+
+#pragma mark - UIBarPositioning
+
+- (UIBarPosition) positionForBar:(id<UIBarPositioning>)bar
+{
+	if (bar == self.topToolbar)
+		return UIBarPositionTop;
+	else
+		return UIBarPositionAny;
 }
 
 #pragma mark - Navigation
