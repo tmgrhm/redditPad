@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sortControl;
 
 @property (strong, nonatomic) NSMutableArray *listings;
+@property (strong, nonatomic) NSMutableDictionary *listingCellHeights;
 @property (strong, nonatomic) TGLink *selectedLink;
 
 @end
@@ -40,12 +41,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 	self.listings = [NSMutableArray new];
+	self.listingCellHeights = [NSMutableDictionary new];
 	
 	[self themeAppearance];
-	
-	self.tableView.estimatedRowHeight = 80.0;
-	self.tableView.rowHeight = UITableViewAutomaticDimension;
-	[self scrollToTopWithAnimation:NO];
 	
 	// TODO custom refreshControl
 	self.refreshControl = [UIRefreshControl new];
@@ -57,6 +55,8 @@
 	[self.tableView addSubview:self.refreshControl];
 	
 	[self loadSubreddit:self.subreddit];
+	
+	[self scrollToTopWithAnimation:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -186,8 +186,25 @@
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	TGListingTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TGListingTableViewCell" forIndexPath:indexPath];
+	if (indexPath.row == self.listings.count-10)
+		[self loadMore];
 	
+	return [self listingCellAtIndexPath:indexPath];
+}
+
+- (TGListingTableViewCell *)listingCellAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGListingTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TGListingTableViewCell" forIndexPath:indexPath];
+	[self configureListingCell:cell atIndexPath:indexPath];
+	
+	[cell setNeedsLayout];
+	[cell layoutIfNeeded];
+	
+	return cell;
+}
+
+- (void)configureListingCell:(TGListingTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
 	TGLink *link = ((TGLink *)self.listings[indexPath.row]);
 	
 	cell.title.text = link.title;
@@ -224,11 +241,57 @@
 	cell.author.textColor = [ThemeManager secondaryTextColor];
 	cell.domain.textColor = [ThemeManager secondaryTextColor];
 	cell.totalComments.textColor = [ThemeManager tintColor];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return [self heightForListingCellAtIndexPath:indexPath];
+}
+
+- (CGFloat)heightForListingCellAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGLink *link = self.listings[indexPath.row];
+	CGFloat height;
+	if ((height = [[self.listingCellHeights objectForKey:link.id] floatValue]))
+	{
+		return height; // if cached, return cached height
+	}
 	
-	if (indexPath.row == self.listings.count-10)
-		[self loadMore];
+	static TGListingTableViewCell *sizingCell = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"TGListingTableViewCell"];
+	});
+ 
+	[self configureListingCell:sizingCell atIndexPath:indexPath];
 	
-	return cell;
+	height = [self calculateHeightForConfiguredListingCell:sizingCell];
+	[self.listingCellHeights setValue:@(height) forKey:link.id]; // cache it
+	return height;
+}
+
+- (CGFloat)calculateHeightForConfiguredListingCell:(TGListingTableViewCell *)sizingCell
+{
+	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.tableView.frame), CGRectGetHeight(sizingCell.bounds));
+	
+	// constrain contentView.width to same as table.width
+	// required for correct height calculation with UITextView
+	// http://stackoverflow.com/questions/27064070/
+	UIView *contentView = sizingCell.contentView;
+	contentView.translatesAutoresizingMaskIntoConstraints = NO;
+	NSDictionary *metrics = @{@"tableWidth":@(self.tableView.frame.size.width)};
+	NSDictionary *views = NSDictionaryOfVariableBindings(contentView);
+	[contentView addConstraints:
+	 [NSLayoutConstraint constraintsWithVisualFormat:@"[contentView(tableWidth)]"
+											 options:0
+											 metrics:metrics
+											   views:views]];
+	
+	[sizingCell setNeedsLayout];
+	[sizingCell layoutIfNeeded];
+	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+	
+	return size.height + 1.0f; // Add 1.0f for the cell separator height
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -238,9 +301,7 @@
 	
 	self.selectedLink = self.listings[indexPath.row];
 	
-/*	NSString *lastPathComponent = self.selectedLink.url.pathComponents.lastObject;
-	
-	if ([lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"] || [lastPathComponent hasSuffix:@".gif"])
+/*	if ([self.selectedLink isImageLink])
 	{
 		[self performSegueWithIdentifier:@"listingToImageView" sender:self]; // TODO better imageView
 	} else */
