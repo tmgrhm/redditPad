@@ -22,6 +22,7 @@
 
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
+#import <TUSafariActivity/TUSafariActivity.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
@@ -37,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewImageHeight;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *savePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
 @property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
@@ -184,8 +186,16 @@
 }
 
 - (IBAction)sharePostPressed:(id)sender {
-	NSLog(@"Share post");
-	// TODO share sheet
+	TUSafariActivity *safariActivity = [TUSafariActivity new];
+	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
+											initWithActivityItems:@[self.link.title, self.link.url]
+											applicationActivities:@[safariActivity]];
+	
+	shareSheet.popoverPresentationController.barButtonItem = self.sharePostButton;
+	
+	[self presentViewController:shareSheet
+					   animated:YES
+					 completion:nil];
 }
 
 - (IBAction)upvoteButtonPressed:(id)sender {

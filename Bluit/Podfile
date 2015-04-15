@@ -6,3 +6,4 @@ pod 'AFNetworking', '~> 2.5', :inhibit_warnings => true
 pod 'XNGMarkdownParser', :inhibit_warnings => true
 # pod 'URBMediaFocusViewController'
 # pod 'Reveal-iOS-SDK', :configurations => ['Debug']
+pod 'TUSafariActivity', '~> 1.0'

@@ -292,8 +292,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sy1-Ii-pln">
+                            <webView opaque="NO" contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sy1-Ii-pln">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="gFf-Ur-DKX" id="kGD-eS-Civ"/>
@@ -803,7 +804,7 @@
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hn9-ej-aYd" userLabel="Header Data">
                                                                     <rect key="frame" x="0.0" y="0.0" width="668" height="195"/>
                                                                     <subviews>
-                                                                        <textView contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qWy-1x-0OD" userLabel="Title">
+                                                                        <textView contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qWy-1x-0OD" userLabel="Title">
                                                                             <rect key="frame" x="75" y="14" width="569" height="40"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                             <attributedString key="attributedText">
@@ -1119,6 +1120,7 @@
                         <outlet property="previewImageHeight" destination="0We-rI-RMx" id="Q5K-aJ-S4f"/>
                         <outlet property="savePostButton" destination="Vfb-ku-gBd" id="7j9-Gs-kMP"/>
                         <outlet property="shadowView" destination="YWD-s7-gm1" id="Lse-2s-fzT"/>
+                        <outlet property="sharePostButton" destination="b9V-pB-qqY" id="aUd-W4-ZL0"/>
                         <outlet property="topToolbar" destination="ArW-f8-L6R" id="vSI-0b-ohg"/>
                         <segue destination="gFf-Ur-DKX" kind="presentation" identifier="linkViewToWebView" id="F0Z-Ku-XRv"/>
                         <segue destination="gFf-Ur-DKX" kind="presentation" identifier="openLink" id="fTW-1s-qNd"/>
@@ -1153,8 +1155,8 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="iGZ-e7-hTh"/>
-        <segue reference="qgV-3d-NLN"/>
+        <segue reference="fTW-1s-qNd"/>
         <segue reference="iA2-kh-EGo"/>
+        <segue reference="qgV-3d-NLN"/>
     </inferredMetricsTieBreakers>
 </document>
