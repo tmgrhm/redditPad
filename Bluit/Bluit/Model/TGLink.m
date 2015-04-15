@@ -35,6 +35,9 @@
 	_sticky =			[data[@"stickied"] boolValue];
 	_viewed =			[data[@"visited"] boolValue];
 	
+	NSString *lastPathComponent = _url.lastPathComponent;
+	_isImageLink = [lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"];
+	
 	_thumbnailURL = _selfpost ? nil : [NSURL URLWithString:data[@"thumbnail"]];
 	
 	return self;

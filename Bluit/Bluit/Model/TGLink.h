@@ -30,6 +30,7 @@
 @property (nonatomic, assign, getter=isSticky) BOOL sticky;
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 @property (nonatomic, assign, getter=isViewed) BOOL viewed; // TODO set when viewed
+@property (nonatomic, assign) BOOL isImageLink;
 
 @property (nonatomic, copy, readonly) NSURL *permalink;
 
