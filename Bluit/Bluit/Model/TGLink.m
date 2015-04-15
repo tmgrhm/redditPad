@@ -25,7 +25,6 @@
 	_author =			data[@"author"];
 	_domain =			data[@"domain"];
 	_url =				[NSURL URLWithString:data[@"url"]];
-	_selfText =			data[@"selftext"];
 	_selfTextHTML =		data[@"body_html"];
 	_edited =			[data[@"edited"] boolValue];
 	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] unsignedIntegerValue]] : nil;
@@ -34,6 +33,15 @@
 	_nsfw =				[data[@"over_18"] boolValue];
 	_sticky =			[data[@"stickied"] boolValue];
 	_viewed =			[data[@"visited"] boolValue];
+	
+	NSString *selfText = data[@"selftext"];
+	if (selfText)
+	{
+		selfText = [selfText stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+		selfText = [selfText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+		selfText = [selfText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+	}
+	_selfText =	data[@"selftext"];
 	
 	NSString *lastPathComponent = _url.lastPathComponent;
 	_isImageLink = [lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"];

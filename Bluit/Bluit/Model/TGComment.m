@@ -23,7 +23,12 @@
 	
 	NSDictionary *data = dict[@"data"];
 	
-	_body =				data[@"body"];
+	NSString *body = data[@"body"];
+	body = [body stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+	body = [body stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+	body = [body stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+	
+	_body =				body;
 	_bodyHTML =			data[@"body_html"];
 	_scoreHidden =		[data[@"score_hidden"] boolValue];
 	_author =			data[@"author"];
