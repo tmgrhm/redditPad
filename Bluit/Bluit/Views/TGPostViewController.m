@@ -44,7 +44,7 @@
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
 @property (strong, nonatomic) NSMutableDictionary *commentHeights;
 
-@property (strong, nonatomic) NSURL *urlFromCommentTapped;
+@property (strong, nonatomic) NSURL *interactedURL;
 
 - (void) reloadCommentTableViewData;
 
@@ -297,14 +297,19 @@
 	cell.title.delegate = self;
 	cell.content.delegate = self;
 	
-	cell.title.selectable = YES; // enable selection while using UITextView setText else attributedText is reset (wtf)
 	cell.title.text = self.link.title;
 	NSMutableAttributedString *mutAttrTitle = [cell.title.attributedText mutableCopy];
-	[mutAttrTitle addAttribute:NSForegroundColorAttributeName
-						 value:[ThemeManager textColor]
-						 range:NSMakeRange(0, mutAttrTitle.length)];
+	NSDictionary *attributes;
+	if ([self.link isSelfpost])
+	{
+		attributes = @{NSForegroundColorAttributeName	: [ThemeManager textColor] };
+	} else {
+		attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
+					   NSLinkAttributeName				: self.link.url};
+		cell.title.delegate = self;
+	}
+	[mutAttrTitle addAttributes:attributes range:NSMakeRange(0, mutAttrTitle.length)];
 	cell.title.attributedText = mutAttrTitle;
-	cell.title.selectable = NO;
 	
 	NSString *edited = [self.link isEdited] ? [NSString stringWithFormat:@" (edited %@)", [self.link.editDate relativeDateString]] : @""; // TODO better edit indicator
 	cell.metadata.text = [NSString stringWithFormat:@"%ld points in /r/%@ %@%@, by %@", (long)self.link.score, self.link.subreddit, [self.link.creationDate relativeDateString], edited, self.link.author];
@@ -327,6 +332,7 @@
 		cell.content.attributedText = [self attributedStringFromMarkdown:self.link.selfText];
 	} else {
 		cell.content.text = [self.link.url absoluteString];
+		cell.content.dataDetectorTypes = UIDataDetectorTypeNone;
 	}
 }
 
@@ -533,7 +539,7 @@
 #pragma mark - UITextView
 - (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
-	self.urlFromCommentTapped = URL;
+	self.interactedURL = URL;
 	[self performSegueWithIdentifier:@"openLink" sender:self];
 	return NO;
 }
@@ -562,7 +568,7 @@
 	else if ([segue.identifier isEqualToString:@"openLink"])
 	{
 		TGWebViewController *webVC = segue.destinationViewController;
-		webVC.url = self.urlFromCommentTapped;
+		webVC.url = self.interactedURL;
 	}
 }
 

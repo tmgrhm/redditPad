@@ -34,9 +34,12 @@
 * --fix thumbnails causing one-line titles to display as two-line cells--
 
 ##Comments View
+* collapsing threads and animating *nicely*
+* fix headerCell spacing
 * improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
+* look at performance of scrolling - why so bad
 * design for selfpost where body is empty
 
 * --negative scores--
@@ -45,13 +48,15 @@
 * --remove trailing \n from comments--
 
 ##Web View
-* Increase Size
-* Title from current webpage title
 * Button to view comments for current page *if Link web view*
-* Try theme loading backgroundColor (prevent white flash when in dark theme)
+
+* --Try theme loading backgroundColor (prevent white flash when in dark theme)--
+* --Increase Size--
+* --Title from current webpage title--
 
 ##Subreddits
 * figure out how to get all user's subscribed subreddits
+* trending subreddits
 * add default list of subreddits in Subreddits view
 
 ##Search
@@ -75,10 +80,10 @@
 
 ##Design Implementation
 * Comments left-bars
-* vote status
 * distinguished votables
 * gilded votables
 * archived things
 * private subreddits
 
+* --vote status--
 * --Navigational restructure--
