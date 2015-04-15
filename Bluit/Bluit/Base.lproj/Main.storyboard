@@ -43,7 +43,7 @@
                                             </connections>
                                         </segmentedControl>
                                     </subviews>
-                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstItem="PoJ-5q-Gbo" firstAttribute="top" secondItem="a8f-GZ-1HC" secondAttribute="top" constant="30" id="Nt3-9a-4mk"/>
                                         <constraint firstAttribute="centerX" secondItem="PoJ-5q-Gbo" secondAttribute="centerX" id="si0-oB-k7k"/>
@@ -1155,8 +1155,8 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fTW-1s-qNd"/>
-        <segue reference="iA2-kh-EGo"/>
         <segue reference="qgV-3d-NLN"/>
+        <segue reference="iGZ-e7-hTh"/>
+        <segue reference="YFw-Df-Uep"/>
     </inferredMetricsTieBreakers>
 </document>

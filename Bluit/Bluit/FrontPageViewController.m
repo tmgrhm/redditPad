@@ -74,7 +74,6 @@
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
-	self.tableView.tableHeaderView.backgroundColor = [ThemeManager backgroundColor];
 }
 
 #pragma mark - IBAction
