@@ -41,7 +41,7 @@
 		{
 			NSMutableDictionary *mutableChild = [child mutableCopy];
 			mutableChild[@"data"] = [mutableChild[@"data"] mutableCopy];
-			mutableChild[@"data"][@"indentationLevel"] = [NSString stringWithFormat:@"%ld", self.indentationLevel + 1];
+			mutableChild[@"data"][@"indentationLevel"] = [NSString stringWithFormat:@"%ld", (long) self.indentationLevel + 1];
 			TGComment *comment = [[TGComment new] initCommentFromDictionary:mutableChild];
 			if (comment)
 			{

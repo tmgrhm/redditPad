@@ -21,15 +21,20 @@
 #import "NSDate+RelativeDateString.h"
 
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
+
+@property (weak, nonatomic) IBOutlet UIView *shadowView;
+@property (weak, nonatomic) IBOutlet UIView *fadeView;
+@property (weak, nonatomic) IBOutlet UIView *containerView;
 
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
-@property (weak, nonatomic) IBOutlet UIView *shadowView;
-@property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
+@property (weak, nonatomic) IBOutlet UIImageView *previewImage;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewImageHeight;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *savePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 
@@ -92,6 +97,9 @@
 	// TODO figure out how to get custom shadowImage without changing backgroundImage
 //	[self.topToolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 //	[self.topToolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+	
+	self.commentTableView.backgroundColor = [UIColor clearColor];
+	self.containerView.backgroundColor = [ThemeManager backgroundColor];
 }
 
 - (void) configureGestureRecognizer
@@ -260,6 +268,17 @@
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
+	if (self.link.isImageLink)
+	{
+		[self.previewImage setImageWithURL:self.link.url];
+		self.previewImageHeight.constant = 300;
+		cell.topMargin.constant = 200;
+	} else {
+		self.previewImage.image = nil;
+		self.previewImageHeight.constant = 0;
+		cell.topMargin.constant = 0;
+	}
+	
 	[self updateSaveButton];
 	[self updateHideButton];
 	[self updateVoteButtons];
@@ -291,6 +310,8 @@
 	cell.numComments.attributedText = mutAttrComms;
 	
 	cell.separator.backgroundColor = [ThemeManager backgroundColor];
+	cell.backgroundColor = [UIColor clearColor];
+	cell.mainBackground.backgroundColor = [ThemeManager contentBackgroundColor];
 	
 	if ([self.link isSelfpost]) {
 		cell.content.attributedText = [self attributedStringFromMarkdown:self.link.selfText];
@@ -388,7 +409,6 @@
 	[sizingCell setNeedsLayout];
 	[sizingCell layoutIfNeeded];
 	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	
 	return size.height + 1.0f; // Add 1.0f for the cell separator height
 }
 
