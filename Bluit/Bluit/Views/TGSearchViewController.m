@@ -43,7 +43,9 @@
 
 - (void) goToSubreddit
 {
-	[self performSegueWithIdentifier:@"goToSubreddit" sender:self];
+	NSString *subreddit = [NSString stringWithFormat:@"/r/%@", self.searchTextField.text];
+	[self.listingViewController loadSubreddit:subreddit];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Navigation

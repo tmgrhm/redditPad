@@ -65,11 +65,11 @@ NSString * const kRandomSubredditURL = @"/r/random";
 }
 
 #pragma mark - Setup & Appearance
+
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
 }
-
 
 #pragma mark - UITableView
 - (void) reloadTableViewData

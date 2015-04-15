@@ -12,9 +12,8 @@
 #import "TGWebViewController.h"
 #import "TGPostViewController.h"
 #import "TGImageViewController.h"
+#import "TGSearchViewController.h"
 
-#import "TGLink.h"
-#import "TGSubreddit.h"
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
@@ -71,6 +70,7 @@
 }
 
 #pragma mark - Setup & Appearance
+
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
@@ -346,6 +346,11 @@
 	{
 		TGImageViewController *imageVC = segue.destinationViewController;
 		imageVC.imageURL = self.selectedLink.url;
+	}
+	else if ([segue.identifier isEqualToString:@"searchListing"])
+	{
+		TGSearchViewController *searchVC = segue.destinationViewController;
+		searchVC.listingViewController = self;
 	}
 
 }

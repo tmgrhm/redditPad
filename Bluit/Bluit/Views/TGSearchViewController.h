@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FrontPageViewController.h"
 
 @interface TGSearchViewController : UIViewController <UITextFieldDelegate>
+
+@property (strong, nonatomic) FrontPageViewController *listingViewController;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField;
 

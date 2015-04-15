@@ -1153,8 +1153,8 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="iGZ-e7-hTh"/>
         <segue reference="qgV-3d-NLN"/>
-        <segue reference="YFw-Df-Uep"/>
-        <segue reference="fTW-1s-qNd"/>
+        <segue reference="iA2-kh-EGo"/>
     </inferredMetricsTieBreakers>
 </document>
