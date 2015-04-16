@@ -139,7 +139,7 @@
 
 - (void) updateVoteButtons
 {
-	switch (self.link.voteStatus)
+	switch (self.link.voteStatus)	// TODO why isn't this reflecting properly in UI on viewDidAppear of postVC
 	{
 		case TGVoteStatusNone:
 			self.postHeader.upvoteButton.selected = NO;
@@ -168,16 +168,32 @@
 
 - (IBAction)savePostPressed:(id)sender
 {
-	NSLog(@"Save post");
-	// TODO API call with success&failure blocks
-	self.link.saved = !self.link.saved;
+	if ([self.link isSaved])
+	{
+		[[TGRedditClient sharedClient] unsave:self.link];
+		self.link.saved = NO;
+	}
+	else
+	{
+		[[TGRedditClient sharedClient] save:self.link];
+		self.link.saved = YES;
+	}
 	[self updateSaveButton];
 }
 
 - (IBAction)hidePostPressed:(id)sender {
 	NSLog(@"Hide post");
-	self.link.hidden = !self.link.hidden;
-	// TODO API call with success&failure blocks
+	if ([self.link isHidden])
+	{
+		[[TGRedditClient sharedClient] unhide:self.link];
+		self.link.hidden = NO;
+	}
+	else
+	{
+		self.link.hidden = YES;
+		[[TGRedditClient sharedClient] hide:self.link];
+	}
+	
 	[self updateHideButton];
 }
 
@@ -200,19 +216,31 @@
 }
 
 - (IBAction)upvoteButtonPressed:(id)sender {
-	// TODO API call with success&failure blocks
-	
-	if (self.link.isUpvoted)	self.link.voteStatus = TGVoteStatusNone;
-	else						self.link.voteStatus = TGVoteStatusUpvoted;
+	if (self.link.isUpvoted)
+	{
+		self.link.voteStatus = TGVoteStatusNone;
+		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusNone];
+	}
+	else
+	{
+		self.link.voteStatus = TGVoteStatusUpvoted;
+		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusUpvoted];
+	}
 	
 	[self updateVoteButtons];
 }
 
 - (IBAction)downvoteButtonPressed:(id)sender {
-	// TODO API call with success&failure blocks
-	
-	if (self.link.isDownvoted)	self.link.voteStatus = TGVoteStatusNone;
-	else						self.link.voteStatus = TGVoteStatusDownvoted;
+	if (self.link.isDownvoted)
+	{
+		self.link.voteStatus = TGVoteStatusNone;
+		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusNone];
+	}
+	else
+	{
+		self.link.voteStatus = TGVoteStatusDownvoted;
+		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusDownvoted];
+	}
 	
 	[self updateVoteButtons];
 }
