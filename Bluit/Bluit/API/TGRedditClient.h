@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class TGLink;
+#import "TGLink.h"
+#import "TGSubreddit.h"
 
 typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); // TODO move
 
@@ -22,7 +23,6 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 - (void) requestListing:(NSString *)request withCompletionBlock:(TGListingCompletionBlock)block;
 
-- (void) loginWithUsername:(NSString *)username password:(NSString *)password withCompletion:(void (^)(void))completion;
 - (NSURL *) oAuthLoginURL;
 - (void) loginWithOAuthResponse:(NSURL *)url;
 
@@ -32,5 +32,14 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 - (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion;
 
+- (void) hide:(TGThing *)thing;
+- (void) unhide:(TGThing *)thing;
+
+- (void) save:(TGThing *)thing;
+- (void) unsave:(TGThing *)thing;
+
+- (void) vote:(TGThing *)thing direction:(TGVoteStatus)vote;
+
+- (void) subscribe:(TGSubreddit *)subreddit;
 
 @end

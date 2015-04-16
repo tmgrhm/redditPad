@@ -9,8 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "TGRedditClient.h"
-#import "TGLink.h"
-#import "TGSubreddit.h"
 
 #import "TGWebViewController.h"
 
@@ -186,6 +184,109 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	 ];
 }
 
+#pragma mark - Report
+
+- (void) hide:(TGThing *)thing
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/hide", self.baseURLString];
+	NSDictionary *parameters = @{@"id" : thing.fullname};
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
+- (void) unhide:(TGThing *)thing
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/unhide", self.baseURLString];
+	NSDictionary *parameters = @{@"id" : thing.fullname};
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
+
+#pragma mark - Save
+
+- (void) save:(TGThing *)thing
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/save", self.baseURLString];
+	NSDictionary *parameters = @{@"id" : thing.fullname};
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
+- (void) unsave:(TGThing *)thing
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/unsave", self.baseURLString];
+	NSDictionary *parameters = @{@"id" : thing.fullname};
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
+#pragma mark - Voting
+
+- (void) vote:(TGThing *)thing direction:(TGVoteStatus)vote
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/vote", self.baseURLString];
+	NSDictionary *parameters = @{@"id":		thing.fullname,
+								 @"dir":		@(vote).stringValue}; // TODO vote direction
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
+#pragma mark - Subscribe
+
+- (void) subscribe:(TGSubreddit *)subreddit
+{
+	NSString *url = [NSString stringWithFormat:@"%@api/subscribe", self.baseURLString];
+	
+	NSString *action = subreddit.userIsSubscriber ? @"unsub" : @"sub";
+	NSDictionary *parameters = @{@"sr" : subreddit.fullname,
+								 @"action" : action};
+	
+	[self.manager POST:url
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   NSLog(@"Success!\n%@", responseObject);
+			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   // TODO
+				   [self failureWithError:error];
+			   }];
+}
+
 #pragma mark - Authentication
 
 - (NSURL *) oAuthLoginURL
@@ -274,44 +375,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			   }];
 }
 
-- (void) loginWithUsername:(NSString *)username
-				  password:(NSString *)password
-			withCompletion:(void (^)(void))completion		// TODO remove, deprecated
-{
-	NSDictionary *parameters = @{@"user": username,
-								 @"passwd": password,
-								 @"rem": @"on",
-								 @"api_type": @"json"};
-	
-	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:@"api/login"];
-	
-	__weak __typeof(self)weakSelf = self;
-	
-	[self.manager POST:urlString
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject)
-		{
-			NSDictionary *data = (NSDictionary *)responseObject[@"json"][@"data"];
-			weakSelf.modhash = data[@"modhash"];
-			weakSelf.sessionIdentifier = data[@"cookie"] ?
-			[NSString stringWithFormat:@"reddit_session=%@", [data[@"cookie"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] : nil;
-			
-			NSLog(@"got new session: \"%@\" \nsessionID: \"%@\"", weakSelf.modhash, weakSelf.sessionIdentifier);
-			
-			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.modhash forKey:@"modhash"];
-			[[NSUserDefaults standardUserDefaults] setObject:weakSelf.sessionIdentifier forKey:@"sessionIdentifier"];
-			
-			[weakSelf setSerializerHTTPHeaders:weakSelf.modhash and:weakSelf.sessionIdentifier];
-			completion();
-		}
-			   failure:^(NSURLSessionDataTask *task, NSError *error)
-		{
-			[self failureWithError:error];
-		}
-	 ];
-}
-
-#pragma mark Convenience
+#pragma mark - Convenience
 
 - (NSString *)valueForKey:(NSString *)key
 		   fromQueryItems:(NSArray *)queryItems
