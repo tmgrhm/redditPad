@@ -8,11 +8,11 @@
 
 #import "TGCreated.h"
 
-typedef NS_ENUM(NSUInteger, TGVoteStatus)
+typedef NS_ENUM(NSInteger, TGVoteStatus)
 {
-	TGVoteStatusNone,
-	TGVoteStatusUpvoted,
-	TGVoteStatusDownvoted
+	TGVoteStatusDownvoted =	-1,
+	TGVoteStatusNone =		0,
+	TGVoteStatusUpvoted =	1
 };
 
 typedef NS_ENUM(NSUInteger, TGVotableDistinguished)
