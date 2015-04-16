@@ -30,6 +30,8 @@
     // Do any additional setup after loading the view.
 	[self themeAppearance];
 	
+	[self oAuthLoginPressed:self];
+	
 	NSString *theme = [ThemeManager sharedManager].theme[@"themeName"];
 	self.themeSegControl.selectedSegmentIndex = [theme isEqualToString:@"lightTheme"] ? 0 : 1;
 }
@@ -47,18 +49,6 @@
 }
 
 #pragma mark - IBAction
-
-- (IBAction)loginPressed:(id)sender
-{
-	TGRedditClient *client = [TGRedditClient sharedClient];
-	
-	__weak __typeof(self)weakSelf = self;
-	[client loginWithUsername:self.usernameField.text
-					 password:self.passwordField.text
-			   withCompletion:^void(void) {
-		[weakSelf loginSuccessful];
-	}];
-}
 
 - (IBAction)oAuthLoginPressed:(id)sender
 {
@@ -101,7 +91,8 @@
 	if (navigationType == UIWebViewNavigationTypeFormSubmitted)
 	{
 		NSURL *url = request.URL;
-		if ([[url scheme] isEqualToString:@"redditpad"]) {
+		if ([[url scheme] isEqualToString:@"redditpad"])
+		{
 			[[TGRedditClient sharedClient] loginWithOAuthResponse:url];
 //			[[UIApplication sharedApplication] openURL:url]; // TODO handle response via delegate instead?
 			return NO; // don't let the webview process it

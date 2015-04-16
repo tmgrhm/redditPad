@@ -24,14 +24,12 @@
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
-@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
+@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 
-@property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
-@property (strong, nonatomic) TGLinkPostCell *postHeader;
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
 @property (weak, nonatomic) IBOutlet UIImageView *previewImage;
@@ -40,9 +38,13 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
+@property (nonatomic) CGFloat postHeaderHeight;
+@property (strong, nonatomic) TGLinkPostCell *postHeader;
+
 @property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSMutableArray *collapsedComments;
 @property (strong, nonatomic) NSMutableDictionary *commentHeights;
+@property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 
 @property (strong, nonatomic) NSURL *interactedURL;
 
@@ -96,9 +98,8 @@
 
 - (void) themeAppearance
 {
-	// TODO figure out how to get custom shadowImage without changing backgroundImage
-//	[self.topToolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-//	[self.topToolbar setShadowImage:[UIImage new] forToolbarPosition:UIBarPositionAny];
+	self.topToolbar.layer.borderColor = [[ThemeManager separatorColor] CGColor];
+	self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
 	
 	self.commentTableView.backgroundColor = [UIColor clearColor];
 	self.containerView.backgroundColor = [ThemeManager backgroundColor];
@@ -399,6 +400,8 @@
 
 - (CGFloat)heightForHeaderCell
 {
+	if (self.postHeaderHeight != 0) return self.postHeaderHeight;
+	
 	static TGLinkPostCell *sizingCell = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
@@ -425,7 +428,9 @@
 	[sizingCell setNeedsLayout];
 	[sizingCell layoutIfNeeded];
 	CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-	return size.height + 1.0f; // Add 1.0f for the cell separator height
+	
+	self.postHeaderHeight = size.height + 1.0f; // Add 1.0f for the cell separator height
+	return self.postHeaderHeight;
 }
 
 - (CGFloat)heightForCommentCellAtIndexPath:(NSIndexPath *)indexPath
@@ -542,16 +547,6 @@
 	self.interactedURL = URL;
 	[self performSegueWithIdentifier:@"openLink" sender:self];
 	return NO;
-}
-
-#pragma mark - UIBarPositioning
-
-- (UIBarPosition) positionForBar:(id<UIBarPositioning>)bar
-{
-	if (bar == self.topToolbar)
-		return UIBarPositionTop;
-	else
-		return UIBarPositionAny;
 }
 
 #pragma mark - Navigation
