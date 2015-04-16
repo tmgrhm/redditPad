@@ -17,8 +17,9 @@
 #import <AFNetworking/AFHTTPRequestOperation.h>
 #import <AFNetworking/AFHTTPSessionManager.h>
 
-static NSString * const BaseURLString = @"http://www.reddit.com/";
-static NSString * const BaseHTTPSURLString = @"https://ssl.reddit.com/";
+static NSString * const kBaseURLString = @"http://www.reddit.com/";
+static NSString * const kBaseOAuthString = @"https://oauth.reddit.com/";
+static NSString * const kBaseHTTPSURLString = @"https://ssl.reddit.com/";
 
 // OAuth parameters
 static NSString * const client_id = @"l5iDc07xOgRpug";
@@ -33,8 +34,12 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 @property (strong, nonatomic) NSString *modhash;
 @property (strong, nonatomic) NSString *sessionIdentifier;
+
 @property (strong, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSString *refreshToken;
+@property (strong, nonatomic) NSDate *currentTokenExpirationDate;
+
+@property (strong, nonatomic) NSString *baseURLString;
 
 @end
 
@@ -45,8 +50,10 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	static TGRedditClient *sharedClient = nil;
 	static dispatch_once_t oncePredicate;
 	dispatch_once(&oncePredicate, ^{
-		sharedClient = [TGRedditClient new]; // TODO revert to alloc init?
+		sharedClient = [TGRedditClient new];
 	});
+	
+	[sharedClient refreshOAuthToken];	// TODO probably only want to call this if user is supposed to be logged in, and/or safeguard in the refresh method against nil date
 	
 	return sharedClient;
 }
@@ -58,6 +65,11 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	{
 		self.serializer = [AFHTTPRequestSerializer serializer];
 		self.manager = [AFHTTPSessionManager manager];
+		self.baseURLString = kBaseURLString;
+		
+		self.currentTokenExpirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"currentTokenExpirationDate"];
+		self.accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"];
+		self.refreshToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"refreshToken"];
 	}
 	
 	return self;
@@ -87,7 +99,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void) requestListing:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)completion	// TODO improve
 {
-	NSString *urlString = [NSString stringWithFormat:@"%@%@", BaseURLString, path];
+	NSString *urlString = [NSString stringWithFormat:@"%@%@", self.baseURLString, path];
 	NSLog(@"Client requesting: %@", urlString);
 	
 	[self.manager GET:urlString
@@ -115,7 +127,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 {
 	NSLog(@"requesting comments for: %@", link.id);
 	
-	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", BaseURLString, link.subreddit, link.id];
+	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", self.baseURLString, link.subreddit, link.id];
 	
 	[self.manager GET:urlString
 		   parameters:nil
@@ -150,7 +162,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void)retrieveSubreddits:(NSString *)path withCompletion:(void (^)(NSArray *subreddits))completion
 {
-	NSString *url = [BaseURLString stringByAppendingString:[NSString stringWithFormat:@"subreddits/%@", path]];
+	NSString *url = [self.baseURLString stringByAppendingString:[NSString stringWithFormat:@"subreddits/%@", path]];
 	[self.manager GET:url
 			parameters:nil
 			   success:^(NSURLSessionDataTask *task, id responseObject)
@@ -178,14 +190,17 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (NSURL *) oAuthLoginURL
 {
-	NSString *authURLString = [NSString stringWithFormat:@"api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@&duration=permanent&scope=%@", client_id, oAuthState, redirect_uri, scope];
-	NSString *urlString = [BaseHTTPSURLString stringByAppendingString:authURLString];
+	// https://github.com/reddit/reddit/wiki/OAuth2#authorization
+	
+	NSString *urlString = [NSString stringWithFormat:@"https://www.reddit.com/api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@&duration=permanent&scope=%@", client_id, oAuthState, redirect_uri, scope];
 	NSURL *url = [NSURL URLWithString:urlString];
 	return url;
 }
 
 - (void) loginWithOAuthResponse:(NSURL *)url
 {
+	// https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
+	
 	NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
 												resolvingAgainstBaseURL:NO];
 	NSArray *queryItems = urlComponents.queryItems;
@@ -193,7 +208,9 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	
 	if (error)
 	{
+		// TODO errors https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
 		NSLog(@"Error: %@", error);
+		return;
 	}
 	
 	NSString *state = [self valueForKey:@"state" fromQueryItems:queryItems];
@@ -202,24 +219,24 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	if ([state isEqualToString:oAuthState])
 	{
 		NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
-		NSDictionary *parameters = @{@"grant_type":@"authorization_code",
-									 @"code":code,
-									 @"redirect_uri":redirect_uri};
+		NSDictionary *parameters = @{@"grant_type" :		@"authorization_code",
+									 @"code" :			code,
+									 @"redirect_uri" :	redirect_uri};
 		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																	   password:@""]; // password empty due to being a confidential client
 		[self.manager POST:accessURL
 				parameters:parameters
 				   success:^(NSURLSessionDataTask *task, id responseObject) {
-					   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
+					   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
 					   self.accessToken = responseObject[@"access_token"];
 					   self.refreshToken = responseObject[@"refresh_token"];
-					   // TODO set up refreshing — probably want to store responseObject[@"expires_in"]
-					   
+					   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
 					   // TODO use global notification centre to announce login
 				   }
 				   failure:^(NSURLSessionDataTask *task, NSError *error) {
 					   [self failureWithError:error];
 				   }];
+		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:nil password:nil];
 	}
 	else
 	{
@@ -227,11 +244,22 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	}
 }
 
-- (void) refreshOAuthToken // TODO use this
+- (void) refreshOAuthToken
 {
+	// TODO handle currentTokenExpirationDate = nil
+	
+	if ([self.currentTokenExpirationDate timeIntervalSinceNow] > 0.0) // if token expiration date is after now (i.e. has not passed)
+	{
+		// do nothing, return
+		NSLog(@"date has not passed\n%@\n%f", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
+		return;
+	}
+	
+	NSLog(@"date has passed, token needs refreshing\n%@\n%f", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
+	
 	NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
-	NSDictionary *parameters = @{@"grant_type":@"refresh_token",
-								 @"refresh_token":self.refreshToken};
+	NSDictionary *parameters = @{@"grant_type" :		@"refresh_token",
+								 @"refresh_token" :	self.refreshToken};
 	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																   password:@""]; // password empty due to being a confidential client
 	[self.manager POST:accessURL
@@ -239,6 +267,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 			   success:^(NSURLSessionDataTask *task, id responseObject) {
 				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
 				   self.accessToken = responseObject[@"access_token"];
+				   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error) {
 				   [self failureWithError:error];
@@ -302,6 +331,33 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 											  cancelButtonTitle:@"OK"
 											  otherButtonTitles:nil];
 	[alertView show];
+	NSLog(@"%@", error);
+}
+
+#pragma mark - Setters & Getters
+
+- (void) setAccessToken:(NSString *)accessToken
+{
+	// TODO remvoe/store more safely? - see https://github.com/AFNetworking/AFOAuth2Manager/blob/30037a691ddd4c94b64772ca125e12fda4d51eda/AFOAuth2Manager/AFOAuth2Manager.m#L340
+	// TODO investigate & handle nil/empty cases
+	
+	_accessToken = accessToken;
+	[[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:@"accessToken"];
+	[self.manager.requestSerializer setValue:[NSString stringWithFormat:@"bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
+	
+	self.baseURLString = kBaseOAuthString; // use oAuth URL because we are oAuth'd
+}
+
+- (void) setRefreshToken:(NSString *)refreshToken
+{
+	_refreshToken = refreshToken;
+	[[NSUserDefaults standardUserDefaults] setObject:refreshToken forKey:@"refreshToken"];
+}
+
+- (void) setCurrentTokenExpirationDate:(NSDate *)currentTokenExpirationDate
+{
+	_currentTokenExpirationDate = currentTokenExpirationDate;
+	[[NSUserDefaults standardUserDefaults] setObject:currentTokenExpirationDate forKey:@"currentTokenExpirationDate"];
 }
 
 @end
