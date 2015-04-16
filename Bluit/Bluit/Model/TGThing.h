@@ -33,4 +33,6 @@ static NSString * const kTGThingMoreString =			@"more";
 
 - (instancetype) initFromDictionary:(NSDictionary *)dict;
 
+- (NSString *)fullname;
+
 @end

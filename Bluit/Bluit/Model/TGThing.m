@@ -43,4 +43,11 @@
 	return self;
 }
 
+- (NSString *)fullname
+{
+	NSString *name = [NSString stringWithFormat:@"t%lu_%@", (unsigned long)self.type, self.id];
+	NSLog(@"%@", name);
+	return name;
+}
+
 @end
