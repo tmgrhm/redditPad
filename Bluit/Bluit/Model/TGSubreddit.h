@@ -26,11 +26,21 @@ typedef NS_ENUM(NSUInteger, TGSubmissionType)
 
 typedef NS_ENUM(NSUInteger, TGSubredditSort)
 {
-	TGSubredditSortHot,
+	TGSubredditSortHot = 1,
 	TGSubredditSortNew,
 	TGSubredditSortRising,
 	TGSubredditSortControversial,
 	TGSubredditSortTop
+};
+
+typedef NS_ENUM(NSUInteger, TGSubredditSortTimeframe)
+{
+	TGSubredditSortHour = 1,
+	TGSubredditSortDay,
+	TGSubredditSortWeek,
+	TGSubredditSortMonth,
+	TGSubredditSortYear,
+	TGSubredditSortAll
 };
 
 static NSString * const kTGSubredditSortStringHot =				@"Hot";
@@ -38,6 +48,13 @@ static NSString * const kTGSubredditSortStringNew =				@"New";
 static NSString * const kTGSubredditSortStringRising =			@"Rising";
 static NSString * const kTGSubredditSortStringControversial =	@"Controversial";
 static NSString * const kTGSubredditSortStringTop =				@"Top";
+
+static NSString * const kTGSubredditSortTimeframeStringHour =	@"hour";
+static NSString * const kTGSubredditSortTimeframeStringDay =		@"day";
+static NSString * const kTGSubredditSortTimeframeStringWeek =	@"week";
+static NSString * const kTGSubredditSortTimeframeStringMonth =	@"month";
+static NSString * const kTGSubredditSortTimeframeStringYear =	@"year";
+static NSString * const kTGSubredditSortTimeframeStringAll =		@"all";
 
 @interface TGSubreddit : TGCreated
 
