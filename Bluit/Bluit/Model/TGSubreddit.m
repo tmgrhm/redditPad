@@ -10,6 +10,52 @@
 
 @implementation TGSubreddit
 
++ (NSString *) sortStringFromSubredditSort:(TGSubredditSort)sort
+{
+	switch (sort) {
+		case TGSubredditSortHot:				return kTGSubredditSortStringHot;
+		case TGSubredditSortNew:				return kTGSubredditSortStringNew;
+		case TGSubredditSortRising:				return kTGSubredditSortStringRising;
+		case TGSubredditSortControversial:		return kTGSubredditSortStringControversial;
+		case TGSubredditSortTop:				return kTGSubredditSortStringTop;
+	}
+	return nil;
+}
+
++ (TGSubredditSort) sortFromSortString:(NSString *)sortString
+{
+	if		([sortString isEqualToString:kTGSubredditSortStringHot])				return TGSubredditSortHot;
+	else if ([sortString isEqualToString:kTGSubredditSortStringNew])				return TGSubredditSortNew;
+	else if ([sortString isEqualToString:kTGSubredditSortStringRising])			return TGSubredditSortRising;
+	else if ([sortString isEqualToString:kTGSubredditSortStringControversial])	return TGSubredditSortControversial;
+	else if ([sortString isEqualToString:kTGSubredditSortStringTop])				return TGSubredditSortTop;
+	else return 0;
+}
+
++ (NSString *) sortTimeframeStringFromSubredditSortTimeframe:(TGSubredditSortTimeframe)timeframe
+{
+	switch (timeframe) {
+		case TGSubredditSortHour:				return kTGSubredditSortTimeframeStringHour;
+		case TGSubredditSortDay:				return kTGSubredditSortTimeframeStringDay;
+		case TGSubredditSortWeek:				return kTGSubredditSortTimeframeStringWeek;
+		case TGSubredditSortMonth:				return kTGSubredditSortTimeframeStringMonth;
+		case TGSubredditSortYear:				return kTGSubredditSortTimeframeStringYear;
+		case TGSubredditSortAll:				return kTGSubredditSortTimeframeStringAll;
+	}
+	return nil;
+}
+
++ (TGSubredditSortTimeframe) sortTimeframeFromSortString:(NSString*)timeframeString
+{
+	if		([timeframeString isEqualToString:kTGSubredditSortTimeframeStringHour])		return TGSubredditSortHour;
+	else if ([timeframeString isEqualToString:kTGSubredditSortTimeframeStringDay])		return TGSubredditSortDay;
+	else if ([timeframeString isEqualToString:kTGSubredditSortTimeframeStringWeek])		return TGSubredditSortWeek;
+	else if ([timeframeString isEqualToString:kTGSubredditSortTimeframeStringMonth])		return TGSubredditSortMonth;
+	else if ([timeframeString isEqualToString:kTGSubredditSortTimeframeStringYear])		return TGSubredditSortYear;
+	else if ([timeframeString isEqualToString:kTGSubredditSortTimeframeStringAll])		return TGSubredditSortAll;
+	else return 0;
+}
+
 - (instancetype) initSubredditFromDictionary:(NSDictionary *)dict
 {
 	self = [super initFromDictionary:dict];

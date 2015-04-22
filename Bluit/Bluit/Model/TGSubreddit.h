@@ -83,6 +83,11 @@ static NSString * const kTGSubredditSortTimeframeStringAll =		@"all";
 @property (nonatomic, assign, readonly) BOOL userIsModerator;
 @property (nonatomic, assign, readonly) BOOL userIsBanned;
 
++ (NSString *) sortStringFromSubredditSort:(TGSubredditSort)sort;
++ (TGSubredditSort) sortFromSortString:(NSString *)sortString;
++ (NSString *) sortTimeframeStringFromSubredditSortTimeframe:(TGSubredditSortTimeframe)timeframe;
++ (TGSubredditSortTimeframe) sortTimeframeFromSortString:(NSString*)timeframeString;
+
 - (instancetype) initSubredditFromDictionary:(NSDictionary *)dict;
 
 @end
