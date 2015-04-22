@@ -51,8 +51,6 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		sharedClient = [TGRedditClient new];
 	});
 	
-	[sharedClient refreshOAuthToken];	// TODO probably only want to call this if user is supposed to be logged in, and/or safeguard in the refresh method against nil date
-	
 	return sharedClient;
 }
 
@@ -100,7 +98,6 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *urlString = [NSString stringWithFormat:@"%@%@", self.baseURLString, path];
 	NSLog(@"Client requesting: %@", urlString);
 	
-	[self.manager GET:urlString
 		   parameters:nil
 			  success:^(NSURLSessionDataTask *task, id responseObject) {
 				  NSDictionary *responseDict = (NSDictionary *)responseObject;
@@ -117,6 +114,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 				  [self failureWithError:error];
 				  completion(nil, error);
 			  }];
+	[self GET:urlString
 }
 
 #pragma mark - Links
@@ -127,16 +125,16 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	
 	NSString *urlString = [NSString stringWithFormat:@"%@/r/%@/comments/%@.json", self.baseURLString, link.subreddit, link.id];
 	
-	[self.manager GET:urlString
-		   parameters:nil
-			  success:^(NSURLSessionDataTask *task, id responseObject){
-				  id comments = [responseObject lastObject][@"data"][@"children"];
-				  completion(comments);
-			  }
-			  failure:^(NSURLSessionDataTask *task, NSError *error){
-				  // TODO
-				  [self failureWithError:error];
-			  }
+	[self GET:urlString
+   parameters:nil
+	  success:^(NSURLSessionDataTask *task, id responseObject){
+		  id comments = [responseObject lastObject][@"data"][@"children"];
+		  completion(comments);
+	  }
+	  failure:^(NSURLSessionDataTask *task, NSError *error){
+		  // TODO
+		  [self failureWithError:error];
+	  }
 	 ];
 }
 
@@ -161,26 +159,26 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 - (void)retrieveSubreddits:(NSString *)path withCompletion:(void (^)(NSArray *subreddits))completion
 {
 	NSString *url = [self.baseURLString stringByAppendingString:[NSString stringWithFormat:@"subreddits/%@", path]];
-	[self.manager GET:url
-			parameters:nil
-			   success:^(NSURLSessionDataTask *task, id responseObject)
-				{
-					NSArray *responseSubs = responseObject[@"data"][@"children"];
-					NSMutableArray *subreddits = [NSMutableArray new];
-					for (NSDictionary *child in responseSubs)
-					{
-						TGSubreddit *sub = [[TGSubreddit alloc] initSubredditFromDictionary:child];
-						[subreddits addObject:sub];
-					}
-					
-					NSLog(@"Retrieved %lu subreddits", (unsigned long)subreddits.count);
-					completion(subreddits);
-				}
-			   failure:^(NSURLSessionDataTask *task, NSError *error)
-				{
-				   // TODO
-				   [self failureWithError:error];
-			   }
+	[self GET:url
+   parameters:nil
+	  success:^(NSURLSessionDataTask *task, id responseObject)
+	 {
+		 NSArray *responseSubs = responseObject[@"data"][@"children"];
+		 NSMutableArray *subreddits = [NSMutableArray new];
+		 for (NSDictionary *child in responseSubs)
+		 {
+			 TGSubreddit *sub = [[TGSubreddit alloc] initSubredditFromDictionary:child];
+			 [subreddits addObject:sub];
+		 }
+		 
+		 NSLog(@"Retrieved %lu subreddits", (unsigned long)subreddits.count);
+		 completion(subreddits);
+	 }
+	  failure:^(NSURLSessionDataTask *task, NSError *error)
+	 {
+		 // TODO
+		 [self failureWithError:error];
+	 }
 	 ];
 }
 
@@ -191,14 +189,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *url = [NSString stringWithFormat:@"%@api/hide", self.baseURLString];
 	NSDictionary *parameters = @{@"id" : thing.fullname};
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 - (void) unhide:(TGThing *)thing
@@ -206,14 +204,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *url = [NSString stringWithFormat:@"%@api/unhide", self.baseURLString];
 	NSDictionary *parameters = @{@"id" : thing.fullname};
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 
@@ -224,14 +222,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *url = [NSString stringWithFormat:@"%@api/save", self.baseURLString];
 	NSDictionary *parameters = @{@"id" : thing.fullname};
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 - (void) unsave:(TGThing *)thing
@@ -239,14 +237,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *url = [NSString stringWithFormat:@"%@api/unsave", self.baseURLString];
 	NSDictionary *parameters = @{@"id" : thing.fullname};
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 #pragma mark - Voting
@@ -257,14 +255,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSDictionary *parameters = @{@"id":		thing.fullname,
 								 @"dir":		@(vote).stringValue}; // TODO vote direction
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 #pragma mark - Subscribe
@@ -277,14 +275,14 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSDictionary *parameters = @{@"sr" : subreddit.fullname,
 								 @"action" : action};
 	
-	[self.manager POST:url
-			parameters:parameters
-			   success:^(NSURLSessionDataTask *task, id responseObject) {
-				   NSLog(@"Success!\n%@", responseObject);
-			   } failure:^(NSURLSessionDataTask *task, NSError *error) {
-				   // TODO
-				   [self failureWithError:error];
-			   }];
+	[self POST:url
+	parameters:parameters
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   NSLog(@"Success!\n%@", responseObject);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
 }
 
 #pragma mark - Authentication
@@ -325,18 +323,18 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 									 @"redirect_uri" :	redirect_uri};
 		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																	   password:@""]; // password empty due to being a confidential client
-		[self.manager POST:accessURL
-				parameters:parameters
-				   success:^(NSURLSessionDataTask *task, id responseObject) {
-					   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
-					   self.accessToken = responseObject[@"access_token"];
-					   self.refreshToken = responseObject[@"refresh_token"];
-					   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
-					   // TODO use global notification centre to announce login
-				   }
-				   failure:^(NSURLSessionDataTask *task, NSError *error) {
-					   [self failureWithError:error];
-				   }];
+		[self POST:accessURL
+		parameters:parameters
+		   success:^(NSURLSessionDataTask *task, id responseObject) {
+			   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
+			   self.accessToken = responseObject[@"access_token"];
+			   self.refreshToken = responseObject[@"refresh_token"];
+			   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
+			   // TODO use global notification centre to announce login
+		   }
+		   failure:^(NSURLSessionDataTask *task, NSError *error) {
+			   [self failureWithError:error];
+		   }];
 		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:nil password:nil];
 	}
 	else
@@ -345,18 +343,17 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	}
 }
 
-- (void) refreshOAuthToken
+- (void) refreshOAuthTokenWithSuccess:(void (^)())success
 {
 	// TODO handle currentTokenExpirationDate = nil
 	
-	if ([self.currentTokenExpirationDate timeIntervalSinceNow] > 0.0) // if token expiration date is after now (i.e. has not passed)
+	if (![self accessTokenHasExpired])
 	{
-		// do nothing, return
 		NSLog(@"date has not passed\n%@\n%f", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
 		return;
 	}
 	
-	NSLog(@"date has passed, token needs refreshing\n%@\n%f", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
+	NSLog(@"date has passed, token needs refreshing (%@ — %f seconds ago)", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
 	
 	NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
 	NSDictionary *parameters = @{@"grant_type" :		@"refresh_token",
@@ -369,10 +366,17 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
 				   self.accessToken = responseObject[@"access_token"];
 				   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
+				   NSLog(@"accessToken refreshed");
+				   success();
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error) {
 				   [self failureWithError:error];
 			   }];
+}
+
+- (BOOL) accessTokenHasExpired
+{
+	return [self.currentTokenExpirationDate timeIntervalSinceNow] < 0.0;
 }
 
 #pragma mark - Convenience
@@ -385,6 +389,50 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 								  filteredArrayUsingPredicate:predicate]
 								 firstObject];
 	return queryItem.value;
+}
+
+- (void) POST:(NSString *)stringURL parameters:(NSDictionary *)parameters success:(void (^)(NSURLSessionDataTask* task, id responseObject))success failure:(void (^)(NSURLSessionDataTask* task, NSError* error))failure
+{
+	// TODO accessTokenIsRefreshing + either KVO or sleep while YES
+	// to prevent multiple refreshes at same time
+	
+	if ([self accessTokenHasExpired])
+	{
+		[self refreshOAuthTokenWithSuccess:^{
+			[self POST:stringURL parameters:parameters success:success failure:failure];
+		}];
+		NSLog(@"Retrying because accessTokenHasExpired");
+		return;
+	}
+	
+	[self.manager POST:stringURL
+			parameters:parameters
+			   success:success
+			   failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   failure(task, error);
+			   }];
+}
+
+- (void) GET:(NSString *)stringURL parameters:(NSDictionary *)parameters success:(void (^)(NSURLSessionDataTask* task, id responseObject))success failure:(void (^)(NSURLSessionDataTask* task, NSError* error))failure
+{
+	// TODO accessTokenIsRefreshing + either KVO or sleep while YES
+	// to prevent multiple refreshes at same time
+	
+	if ([self accessTokenHasExpired])
+	{
+		[self refreshOAuthTokenWithSuccess:^{
+			[self GET:stringURL parameters:parameters success:success failure:failure];
+		}];
+		NSLog(@"Retrying because accessTokenHasExpired");
+		return;
+	}
+	
+	[self.manager GET:stringURL
+		   parameters:parameters
+			  success:success
+			  failure:^(NSURLSessionDataTask *task, NSError *error) {
+				  failure(task, error);
+			  }];
 }
 
 - (void) failureWithError:(NSError *)error
@@ -422,6 +470,17 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 {
 	_currentTokenExpirationDate = currentTokenExpirationDate;
 	[[NSUserDefaults standardUserDefaults] setObject:currentTokenExpirationDate forKey:@"currentTokenExpirationDate"];
+}
+
+#pragma mark - Errors
+
+- (void) handleError:(NSError *)error
+{
+	if ([error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey] statusCode] == 403)
+	{
+		// TODO
+	}
+	
 }
 
 @end
