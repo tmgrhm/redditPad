@@ -104,6 +104,10 @@
 	return [self colorForKey:@"saveColor"];
 }
 
++ (UIColor *) stickyColor {
+	return [self colorForKey:@"stickyColor"];
+}
+
 + (UIColor *) separatorColor {
 	return [self colorForKey:@"separatorColor"];
 }

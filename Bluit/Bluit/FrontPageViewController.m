@@ -227,6 +227,11 @@
 		cell.domain.hidden = NO;
 	}
 	
+	if (link.isSticky)	// TODO
+		cell.title.textColor = [ThemeManager stickyColor];
+	else
+		cell.title.textColor = [ThemeManager textColor];
+	
 	cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Inactive"];
 	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Inactive"];
 	

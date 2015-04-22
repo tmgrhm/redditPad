@@ -38,6 +38,7 @@ static NSString * const darkTheme = @"darkTheme";
 + (UIColor *) inactiveColor;
 + (UIColor *) downvoteColor;
 + (UIColor *) saveColor;
++ (UIColor *) stickyColor;
 
 + (UIColor *) separatorColor;
 + (UIColor *) shadowColor;

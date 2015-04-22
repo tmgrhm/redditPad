@@ -24,6 +24,8 @@
 	<string>FF4501</string>
 	<key>saveColor</key>
 	<string>FFBF00</string>
+	<key>stickyColor</key>
+	<string>2FD675</string>
 	<key>separatorColor</key>
 	<string>E9EAF0</string>
 	<key>shadowColor</key>
