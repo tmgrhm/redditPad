@@ -60,7 +60,7 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark - Initialisation
+#pragma mark - Customisation
 
 - (void) themeAppearance
 {
@@ -99,8 +99,7 @@
 	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
 	
 	[[UISegmentedControl appearance] setTintColor:[ThemeManager tintColor]];
-	attributes = @{NSFontAttributeName:				[UIFont fontWithName:@"AvenirNext-Medium" size:14.0f],
-				   NSForegroundColorAttributeName:	[ThemeManager tintColor]};
+	attributes = @{NSFontAttributeName: [UIFont fontWithName:@"AvenirNext-Medium" size:14.0f]};
 	[[UISegmentedControl appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
 	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
 }
