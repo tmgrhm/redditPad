@@ -63,8 +63,9 @@
 	
 	[self createShadow];
 	[self themeAppearance];
+	[self configureContentInsets];
 	[self configureGestureRecognizer];
-	
+
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
 	 {
@@ -98,11 +99,14 @@
 
 - (void) themeAppearance
 {
-	self.topToolbar.layer.borderColor = [[ThemeManager separatorColor] CGColor];
-	self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
-	
 	self.commentTableView.backgroundColor = [UIColor clearColor];
 	self.containerView.backgroundColor = [ThemeManager backgroundColor];
+}
+
+- (void) configureContentInsets
+{
+	[self.commentTableView setContentInset:UIEdgeInsetsMake(self.topToolbar.frame.size.height, 0, 0, 0)];
+	[self.commentTableView setScrollIndicatorInsets:self.commentTableView.contentInset];
 }
 
 - (void) configureGestureRecognizer
@@ -122,6 +126,7 @@
 
 - (void) updateSaveButton
 {
+	// TODO get colours working properly
 	self.savePostButton.tintColor = self.link.isSaved ? [ThemeManager saveColor] : [ThemeManager inactiveColor];
 }
 
@@ -309,10 +314,20 @@
 {
 	if (self.link.isImageLink)
 	{
+		self.topToolbar.tintColor = [UIColor whiteColor];
+		[self.topToolbar setBackgroundImage:[UIImage new]
+						 forToolbarPosition:UIBarPositionAny
+								 barMetrics:UIBarMetricsDefault];
+		[self.topToolbar setShadowImage:[UIImage new]
+					 forToolbarPosition:UIToolbarPositionAny];
+		
 		[self.previewImage setImageWithURL:self.link.url];
 		self.previewImageHeight.constant = 300;
 		cell.topMargin.constant = 200;
 	} else {
+		self.topToolbar.layer.borderColor = [[ThemeManager separatorColor] CGColor];
+		self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
+		
 		self.previewImage.image = nil;
 		self.previewImageHeight.constant = 0;
 		cell.topMargin.constant = 0;
@@ -330,13 +345,10 @@
 	NSMutableAttributedString *mutAttrTitle = [cell.title.attributedText mutableCopy];
 	NSDictionary *attributes;
 	if ([self.link isSelfpost])
-	{
 		attributes = @{NSForegroundColorAttributeName	: [ThemeManager textColor] };
-	} else {
+	else
 		attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
 					   NSLinkAttributeName				: self.link.url};
-		cell.title.delegate = self;
-	}
 	[mutAttrTitle addAttributes:attributes range:NSMakeRange(0, mutAttrTitle.length)];
 	cell.title.attributedText = mutAttrTitle;
 	
@@ -570,6 +582,7 @@
 	
 	self.comments = newComments;
 	[self reloadCommentTableViewData];
+	// [self.commentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES]; TODO
 }
 
 #pragma mark - UITextView
