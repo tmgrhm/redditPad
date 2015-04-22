@@ -357,9 +357,12 @@
 	cell.backgroundColor = [UIColor clearColor];
 	cell.mainBackground.backgroundColor = [ThemeManager contentBackgroundColor];
 	
-	if ([self.link isSelfpost]) {
+	if ([self.link isSelfpost])
+	{
+		cell.content.textColor = [ThemeManager textColor];
 		cell.content.attributedText = [self attributedStringFromMarkdown:self.link.selfText];
 	} else {
+		cell.content.textColor = [ThemeManager secondaryTextColor];
 		cell.content.text = [self.link.url absoluteString];
 		cell.content.dataDetectorTypes = UIDataDetectorTypeNone;
 	}
