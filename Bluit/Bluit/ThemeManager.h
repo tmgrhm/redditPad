@@ -10,14 +10,18 @@
 
 @class UIColor;
 
-static NSString * const defaultTheme = @"lightTheme";
-static NSString * const darkTheme = @"darkTheme";
+static NSString * const kTGThemeDefault = @"lightTheme";
+static NSString * const kTGThemeDark = @"darkTheme";
+
+static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 
 @interface ThemeManager : NSObject
 
 @property (strong, nonatomic) NSDictionary *theme;
 
 + (ThemeManager *)sharedManager;
+
+- (void) setCurrentTheme:(NSString *)themeName;
 
 + (NSString *) stringForKey:(NSString *)key;
 + (UIColor *) colorForKey:(NSString *)key;

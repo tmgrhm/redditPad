@@ -31,11 +31,20 @@
 	if ((self = [super init]))
 	{
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		NSString *themeName = [defaults objectForKey:@"theme"] ? : defaultTheme; // TODO
-		NSString *path = [[NSBundle mainBundle] pathForResource:themeName ofType:@"plist"];
-		self.theme = [NSDictionary dictionaryWithContentsOfFile:path];
+		NSString *themeName = [defaults objectForKey:@"theme"] ? : kTGThemeDefault; // TODO
+		[self setCurrentTheme:themeName];
 	}
 	return self;
+}
+
+- (void) setCurrentTheme:(NSString *)themeName
+{
+	[[NSUserDefaults standardUserDefaults] setObject:themeName forKey:@"theme"];
+	NSString *path = [[NSBundle mainBundle] pathForResource:themeName ofType:@"plist"];
+	self.theme = [NSDictionary dictionaryWithContentsOfFile:path];
+	
+	NSNotification *themeChangeNotification = [NSNotification notificationWithName:kThemeDidChangeNotification object:nil];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:themeChangeNotification postingStyle:NSPostWhenIdle];
 }
 
 #pragma mark - Utility

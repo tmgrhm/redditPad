@@ -56,6 +56,7 @@
 	[self loadSubreddit:self.subreddit];
 	
 	[self scrollToTopWithAnimation:NO];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kThemeDidChangeNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -74,6 +75,30 @@
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
+	
+	self.refreshControl.backgroundColor = [UIColor clearColor];
+	self.refreshControl.tintColor = [ThemeManager secondaryTextColor]; // TODO get better colour
+}
+
+- (void) themeDidChange
+{
+	NSLog(@"fpVC themeDidChange");
+	[self themeAppearance];
+	
+	// TODO update self properly
+	
+	UINavigationBar *navbar = self.navigationController.navigationBar;
+	navbar.barStyle = [ThemeManager uiBarStyle];
+	navbar.barTintColor = [ThemeManager contentBackgroundColor];
+	navbar.tintColor = [ThemeManager tintColor];
+	navbar.titleTextAttributes = @{NSForegroundColorAttributeName:	[ThemeManager textColor],
+								   NSFontAttributeName:			[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
+	
+	self.sortControl.tintColor = [ThemeManager tintColor];
+	[self.sortControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
+	
+	self.tableView.backgroundColor = [ThemeManager backgroundColor];
+	[self reloadTableView];
 }
 
 #pragma mark - IBAction

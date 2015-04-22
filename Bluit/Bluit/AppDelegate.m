@@ -24,6 +24,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
 	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeAppearance) name:kThemeDidChangeNotification object:nil];
 	[self themeAppearance];
 	
 	UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;

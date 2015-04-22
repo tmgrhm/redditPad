@@ -62,18 +62,17 @@
 - (IBAction)themeSegControlValueChanged:(UISegmentedControl *)sender
 {
 	NSString *title = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
-	NSString *theme = [title isEqualToString:@"Light"] ? @"lightTheme" : @"darkTheme";
-	[[NSUserDefaults standardUserDefaults] setObject:theme forKey:@"theme"];
+	NSString *theme = [title isEqualToString:@"Light"] ? kTGThemeDefault : kTGThemeDark;
+	NSLog(@"Changed theme: %@", theme);
+	[[ThemeManager sharedManager] setCurrentTheme:theme];
 	
-	// TODO NSNotification themeDidChange
-	
-	NSArray *windows = [UIApplication sharedApplication].windows;
-	for (UIWindow *window in windows) {
-		for (UIView *view in window.subviews) {
-			[view removeFromSuperview];
-			[window addSubview:view];
-		}
-	}
+//	NSArray *windows = [UIApplication sharedApplication].windows;
+//	for (UIWindow *window in windows) {
+//		for (UIView *view in window.subviews) {
+//			[view removeFromSuperview];
+//			[window addSubview:view];
+//		}
+//	}
 }
 
 #pragma mark -
