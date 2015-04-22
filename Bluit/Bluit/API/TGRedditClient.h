@@ -10,6 +10,7 @@
 
 #import "TGLink.h"
 #import "TGSubreddit.h"
+#import "TGPagination.h"
 
 typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); // TODO move
 
@@ -17,11 +18,7 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 + (instancetype)sharedClient;
 
-- (void) requestFrontPageWithCompletionBlock:(TGListingCompletionBlock)block;
-- (void) requestSubreddit:(NSString *)subredditURL withCompletion:(TGListingCompletionBlock)completion;
-- (void) requestSubreddit:(NSString *)subredditURL after:(TGLink *)link withCompletion:(TGListingCompletionBlock)completion;
-
-- (void) requestListing:(NSString *)request withCompletionBlock:(TGListingCompletionBlock)block;
+- (void) requestSubredditWithPagination:(TGPagination *)pagination withCompletion:(TGListingCompletionBlock)completion;
 
 - (NSURL *) oAuthLoginURL;
 - (void) loginWithOAuthResponse:(NSURL *)url;

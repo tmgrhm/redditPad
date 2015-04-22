@@ -43,8 +43,9 @@
 
 - (void) goToSubreddit
 {
-	NSString *subreddit = [NSString stringWithFormat:@"/r/%@", self.searchTextField.text];
+	NSString *subreddit = [NSString stringWithFormat:@"/r/%@/", self.searchTextField.text];
 	[self.listingViewController loadSubreddit:subreddit];
+	
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -55,8 +56,10 @@
 {
 	if ([segue.identifier isEqualToString:@"goToSubreddit"])
 	{
-		FrontPageViewController *listingVC = (FrontPageViewController *) segue.destinationViewController;
-		listingVC.subreddit = [NSString stringWithFormat:@"/r/%@", self.searchTextField.text];
+		// TODO remove? not using
+		NSLog(@"goToSubreddit segue");
+//		FrontPageViewController *listingVC = (FrontPageViewController *) segue.destinationViewController;
+//		listingVC.pagination.subreddit = [NSString stringWithFormat:@"/r/%@/", self.searchTextField.text];
 	}
 }
 

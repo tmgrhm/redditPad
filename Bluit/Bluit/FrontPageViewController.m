@@ -42,18 +42,18 @@
 	self.listings = [NSMutableArray new];
 	self.listingCellHeights = [NSMutableDictionary new];
 	
-	[self themeAppearance];
+	self.pagination = [TGPagination new];
 	
 	// TODO custom refreshControl
 	self.refreshControl = [UIRefreshControl new];
-	self.refreshControl.backgroundColor = [ThemeManager backgroundColor];
-	self.refreshControl.tintColor = [ThemeManager secondaryTextColor]; // TODO get better colour
 	[self.refreshControl addTarget:self
 					   action:@selector(refreshData)
 			 forControlEvents:UIControlEventValueChanged];
 	[self.tableView addSubview:self.refreshControl];
 	
-	[self loadSubreddit:self.subreddit];
+	[self themeAppearance];
+	
+	[self loadSubreddit:self.pagination.subreddit];
 	
 	[self scrollToTopWithAnimation:NO];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kThemeDidChangeNotification object:nil];
@@ -105,45 +105,114 @@
 
 - (void)refreshData	// pull-to-refresh
 {
-	[self loadSubreddit:self.subreddit];
+	[self loadSubredditWithCurrentPagination];
 }
 
 - (IBAction)sortChanged:(UISegmentedControl *)sender
 {
-	NSString *sort = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];
+	NSString *sortString = [sender titleForSegmentAtIndex:sender.selectedSegmentIndex];		// TODO better conversion
+	if ([sortString isEqualToString:@"Controv."])	sortString = @"Controversial";			// TODO better conversion
 	
-	TGSubredditSort sortType;
-	if		([sort isEqualToString:kTGSubredditSortStringHot])				sortType = TGSubredditSortHot;
-	else if ([sort isEqualToString:kTGSubredditSortStringNew])				sortType = TGSubredditSortNew;
-	else if ([sort isEqualToString:kTGSubredditSortStringRising])			sortType = TGSubredditSortRising;
-	else if ([sort isEqualToString:kTGSubredditSortStringControversial])		sortType = TGSubredditSortControversial;
-	else if ([sort isEqualToString:kTGSubredditSortStringTop])				sortType = TGSubredditSortTop;
+	NSString *subreddit = self.pagination.subreddit;
+	self.pagination = [TGPagination new];
+	self.pagination.subreddit = subreddit;
+	self.pagination.sort = [TGSubreddit sortFromSortString:sortString];
+	self.pagination.timeframe = 0;
 	
-	[self loadSubreddit:self.subreddit withSort:sortType];
+	if (self.pagination.sort == TGSubredditSortTop || self.pagination.sort == TGSubredditSortControversial)
+	{
+		[self showSortTimeframePicker];
+	}
+	else // don't need timeframe otherwise, can make call now
+	{
+		[self loadSubredditWithCurrentPagination];
+	}
+}
+
+- (void) showSortTimeframePicker	// TODO
+{
+	UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+																			 message:nil
+																	  preferredStyle:UIAlertControllerStyleActionSheet];
+	[alertController setModalPresentationStyle:UIModalPresentationPopover];
+	
+	NSArray *sortTypes = @[kTGSubredditSortTimeframeStringHour, kTGSubredditSortTimeframeStringDay, kTGSubredditSortTimeframeStringWeek, kTGSubredditSortTimeframeStringMonth, kTGSubredditSortTimeframeStringYear, kTGSubredditSortTimeframeStringAll];
+	
+	for (int i=0; i < sortTypes.count; i++)
+	{
+		[alertController addAction:[UIAlertAction actionWithTitle:sortTypes[i]
+															style:UIAlertActionStyleDefault
+														  handler:^(UIAlertAction *action) {
+															  NSLog(@"action:%@", action.title);
+															  self.pagination.timeframe = [TGSubreddit sortTimeframeFromSortString:action.title];
+															  [self loadSubredditWithCurrentPagination];
+														  }]];
+	}
+	
+	UIPopoverPresentationController *popPresenter = [alertController
+													 popoverPresentationController];
+	popPresenter.sourceView = self.sortControl;
+	popPresenter.sourceRect = self.sortControl.bounds;
+	[self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Loading Data
 
-- (void)loadSubreddit:(NSString *)subredditURL withSort:(TGSubredditSort)sort
-{
-	// TODO make proper API calls
-	[self loadSubreddit:subredditURL];
-}
-
 - (void)loadSubreddit:(NSString *)subredditURL
 {
-	NSLog(@"fpVC.subreddit: %@", self.subreddit);
-	if ([subredditURL length] == 0)	subredditURL = @"hot";
+	// clear current pagination
+	self.sortControl.selectedSegmentIndex = 0;
+	self.pagination = [TGPagination new];
+	self.pagination.subreddit = subredditURL;
 	
-	self.subreddit = subredditURL;
-	self.title = subredditURL;
-	if ([subredditURL isEqualToString:@"hot"])	self.title = @"Front Page";
+	self.title = [self titleFromPagination];
+	
+	[self loadSubredditWithCurrentPagination];
+}
+
+- (void) loadMore
+{
+	[self loadSubredditAfter:self.listings.lastObject];	// TODO handle no results case
+}
+
+- (void) loadSubredditAfter:(TGLink *)link
+{
+	NSLog(@"fpVC loadAfter: %@", link.fullname);
+	self.pagination.afterLink = link;
 	
 	__weak __typeof(self)weakSelf = self;
-	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:nil withCompletion:^(NSArray *collection, NSError *error)
-	{
-		[weakSelf setPosts:collection];
-	}];
+	[[TGRedditClient sharedClient] requestSubredditWithPagination:self.pagination withCompletion:^(NSArray *collection, NSError *error)
+	 {
+		 if (error)
+		 {
+			 // TODO
+		 } else
+		 {
+			 if (collection.count == 0) // no posts found after that post, probably because it's no longer in the current listing?
+			 {
+				 NSUInteger index = [self.listings indexOfObject:link];
+				 [self loadSubredditAfter:self.listings[index-1]];
+			 }
+			 else
+				 [weakSelf appendPosts:collection];
+		 }
+	 }];
+}
+
+- (void)loadSubredditWithCurrentPagination
+{
+	NSLog(@"fpVC.subreddit: %@", self.pagination.subreddit);
+	__weak __typeof(self)weakSelf = self;
+	[[TGRedditClient sharedClient] requestSubredditWithPagination:self.pagination withCompletion:^(NSArray *collection, NSError *error)
+	 {
+		 if (error)
+		 {
+			 // TODO
+		 } else
+		 {
+			 [weakSelf setPosts:collection];
+		 }
+	 }];
 }
 
 - (void) setPosts:(NSArray *)posts
@@ -153,30 +222,34 @@
 	[self reloadTableView];
 }
 
-- (void) loadSubreddit:(NSString *)subredditURL after:(TGLink *)link
-{
-	__weak __typeof(self)weakSelf = self;
-	[[TGRedditClient sharedClient] requestSubreddit:subredditURL after:link withCompletion:^(NSArray *collection, NSError *error)
-	{
-		[weakSelf appendPosts:collection];
-	}];
-}
-
-- (void) loadMore
-{
-	[self loadSubreddit:self.subreddit after:self.listings.lastObject];
-}
-
 - (void) appendPosts:(NSArray *)posts
 {
+	NSMutableArray *newPosts = [NSMutableArray array];
 	NSMutableArray *indexPaths = [NSMutableArray array];
+	
+	for (int i=0; i < posts.count; i++)	// remove any posts already in listing
+	{
+		TGLink *currentNewPost = posts[i];
+		BOOL isAlreadyInListing = NO;
+		for (int j=0; (j < self.listings.count) && !isAlreadyInListing; j++)
+		{
+			TGLink *existingPost = self.listings[j];
+			if ([existingPost.id isEqualToString:currentNewPost.id])
+			{
+				isAlreadyInListing = YES;
+			}
+		}
+		if (!isAlreadyInListing)	[newPosts addObject:currentNewPost];
+	}
+	NSLog(@"appended %lu posts", (unsigned long)newPosts.count);
+	
 	NSInteger currentCount = self.listings.count;
-	for (int i = 0; i < posts.count; i++) {
+	for (int i=0; i < newPosts.count; i++) {
 		[indexPaths addObject:[NSIndexPath indexPathForRow:currentCount+i inSection:0]];
 	}
 	
 	[self.tableView beginUpdates];
-	[self.listings addObjectsFromArray:posts];
+	[self.listings addObjectsFromArray:newPosts];
 	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 	[self.tableView endUpdates];
 }
@@ -345,6 +418,13 @@
 - (void) scrollToTopWithAnimation:(BOOL)animated
 {
 	[self.tableView setContentOffset:CGPointMake(0, 0 - self.tableView.contentInset.top + 66) animated:animated];
+}
+
+#pragma mark - Convenience
+
+- (NSString *) titleFromPagination
+{
+	return [self.pagination.subreddit isEqualToString:@"/"] ? @"Front Page" : self.pagination.subreddit;
 }
 
 #pragma mark - Navigation

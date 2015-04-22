@@ -73,48 +73,45 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 #pragma mark - Listings
 
-- (void) requestFrontPageWithCompletionBlock:(TGListingCompletionBlock)completion
+- (void) requestSubredditWithPagination:(TGPagination *)pagination withCompletion:(TGListingCompletionBlock)completion;
 {
-    [self requestSubreddit:@"hot" withCompletion:completion];
-}
-
-- (void) requestSubreddit:(NSString *)subredditURL withCompletion:(TGListingCompletionBlock)completion
-{
-	[self requestSubreddit:subredditURL after:nil withCompletion:completion];
-}
-
-- (void) requestSubreddit:(NSString *)subredditURL after:(TGLink *)link withCompletion:(TGListingCompletionBlock)completion
-{
-	NSString *path = [subredditURL stringByAppendingString:@".json"];
-	if (link)
+	NSString *path = [NSString stringWithFormat:@"%@%@.json", pagination.subreddit, [[TGSubreddit sortStringFromSubredditSort:pagination.sort] lowercaseString]];
+	NSMutableDictionary *parameters = [NSMutableDictionary new];
+	
+	// http://www.reddit.com/r/unitedkingdom/controversial/?sort=controversial&t=month
+	
+	if (pagination.afterLink)	[parameters setObject:pagination.afterLink.fullname forKey:@"after"];
+	if (pagination.sort)
 	{
-		path = [NSString stringWithFormat:@"%@?after=t3_%@", path, link.id]; // TODO better than "?after="
+		[parameters setObject:[TGSubreddit sortStringFromSubredditSort:pagination.sort] forKey:@"sort"];
+		if (pagination.timeframe)	[parameters setObject:[TGSubreddit sortTimeframeStringFromSubredditSortTimeframe:pagination.timeframe] forKey:@"t"];
 	}
-	[self requestListing:path withCompletionBlock:completion];
+	
+	[self requestListing:path withParameters:parameters completion:completion];
 }
 
-- (void) requestListing:(NSString *)path withCompletionBlock:(TGListingCompletionBlock)completion	// TODO improve
+- (void) requestListing:(NSString *)path withParameters:(NSDictionary *)parameters completion:(TGListingCompletionBlock)completion	// TODO improve
 {
 	NSString *urlString = [NSString stringWithFormat:@"%@%@", self.baseURLString, path];
 	NSLog(@"Client requesting: %@", urlString);
 	
-		   parameters:nil
-			  success:^(NSURLSessionDataTask *task, id responseObject) {
-				  NSDictionary *responseDict = (NSDictionary *)responseObject;
-				  NSMutableArray *listing = [NSMutableArray new];
-				  
-				  for (id item in responseDict[@"data"][@"children"])
-				  {
-					  [listing addObject:[[TGLink new] initLinkFromDictionary:item]];
-				  }
-				  
-				  completion([NSArray arrayWithArray:listing], nil);
-			  }
-			  failure:^(NSURLSessionDataTask *task, NSError *error) {
-				  [self failureWithError:error];
-				  completion(nil, error);
-			  }];
 	[self GET:urlString
+   parameters:parameters
+	  success:^(NSURLSessionDataTask *task, id responseObject) {
+		  NSDictionary *responseDict = (NSDictionary *)responseObject;
+		  NSMutableArray *listing = [NSMutableArray new];
+		  
+		  for (id item in responseDict[@"data"][@"children"])
+		  {
+			  [listing addObject:[[TGLink new] initLinkFromDictionary:item]];
+		  }
+		  
+		  completion([NSArray arrayWithArray:listing], nil);
+	  }
+	  failure:^(NSURLSessionDataTask *task, NSError *error) {
+		  [self failureWithError:error];
+		  completion(nil, error);
+	  }];
 }
 
 #pragma mark - Links
@@ -360,7 +357,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 								 @"refresh_token" :	self.refreshToken};
 	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																   password:@""]; // password empty due to being a confidential client
-	[self.manager POST:accessURL
+	[self.manager POST:accessURL	// SHOULD be self.manager: want to bypass expiredToken check
 			parameters:parameters
 			   success:^(NSURLSessionDataTask *task, id responseObject) {
 				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token

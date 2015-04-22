@@ -19,8 +19,8 @@ NSString * const kAllSubredditsDisplayName = @"All";
 NSString * const kRandomSubreddit = @"Random Subreddit";
 NSString * const kDiscoverSubreddits = @"Discover Subreddits";
 NSString * const kFrontPageURL = @"hot";
-NSString * const kAllSubredditsURL = @"/r/all";
-NSString * const kRandomSubredditURL = @"/r/random";
+NSString * const kAllSubredditsURL = @"/r/all/";
+NSString * const kRandomSubredditURL = @"/r/random/";
 
 
 @interface TGSubredditListViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -153,15 +153,13 @@ NSString * const kRandomSubredditURL = @"/r/random";
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	// Get the new view controller using [segue destinationViewController].
-	// Pass the selected object to the new view controller.
-	
 	if ([segue.identifier isEqualToString:@"subredditListToListing"])
 	{
+		// TODO remove? not using
 		NSLog(@"SubredditListVC requesting fpVC for: %@", self.selectedSubreddit);
-		FrontPageViewController *fpVC = segue.destinationViewController;
-		fpVC.subreddit = self.selectedSubreddit;
-//		webVC.link = self.selectedLink;
+//		FrontPageViewController *fpVC = segue.destinationViewController;
+//		fpVC.pagination = [TGPagination new]; // clear pagination
+//		fpVC.pagination.subreddit = self.selectedSubreddit;
 	}
 }
 
