@@ -36,6 +36,7 @@
 		E2A512991AC4B4F10007A842 /* darkTheme.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2A512981AC4B4F10007A842 /* darkTheme.plist */; };
 		E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */; };
 		E2A5129E1AC564BF0007A842 /* lightTheme.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2A5129D1AC564BF0007A842 /* lightTheme.plist */; };
+		E2BDB76F1AE7779200FEB59C /* TGPagination.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB76E1AE7779200FEB59C /* TGPagination.m */; };
 		E2FBF7231AC5A7D00031C957 /* TGImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FBF7221AC5A7D00031C957 /* TGImageViewController.m */; };
 		F01739A4B8845F47B0205BA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F306A862EA62B98203377AA7 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -108,6 +109,8 @@
 		E2A5129A1AC4B6030007A842 /* UIColor+HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColors.h"; sourceTree = "<group>"; };
 		E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColors.m"; sourceTree = "<group>"; };
 		E2A5129D1AC564BF0007A842 /* lightTheme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = lightTheme.plist; sourceTree = "<group>"; };
+		E2BDB76D1AE7779200FEB59C /* TGPagination.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPagination.h; sourceTree = "<group>"; };
+		E2BDB76E1AE7779200FEB59C /* TGPagination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPagination.m; sourceTree = "<group>"; };
 		E2FBF7211AC5A7D00031C957 /* TGImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageViewController.h; sourceTree = "<group>"; };
 		E2FBF7221AC5A7D00031C957 /* TGImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageViewController.m; sourceTree = "<group>"; };
 		F306A862EA62B98203377AA7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -240,6 +243,8 @@
 				E22047FF1AD8342200A5FACF /* TGSubreddit.m */,
 				E22048011AD85DA200A5FACF /* TGMoreComments.h */,
 				E22048021AD85DA200A5FACF /* TGMoreComments.m */,
+				E2BDB76D1AE7779200FEB59C /* TGPagination.h */,
+				E2BDB76E1AE7779200FEB59C /* TGPagination.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -444,6 +449,7 @@
 				E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */,
 				E2A512971AC4AC990007A842 /* ThemeManager.m in Sources */,
 				E288CBD91AD50CF30059855E /* TGThing.m in Sources */,
+				E2BDB76F1AE7779200FEB59C /* TGPagination.m in Sources */,
 				E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */,
 				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,
