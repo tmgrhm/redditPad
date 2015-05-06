@@ -133,5 +133,27 @@
 	return [self colorForKey:@"shadeColor"];
 }
 
+#pragma mark - Styling methods
+
++ (void) styleSmallcapsHeader:(UILabel *)label
+{
+	label.textColor = [ThemeManager smallcapsHeaderColor];
+	label.alpha = 0.5f;
+	NSMutableAttributedString *mutAttrStr = [label.attributedText mutableCopy];
+	[mutAttrStr addAttribute:NSKernAttributeName
+						 value:@(1.5)
+						 range:NSMakeRange(0, mutAttrStr.length)];
+	label.attributedText = mutAttrStr;
+}
+
++ (void) styleSmallcapsButton:(UIButton *)button // TODO setTitle:(NSString *)title andStyleSmallcapsButton:(UIButton *)button
+{
+	button.tintColor = [ThemeManager tintColor];
+	NSMutableAttributedString *mutAttrStr = [button.titleLabel.attributedText mutableCopy];
+	[mutAttrStr addAttribute:NSKernAttributeName
+					   value:@(1.5)
+					   range:NSMakeRange(0, mutAttrStr.length)];
+	[button setAttributedTitle:mutAttrStr forState:UIControlStateNormal];
+}
 
 @end

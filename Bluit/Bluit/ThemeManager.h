@@ -49,4 +49,7 @@ static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 + (UIColor *) shadowBorderColor;
 + (UIColor *) shadeColor;
 
++ (void) styleSmallcapsHeader:(UILabel *)label;
++ (void) styleSmallcapsButton:(UIButton *)button;
+
 @end
