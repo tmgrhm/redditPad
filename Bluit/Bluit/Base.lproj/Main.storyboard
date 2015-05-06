@@ -10,7 +10,7 @@
         <!--Front Page-->
         <scene sceneID="hNz-n2-bh7">
             <objects>
-                <viewController id="9pv-A4-QxB" customClass="FrontPageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FrontPageViewController" id="9pv-A4-QxB" customClass="FrontPageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Ia1-K6-d13"/>
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
@@ -866,14 +866,14 @@
                                         <rect key="frame" x="0.0" y="0.0" width="668" height="876"/>
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="44" maxX="0.0" maxY="0.0"/>
                                         <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="25" shouldIndentWhileEditing="NO" reuseIdentifier="TGLinkPostCell" rowHeight="213" id="bdk-xD-B72" customClass="TGLinkPostCell">
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="25" shouldIndentWhileEditing="NO" reuseIdentifier="TGLinkPostCell" rowHeight="220" id="bdk-xD-B72" customClass="TGLinkPostCell">
                                                 <rect key="frame" x="0.0" y="350" width="640" height="80"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bdk-xD-B72" id="peA-Q0-bRq">
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hn9-ej-aYd" userLabel="Header Data">
-                                                            <rect key="frame" x="0.0" y="0.0" width="668" height="212"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="668" height="219"/>
                                                             <subviews>
                                                                 <textView contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qWy-1x-0OD" userLabel="Title">
                                                                     <rect key="frame" x="75" y="26" width="569" height="40"/>
@@ -891,7 +891,7 @@
                                                                         <outlet property="delegate" destination="ibe-ay-a9l" id="qoc-Uj-vNg"/>
                                                                     </connections>
                                                                 </textView>
-                                                                <textView contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-te-2tP" userLabel="Content">
+                                                                <textView contentMode="scaleToFill" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="751" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-te-2tP" userLabel="Content">
                                                                     <rect key="frame" x="75" y="70" width="568" height="37"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <attributedString key="attributedText">
@@ -909,36 +909,25 @@
                                                                         <outlet property="delegate" destination="ibe-ay-a9l" id="qmk-wY-v6u"/>
                                                                     </connections>
                                                                 </textView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Metadata" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="thk-NF-JmD">
-                                                                    <rect key="frame" x="75" y="111" width="66" height="21"/>
-                                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="15"/>
-                                                                    <color key="textColor" red="0.54005390405654907" green="0.57619529962539673" blue="0.60124874114990234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <color key="highlightedColor" red="0.54005390405654907" green="0.57619529962539673" blue="0.60124874114990234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                </label>
-                                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="999" translatesAutoresizingMaskIntoConstraints="NO" id="ekq-4S-enb" userLabel="Comments Header BG">
-                                                                    <rect key="frame" x="0.0" y="156" width="668" height="56"/>
-                                                                    <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Dt-12-UxM">
-                                                                            <rect key="frame" x="25" y="29" width="77" height="16"/>
-                                                                            <attributedString key="attributedText">
-                                                                                <fragment content="0 COMMENTS">
-                                                                                    <attributes>
-                                                                                        <color key="NSColor" red="0.34589323401451111" green="0.43828919529914856" blue="0.50505572557449341" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                                        <font key="NSFont" size="11" name="AvenirNext-Bold"/>
-                                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                                                    </attributes>
-                                                                                </fragment>
-                                                                            </attributedString>
-                                                                            <color key="highlightedColor" red="0.34589323401451111" green="0.43828919529914856" blue="0.50505572557449341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                        </label>
-                                                                    </subviews>
-                                                                    <color key="backgroundColor" red="0.91344696283340454" green="0.91727530956268311" blue="0.94206088781356812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="bottom" secondItem="0Dt-12-UxM" secondAttribute="bottom" constant="11" id="RHN-C8-XfP"/>
-                                                                        <constraint firstItem="0Dt-12-UxM" firstAttribute="leading" secondItem="ekq-4S-enb" secondAttribute="leading" constant="25" id="pyO-Vh-who"/>
-                                                                        <constraint firstAttribute="height" priority="999" constant="56" id="ye1-qN-j8A"/>
-                                                                    </constraints>
-                                                                </view>
+                                                                <textView contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TU5-cU-OgG" userLabel="Metadata">
+                                                                    <rect key="frame" x="75" y="114" width="172" height="26"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                    <attributedString key="attributedText">
+                                                                        <fragment content="Selfpost content or URL">
+                                                                            <attributes>
+                                                                                <color key="NSColor" red="0.54005390405654907" green="0.57619529962539673" blue="0.60124874114990234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                <font key="NSFont" size="15" name="AvenirNext-Medium"/>
+                                                                                <font key="NSOriginalFont" size="15" name="AvenirNext-Medium"/>
+                                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                            </attributes>
+                                                                        </fragment>
+                                                                    </attributedString>
+                                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                                                                    <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                                    <connections>
+                                                                        <outlet property="delegate" destination="ibe-ay-a9l" id="Pba-QO-quc"/>
+                                                                    </connections>
+                                                                </textView>
                                                                 <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="imt-rF-eLP" userLabel="Upvote">
                                                                     <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                                                     <constraints>
@@ -969,21 +958,45 @@
                                                                         <action selector="downvoteButtonPressed:" destination="ibe-ay-a9l" eventType="touchUpInside" id="aSh-LR-x4t"/>
                                                                     </connections>
                                                                 </button>
+                                                                <view contentMode="scaleToFill" verticalCompressionResistancePriority="999" translatesAutoresizingMaskIntoConstraints="NO" id="ekq-4S-enb" userLabel="Comments Header BG">
+                                                                    <rect key="frame" x="0.0" y="163" width="668" height="56"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Dt-12-UxM">
+                                                                            <rect key="frame" x="25" y="29" width="77" height="16"/>
+                                                                            <attributedString key="attributedText">
+                                                                                <fragment content="0 COMMENTS">
+                                                                                    <attributes>
+                                                                                        <color key="NSColor" red="0.34589323401451111" green="0.43828919529914856" blue="0.50505572557449341" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                                        <font key="NSFont" size="11" name="AvenirNext-Bold"/>
+                                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                                    </attributes>
+                                                                                </fragment>
+                                                                            </attributedString>
+                                                                            <color key="highlightedColor" red="0.34589323401451111" green="0.43828919529914856" blue="0.50505572557449341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" red="0.91344696283340454" green="0.91727530956268311" blue="0.94206088781356812" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="bottom" secondItem="0Dt-12-UxM" secondAttribute="bottom" constant="11" id="RHN-C8-XfP"/>
+                                                                        <constraint firstItem="0Dt-12-UxM" firstAttribute="leading" secondItem="ekq-4S-enb" secondAttribute="leading" constant="25" id="pyO-Vh-who"/>
+                                                                        <constraint firstAttribute="height" priority="999" constant="56" id="ye1-qN-j8A"/>
+                                                                    </constraints>
+                                                                </view>
                                                             </subviews>
                                                             <constraints>
-                                                                <constraint firstItem="thk-NF-JmD" firstAttribute="top" secondItem="YSU-te-2tP" secondAttribute="bottom" constant="4" id="2mv-Rg-P7D"/>
                                                                 <constraint firstItem="5e7-Ys-PlF" firstAttribute="top" secondItem="imt-rF-eLP" secondAttribute="bottom" id="4vt-yl-tMZ"/>
                                                                 <constraint firstAttribute="trailing" secondItem="YSU-te-2tP" secondAttribute="trailing" constant="25" id="ATK-Yp-dCc"/>
                                                                 <constraint firstItem="YSU-te-2tP" firstAttribute="top" secondItem="qWy-1x-0OD" secondAttribute="bottom" constant="4" id="DnD-Nx-DjY"/>
+                                                                <constraint firstItem="TU5-cU-OgG" firstAttribute="top" secondItem="YSU-te-2tP" secondAttribute="bottom" constant="7" id="FPM-l7-txf"/>
                                                                 <constraint firstAttribute="trailing" secondItem="qWy-1x-0OD" secondAttribute="trailing" constant="24" id="JpX-tP-ecZ"/>
+                                                                <constraint firstItem="TU5-cU-OgG" firstAttribute="leading" secondItem="YSU-te-2tP" secondAttribute="leading" id="N1R-A2-X3a"/>
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="YSU-te-2tP" secondAttribute="leading" id="NVx-d3-wvg"/>
                                                                 <constraint firstAttribute="bottom" secondItem="ekq-4S-enb" secondAttribute="bottom" id="UPG-42-H6v"/>
-                                                                <constraint firstItem="ekq-4S-enb" firstAttribute="top" secondItem="thk-NF-JmD" secondAttribute="bottom" priority="999" constant="24" id="VcW-ke-2dJ"/>
+                                                                <constraint firstItem="ekq-4S-enb" firstAttribute="top" secondItem="TU5-cU-OgG" secondAttribute="bottom" constant="23" id="VHL-ol-doL"/>
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="top" secondItem="Hn9-ej-aYd" secondAttribute="top" constant="26" id="WgG-ob-g08"/>
                                                                 <constraint firstItem="ekq-4S-enb" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="Z1c-46-IB8"/>
                                                                 <constraint firstAttribute="trailing" secondItem="ekq-4S-enb" secondAttribute="trailing" id="bTc-hj-OZX"/>
                                                                 <constraint firstItem="5e7-Ys-PlF" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="f2z-Wi-ogV"/>
-                                                                <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="thk-NF-JmD" secondAttribute="leading" id="leS-UZ-4ff"/>
                                                                 <constraint firstItem="imt-rF-eLP" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="ni8-cx-dUv"/>
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="imt-rF-eLP" secondAttribute="trailing" constant="15" id="wpz-Id-I2K"/>
                                                                 <constraint firstItem="imt-rF-eLP" firstAttribute="top" secondItem="Hn9-ej-aYd" secondAttribute="top" id="ys9-AC-ocW"/>
@@ -1004,7 +1017,7 @@
                                                     <outlet property="content" destination="YSU-te-2tP" id="Hk7-mb-9JU"/>
                                                     <outlet property="downvoteButton" destination="5e7-Ys-PlF" id="Jnf-Ig-PR4"/>
                                                     <outlet property="mainBackground" destination="Hn9-ej-aYd" id="K8x-BL-ufc"/>
-                                                    <outlet property="metadata" destination="thk-NF-JmD" id="h4Q-pg-NnT"/>
+                                                    <outlet property="metadata" destination="TU5-cU-OgG" id="oOx-Ms-ecn"/>
                                                     <outlet property="numComments" destination="0Dt-12-UxM" id="UmT-eg-ei2"/>
                                                     <outlet property="separator" destination="ekq-4S-enb" id="foO-DL-Efz"/>
                                                     <outlet property="title" destination="qWy-1x-0OD" id="W1L-bN-EJN"/>
@@ -1198,7 +1211,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="qgV-3d-NLN"/>
-        <segue reference="fTW-1s-qNd"/>
-        <segue reference="iA2-kh-EGo"/>
+        <segue reference="YFw-Df-Uep"/>
+        <segue reference="iGZ-e7-hTh"/>
     </inferredMetricsTieBreakers>
 </document>

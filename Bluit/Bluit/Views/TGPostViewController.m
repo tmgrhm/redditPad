@@ -355,6 +355,7 @@
 	// clear the delegates to prevent crashes — TODO solve?
 	cell.title.delegate = self;
 	cell.content.delegate = self;
+	cell.metadata.delegate = self;
 	
 	cell.title.text = self.link.title;
 	NSMutableAttributedString *mutAttrTitle = [cell.title.attributedText mutableCopy];

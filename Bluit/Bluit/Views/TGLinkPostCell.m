@@ -14,6 +14,7 @@
     // Initialization code
 	self.title.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
 	self.content.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
+	self.metadata.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
