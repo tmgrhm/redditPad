@@ -78,7 +78,7 @@ static NSString * const kTGSubredditSortTimeframeStringAll =		@"all";
 @property (nonatomic, copy, readonly) NSString *submitLinkBtnLabel;
 @property (nonatomic, copy, readonly) NSString *submitTextBtnLabel;
 
-@property (nonatomic, assign, readonly) BOOL userIsSubscriber;
+@property (nonatomic, assign) BOOL userIsSubscriber;
 @property (nonatomic, assign, readonly) BOOL userIsContributor;
 @property (nonatomic, assign, readonly) BOOL userIsModerator;
 @property (nonatomic, assign, readonly) BOOL userIsBanned;
