@@ -138,14 +138,6 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 #pragma mark - Subreddits
 
-- (void) setSerializerHTTPHeaders:(NSString *)modhash and:(NSString *)sessionIdentifier
-{
-	[self.serializer setValue:modhash forHTTPHeaderField:@"X-Modhash"];
-	[self.serializer setValue:sessionIdentifier forHTTPHeaderField:@"Cookie"];
-	
-	NSLog(@"set headers: \"%@\" \nsessionID: \"%@\"", modhash, sessionIdentifier);
-}
-
 - (void)retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion
 {
 	NSLog(@"retrievingUserSubs");
@@ -359,12 +351,13 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 								 @"refresh_token" :	self.refreshToken};
 	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																   password:@""]; // password empty due to being a confidential client
+	__weak __typeof(self)weakSelf = self;
 	[self.manager POST:accessURL	// SHOULD be self.manager: want to bypass expiredToken check
 			parameters:parameters
 			   success:^(NSURLSessionDataTask *task, id responseObject) {
 				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
-				   self.accessToken = responseObject[@"access_token"];
-				   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
+				   weakSelf.accessToken = responseObject[@"access_token"];
+				   weakSelf.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
 				   NSLog(@"accessToken refreshed");
 				   success();
 				   weakSelf.isRefreshingToken = NO;
@@ -393,16 +386,8 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void) POST:(NSString *)stringURL parameters:(NSDictionary *)parameters success:(void (^)(NSURLSessionDataTask* task, id responseObject))success failure:(void (^)(NSURLSessionDataTask* task, NSError* error))failure
 {
-	// TODO accessTokenIsRefreshing + either KVO or sleep while YES
-	// to prevent multiple refreshes at same time
-	
 	if ([self accessTokenHasExpired])
 	{
-		[self refreshOAuthTokenWithSuccess:^{
-			[self POST:stringURL parameters:parameters success:success failure:failure];
-		}];
-		NSLog(@"Retrying because accessTokenHasExpired");
-		return;
 		if ([self isRefreshingToken])
 		{
 			// TODO handle isRefreshing properly
@@ -430,16 +415,8 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void) GET:(NSString *)stringURL parameters:(NSDictionary *)parameters success:(void (^)(NSURLSessionDataTask* task, id responseObject))success failure:(void (^)(NSURLSessionDataTask* task, NSError* error))failure
 {
-	// TODO accessTokenIsRefreshing + either KVO or sleep while YES
-	// to prevent multiple refreshes at same time
-	
 	if ([self accessTokenHasExpired])
 	{
-		[self refreshOAuthTokenWithSuccess:^{
-			[self GET:stringURL parameters:parameters success:success failure:failure];
-		}];
-		NSLog(@"Retrying because accessTokenHasExpired");
-		return;
 		if ([self isRefreshingToken])
 		{
 			// TODO handle isRefreshing properly
