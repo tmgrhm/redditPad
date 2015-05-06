@@ -372,6 +372,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="768" height="1024"/>
                     <connections>
+                        <outlet property="commentsButton" destination="ceq-Yi-hSr" id="0BF-1x-tnC"/>
                         <outlet property="navigationBar" destination="WgL-KA-70c" id="XzZ-Ll-41W"/>
                         <outlet property="shareButton" destination="BQc-w2-5eD" id="ZrU-1I-ywK"/>
                         <outlet property="toolbar" destination="WgH-ao-0H9" id="Ify-yD-ad5"/>
@@ -1211,7 +1212,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="qgV-3d-NLN"/>
-        <segue reference="YFw-Df-Uep"/>
         <segue reference="iGZ-e7-hTh"/>
+        <segue reference="iA2-kh-EGo"/>
     </inferredMetricsTieBreakers>
 </document>

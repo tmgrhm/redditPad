@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UINavigationBar *navigationBar;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *shareButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *commentsButton;
 
 @end
 
@@ -31,12 +32,15 @@
 	[self themeAppearance];
 	[self configureGestureRecognizer];
 
+	if ([self isLinkPostWebView])
+		self.url = self.link.url;
+	else
+	{
+		self.commentsButton.image = [UIImage new];
+		self.commentsButton.enabled = NO;
+	}
 	
-	if (!self.url) self.url = self.link.url;
 	[self.webView loadRequest:[NSURLRequest requestWithURL:self.url]];
-	// TODO fix webView being wrong-size for sites like imgur and youtube
-	
-//	self.titleLabel.text = self.link.title; // TODO make dynamic per webview
 }
 
 - (void)didReceiveMemoryWarning {
@@ -48,7 +52,6 @@
 
 - (void) configureContentInsets
 {
-	// TODO fix contentInsets-sized black bar at bottom before pageload
 	float navBarHeight = CGRectGetHeight(self.navigationBar.frame);
 	CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
 	CGFloat statusBarHeight = MIN(statusBarSize.width, statusBarSize.height);
@@ -89,12 +92,14 @@
 }
 
 - (IBAction)sharePressed:(id)sender
-{ 	// TODO
+{
+	NSArray *activityItems = [self isLinkPostWebView] ? @[self.link.title, self.url] : @[[self.webView stringByEvaluatingJavaScriptFromString:@"document.title"], self.url];
+	TUSafariActivity *safariActivity = [TUSafariActivity new];
 	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
-											initWithActivityItems:@[self.link.title, self.url] // TODO handle !self.link
+											initWithActivityItems:activityItems
 											applicationActivities:@[safariActivity]];
 	
-	shareSheet.popoverPresentationController.sourceView = self.view;
+	shareSheet.popoverPresentationController.barButtonItem = self.shareButton;
 	
 	[self presentViewController:shareSheet
 					   animated:YES
@@ -149,6 +154,11 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 	}
 }
 
+#pragma mark - Convenience
 
+- (BOOL) isLinkPostWebView
+{
+	return self.link;
+}
 
 @end

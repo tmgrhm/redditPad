@@ -719,7 +719,6 @@
 	
 	NSMutableAttributedString *string = [[parser attributedStringFromMarkdownString:markdown] mutableCopy]; // TODO I think XNG allows you to set paragraph style on the parser instead
 	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-	//	[paragraphStyle setLineSpacing:4.0]; // TODO look at NSMutableString's LineHeight property (inspect NSAttributedString at runtime to see — e.g. "LineHeight 0/0")
 	[paragraphStyle setMinimumLineHeight:21.0];
 	[paragraphStyle setParagraphSpacing:6.0];
 	
