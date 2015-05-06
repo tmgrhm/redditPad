@@ -127,7 +127,17 @@
 - (void) configureInfoCell:(TGSubredditInfoCell *)cell
 {
 	// TODO
+	
 	cell.nameLabel.text = [self.subreddit.url absoluteString];
+	NSMutableAttributedString *attrName = [cell.nameLabel.attributedText mutableCopy];
+	// style leading `/r/`
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+								 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Medium" size:17.0f]};
+	[attrName addAttributes:attributes range:NSMakeRange(0, 3)];
+	// trim trailing `/`
+	attrName = [[attrName attributedSubstringFromRange:NSMakeRange(0, attrName.length-1)] mutableCopy];
+	cell.nameLabel.attributedText = attrName;
+	
 	cell.descriptionLabel.text = self.subreddit.publicDescription;
 	[cell setNumSubscribers:self.subreddit.subscribers];
 	[cell setNumActiveUsers:self.subreddit.activeUsers];

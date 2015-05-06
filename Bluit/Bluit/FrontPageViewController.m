@@ -79,10 +79,21 @@
 {
 	UILabel *titleLabel = [UILabel new];
 	titleLabel.text = [self titleFromPagination];
+	
 	NSMutableAttributedString *attrTitle = [titleLabel.attributedText mutableCopy];
 	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager textColor],
 								 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	[attrTitle addAttributes:attributes range:NSMakeRange(0, attrTitle.length)];
+	
+	if (![self.pagination.subreddit isEqualToString:kSubredditFrontPage]) // title is not "Front Page"
+	{
+		// style leading `/r/`
+		attributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+					   NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Medium" size:17.0f]};
+		[attrTitle addAttributes:attributes range:NSMakeRange(0, 3)];
+		// trim trailing `/`
+		attrTitle = [[attrTitle attributedSubstringFromRange:NSMakeRange(0, attrTitle.length-1)] mutableCopy];
+	}
 	titleLabel.attributedText = attrTitle;
 	
 	CGFloat width = [titleLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
