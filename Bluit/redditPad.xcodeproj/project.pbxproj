@@ -37,6 +37,11 @@
 		E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */; };
 		E2A5129E1AC564BF0007A842 /* lightTheme.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2A5129D1AC564BF0007A842 /* lightTheme.plist */; };
 		E2BDB76F1AE7779200FEB59C /* TGPagination.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB76E1AE7779200FEB59C /* TGPagination.m */; };
+		E2BDB7751AE8CF2000FEB59C /* TGSubredditInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB7741AE8CF2000FEB59C /* TGSubredditInfoCell.m */; };
+		E2BDB7781AE8CF3200FEB59C /* TGSubredditSidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */; };
+		E2BDB77B1AE8D13400FEB59C /* TGSubredditInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB77A1AE8D13400FEB59C /* TGSubredditInfoViewController.m */; };
+		E2DE9BFF1AF932A000BACD5E /* TGFormPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */; };
+		E2DE9C021AF942B100BACD5E /* TGFormAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */; };
 		E2FBF7231AC5A7D00031C957 /* TGImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FBF7221AC5A7D00031C957 /* TGImageViewController.m */; };
 		F01739A4B8845F47B0205BA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F306A862EA62B98203377AA7 /* libPods.a */; };
 /* End PBXBuildFile section */
@@ -111,6 +116,16 @@
 		E2A5129D1AC564BF0007A842 /* lightTheme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = lightTheme.plist; sourceTree = "<group>"; };
 		E2BDB76D1AE7779200FEB59C /* TGPagination.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPagination.h; sourceTree = "<group>"; };
 		E2BDB76E1AE7779200FEB59C /* TGPagination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPagination.m; sourceTree = "<group>"; };
+		E2BDB7731AE8CF2000FEB59C /* TGSubredditInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSubredditInfoCell.h; path = Views/TGSubredditInfoCell.h; sourceTree = "<group>"; };
+		E2BDB7741AE8CF2000FEB59C /* TGSubredditInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSubredditInfoCell.m; path = Views/TGSubredditInfoCell.m; sourceTree = "<group>"; };
+		E2BDB7761AE8CF3200FEB59C /* TGSubredditSidebarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSubredditSidebarCell.h; path = Views/TGSubredditSidebarCell.h; sourceTree = "<group>"; };
+		E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSubredditSidebarCell.m; path = Views/TGSubredditSidebarCell.m; sourceTree = "<group>"; };
+		E2BDB7791AE8D13400FEB59C /* TGSubredditInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSubredditInfoViewController.h; sourceTree = "<group>"; };
+		E2BDB77A1AE8D13400FEB59C /* TGSubredditInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSubredditInfoViewController.m; sourceTree = "<group>"; usesTabs = 1; };
+		E2DE9BFD1AF932A000BACD5E /* TGFormPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFormPresentationController.h; sourceTree = "<group>"; };
+		E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFormPresentationController.m; sourceTree = "<group>"; };
+		E2DE9C001AF942B100BACD5E /* TGFormAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFormAnimationController.h; sourceTree = "<group>"; };
+		E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFormAnimationController.m; sourceTree = "<group>"; };
 		E2FBF7211AC5A7D00031C957 /* TGImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImageViewController.h; sourceTree = "<group>"; };
 		E2FBF7221AC5A7D00031C957 /* TGImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImageViewController.m; sourceTree = "<group>"; };
 		F306A862EA62B98203377AA7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,6 +278,10 @@
 				E2A512861AC0CEF80007A842 /* TGCommentCell.m */,
 				E2A5128C1AC354D50007A842 /* TGLinkPostCell.h */,
 				E2A5128D1AC354D50007A842 /* TGLinkPostCell.m */,
+				E2BDB7731AE8CF2000FEB59C /* TGSubredditInfoCell.h */,
+				E2BDB7741AE8CF2000FEB59C /* TGSubredditInfoCell.m */,
+				E2BDB7761AE8CF3200FEB59C /* TGSubredditSidebarCell.h */,
+				E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -284,6 +303,12 @@
 				E2FBF7221AC5A7D00031C957 /* TGImageViewController.m */,
 				E24CDCD21ADAE8800018907F /* TGSearchViewController.h */,
 				E24CDCD31ADAE8800018907F /* TGSearchViewController.m */,
+				E2BDB7791AE8D13400FEB59C /* TGSubredditInfoViewController.h */,
+				E2BDB77A1AE8D13400FEB59C /* TGSubredditInfoViewController.m */,
+				E2DE9BFD1AF932A000BACD5E /* TGFormPresentationController.h */,
+				E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */,
+				E2DE9C001AF942B100BACD5E /* TGFormAnimationController.h */,
+				E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -439,6 +464,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2DE9BFF1AF932A000BACD5E /* TGFormPresentationController.m in Sources */,
+				E2BDB7751AE8CF2000FEB59C /* TGSubredditInfoCell.m in Sources */,
 				E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */,
 				E288CBA11AD2EABB0059855E /* NSDate+RelativeDateString.m in Sources */,
 				E2FBF7231AC5A7D00031C957 /* TGImageViewController.m in Sources */,
@@ -448,9 +475,12 @@
 				E28BB7F61AB17ED2005E47B8 /* TGLoginViewController.m in Sources */,
 				E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */,
 				E2A512971AC4AC990007A842 /* ThemeManager.m in Sources */,
+				E2BDB7781AE8CF3200FEB59C /* TGSubredditSidebarCell.m in Sources */,
 				E288CBD91AD50CF30059855E /* TGThing.m in Sources */,
 				E2BDB76F1AE7779200FEB59C /* TGPagination.m in Sources */,
 				E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */,
+				E2DE9C021AF942B100BACD5E /* TGFormAnimationController.m in Sources */,
+				E2BDB77B1AE8D13400FEB59C /* TGSubredditInfoViewController.m in Sources */,
 				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,
 				E288CBDC1AD50D110059855E /* TGCreated.m in Sources */,

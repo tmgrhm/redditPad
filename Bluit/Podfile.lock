@@ -1,29 +1,28 @@
 PODS:
-  - AFNetworking (2.5.1):
-    - AFNetworking/NSURLConnection (= 2.5.1)
-    - AFNetworking/NSURLSession (= 2.5.1)
-    - AFNetworking/Reachability (= 2.5.1)
-    - AFNetworking/Security (= 2.5.1)
-    - AFNetworking/Serialization (= 2.5.1)
-    - AFNetworking/UIKit (= 2.5.1)
-  - AFNetworking/NSURLConnection (2.5.1):
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.1):
+  - AFNetworking/NSURLSession (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.1)
-  - AFNetworking/Security (2.5.1)
-  - AFNetworking/Serialization (2.5.1)
-  - AFNetworking/UIKit (2.5.1):
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - fmemopen (0.0.1)
   - TUSafariActivity (1.0.4)
-  - XNGMarkdownParser (0.3.0):
-    - fmemopen
+  - XNGMarkdownParser (0.3.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
@@ -32,9 +31,9 @@ DEPENDENCIES:
   - XNGMarkdownParser
 
 SPEC CHECKSUMS:
-  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
-  fmemopen: 54fc0cc9d9063de6103b40a24849818a53c8f1e5
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  fmemopen: dc31f7d3004644b33deee95e047305d23f8cfdd4
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  XNGMarkdownParser: 72c20da1aceec6df477acd78d2297fb9584e7771
+  XNGMarkdownParser: aed98c14f0c0eb20064184ddf9bac26c482722b2
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.4

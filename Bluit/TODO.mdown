@@ -4,7 +4,6 @@
 * App Icon
 
 ##General
-* switching themes updates instantly (NSNotification?)
 * intercept + open reddit.com & redd.it URLs
 * empty states
 * loading states
@@ -16,7 +15,12 @@
 * session persistence (remembering where a user was after cold launch)
 
 ###Theming
-* NSNotification themeDidChange, force reload views
+* force reload views on notificaiton
+
+* --NSNotification themeDidChange--
+
+##Client
+* Handle isRefreshingToken properly — sleep until is no longer refreshing; requires Thread trickery
 
 ##Things
 * lots more
@@ -35,17 +39,21 @@
 
 ##Comments View
 * collapsing threads and animating *nicely*
-* fix headerCell spacing
 * improved markdown parser
 * Swipe controls on CommentCells
 * add sorting options
 * look at performance of scrolling - why so bad
 * design for selfpost where body is empty
 
+* --fix headerCell spacing--
 * --negative scores--
 * --Selftext body for selfposts--
 * --UITextView for comments--
 * --remove trailing \n from comments--
+
+##Presentation Controller
+* handle rotation
+* fix not being used when returning from fullscreen webview
 
 ##Web View
 * Button to view comments for current page *if Link web view*
@@ -73,10 +81,11 @@
 * messages
 
 ##Login/Authentication
-* refresh access token
 * Log Out
 * NSNotification didLogIn, update views
 * create some isLoggedIn variable (TGRedditClient?) and use to customise UI appropriately
+
+* --refresh access token--
 
 ##Design Implementation
 * Comments left-bars

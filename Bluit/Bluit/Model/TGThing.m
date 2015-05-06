@@ -20,12 +20,12 @@
 	self.id = dict[@"data"][@"id"];
 	
 	NSString *kind = dict[@"kind"];
-	if		([kind isEqualToString:kTGThingCommentString])	_type = TGThingComment;
-	else if ([kind isEqualToString:kTGThingUserString])		_type = TGThingUser;
-	else if ([kind isEqualToString:kTGThingLinkString])		_type = TGThingLink;
-	else if ([kind isEqualToString:kTGThingMessageString	])	_type = TGThingMessage;
+	if		([kind isEqualToString:kTGThingCommentString])		_type = TGThingComment;
+	else if ([kind isEqualToString:kTGThingUserString])			_type = TGThingUser;
+	else if ([kind isEqualToString:kTGThingLinkString])			_type = TGThingLink;
+	else if ([kind isEqualToString:kTGThingMessageString])		_type = TGThingMessage;
 	else if ([kind isEqualToString:kTGThingSubredditString])	_type = TGThingSubreddit;
-	else if ([kind isEqualToString:kTGThingMoreString])		_type = TGThingMore;
+	else if ([kind isEqualToString:kTGThingMoreString])			_type = TGThingMore;
 	
 	switch (_type) {
 		case TGThingComment:

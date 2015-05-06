@@ -52,11 +52,9 @@
 
 - (IBAction)oAuthLoginPressed:(id)sender
 {
-	TGRedditClient *client = [TGRedditClient sharedClient];
-	
 //	[self performSegueWithIdentifier:@"loginWebView" sender:self];
 	[self.webView setDelegate:self];
-	[self.webView loadRequest:[NSURLRequest requestWithURL:[client oAuthLoginURL]]];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:[[TGRedditClient sharedClient] oAuthLoginURL]]];
 }
 
 - (IBAction)themeSegControlValueChanged:(UISegmentedControl *)sender
