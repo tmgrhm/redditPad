@@ -172,6 +172,23 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	 ];
 }
 
+- (void) getSubredditInfoFor:(NSString *)subreddit withCompletion:(void (^)(TGSubreddit *subreddit))completion
+{
+	subreddit = [subreddit stringByReplacingCharactersInRange:NSMakeRange(0, 1) withString:@""]; // remove leading slash
+	NSString *url = [NSString stringWithFormat:@"%@%@about", self.baseURLString, subreddit];
+	
+	[self GET:url
+	parameters:nil
+	   success:^(NSURLSessionDataTask *task, id responseObject) {
+		   TGSubreddit *resultSubreddit = [[TGSubreddit alloc] initSubredditFromDictionary:responseObject];
+		   completion(resultSubreddit);
+	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
+		   // TODO
+		   [self failureWithError:error];
+	   }];
+
+}
+
 #pragma mark - Report
 
 - (void) hide:(TGThing *)thing

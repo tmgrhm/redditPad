@@ -26,6 +26,7 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 #pragma mark - Subreddits
 
 - (void) retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion;
+- (void) getSubredditInfoFor:(NSString *)subreddit withCompletion:(void (^)(TGSubreddit *subreddit))completion;
 
 #pragma mark - Listings
 
