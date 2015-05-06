@@ -49,6 +49,8 @@
 			 forControlEvents:UIControlEventValueChanged];
 	[self.tableView addSubview:self.refreshControl];
 	
+	[self configureNavigationBarTitle];
+	
 	[self themeAppearance];
 	
 	self.pagination = [TGPagination new];
@@ -72,6 +74,22 @@
 
 #pragma mark - Setup & Appearance
 
+- (void) configureNavigationBarTitle
+{
+	UILabel *titleLabel = [UILabel new];
+	titleLabel.text = [self titleFromPagination];
+	NSMutableAttributedString *attrTitle = [titleLabel.attributedText mutableCopy];
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager textColor],
+								 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
+	[attrTitle addAttributes:attributes range:NSMakeRange(0, attrTitle.length)];
+	titleLabel.attributedText = attrTitle;
+	
+	CGFloat width = [titleLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+	titleLabel.frame = CGRectMake(0, 0, width, 30);
+	self.navigationItem.titleView = titleLabel;
+	
+}
+
 - (void) themeAppearance
 {
 	self.view.backgroundColor = [ThemeManager backgroundColor];
@@ -91,8 +109,6 @@
 	navbar.barStyle = [ThemeManager uiBarStyle];
 	navbar.barTintColor = [ThemeManager contentBackgroundColor];
 	navbar.tintColor = [ThemeManager tintColor];
-	navbar.titleTextAttributes = @{NSForegroundColorAttributeName:	[ThemeManager textColor],
-								   NSFontAttributeName:			[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	
 	self.sortControl.tintColor = [ThemeManager tintColor];
 	[self.sortControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
@@ -154,6 +170,14 @@
 	popPresenter.sourceView = self.sortControl;
 	popPresenter.sourceRect = self.sortControl.bounds;
 	[self presentViewController:alertController animated:YES completion:nil];
+	// TODO handle user tapping out of TimeframePicker popover — set sortControl back to what it was
+}
+
+- (void) titleTapped
+{
+	if (self.pagination.subreddit == kSubredditFrontPage) return; // don't show subredditInfo if frontpage
+	
+	[self performSegueWithIdentifier:@"listingToSubredditInfo" sender:self];
 }
 
 #pragma mark - Loading Data
@@ -165,7 +189,7 @@
 	self.pagination = [TGPagination new];
 	self.pagination.subreddit = subredditURL;
 	
-	self.title = [self titleFromPagination];
+	[self configureNavigationBarTitle];
 	
 	[self loadSubredditWithCurrentPagination];
 }
