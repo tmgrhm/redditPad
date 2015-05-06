@@ -273,8 +273,11 @@
 		case 1: // action tapped
 			switch (indexPath.row) { // TODO
 				case 3:
-					[[UIApplication sharedApplication] openURL:self.subreddit.url]; // TODO full URL
+				{
+					NSString *safariUrlString = [NSString stringWithFormat:@"https://www.reddit.com/%@", self.subreddit.url];
+					[[UIApplication sharedApplication] openURL:[NSURL URLWithString:safariUrlString]];
 					break;
+				}
 				default:
 					break;
 			}
