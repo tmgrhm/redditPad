@@ -9,7 +9,10 @@
 #import "TGSearchViewController.h"
 #import "FrontPageViewController.h"
 
+#import "ThemeManager.h"
+
 @interface TGSearchViewController ()
+
 @property (weak, nonatomic) IBOutlet UITextField *searchTextField;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *searchOptionSegControl;
 
@@ -19,13 +22,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+	
+	[self themeAppearance];
+	
 	[self.searchTextField becomeFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) themeAppearance
+{
+	self.view.backgroundColor = [ThemeManager backgroundColor];
 }
 
 #pragma mark - IBActions
