@@ -323,6 +323,7 @@
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
+	// image-specific stuff
 	if (self.link.isImageLink)
 	{
 		self.topToolbar.tintColor = [UIColor whiteColor];
@@ -357,6 +358,7 @@
 	cell.content.delegate = self;
 	cell.metadata.delegate = self;
 	
+	// title
 	cell.title.text = self.link.title;
 	NSMutableAttributedString *mutAttrTitle = [cell.title.attributedText mutableCopy];
 	NSDictionary *attributes;
@@ -368,17 +370,7 @@
 	[mutAttrTitle addAttributes:attributes range:NSMakeRange(0, mutAttrTitle.length)];
 	cell.title.attributedText = mutAttrTitle;
 	
-	NSString *edited = [self.link isEdited] ? [NSString stringWithFormat:@" (edited %@)", [self.link.editDate relativeDateString]] : @""; // TODO better edit indicator
-	cell.metadata.text = [NSString stringWithFormat:@"%ld points in /r/%@ %@%@, by %@", (long)self.link.score, self.link.subreddit, [self.link.creationDate relativeDateString], edited, self.link.author];
-	cell.metadata.textColor = [ThemeManager secondaryTextColor];
-	
-	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
-	[ThemeManager styleSmallcapsHeader:cell.numComments];
-	
-	cell.separator.backgroundColor = [ThemeManager backgroundColor];
-	cell.backgroundColor = [UIColor clearColor];
-	cell.mainBackground.backgroundColor = [ThemeManager contentBackgroundColor];
-	
+	// content
 	if ([self.link isSelfpost])
 	{
 		cell.content.textColor = [ThemeManager textColor];
@@ -388,6 +380,35 @@
 		cell.content.text = [self.link.url absoluteString];
 		cell.content.dataDetectorTypes = UIDataDetectorTypeNone;
 	}
+	
+	// metadata
+	NSURL *subredditURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://showSubreddit?name=%@", [TGRedditClient uriScheme], self.link.subreddit]];
+	NSString *subredditString = [NSString stringWithFormat:@"/r/%@", self.link.subreddit];
+	attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
+				   NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-Medium" size:15.0],
+				   NSLinkAttributeName				: subredditURL};
+	NSAttributedString *subredditLink = [[NSAttributedString alloc] initWithString:subredditString attributes:attributes];
+	
+	NSString *edited = [self.link isEdited] ? [NSString stringWithFormat:@" (edited %@)", [self.link.editDate relativeDateString]] : @""; // TODO better edit indicator
+	
+	cell.metadata.textColor = [ThemeManager secondaryTextColor];
+	cell.metadata.text = [NSString stringWithFormat:@"%ld points in ", (long)self.link.score];
+	
+	NSMutableAttributedString *mutAttrMetadata = [cell.metadata.attributedText mutableCopy];
+	[mutAttrMetadata appendAttributedString:subredditLink];
+	
+	cell.metadata.text = [NSString stringWithFormat:@" %@%@ ago, by %@", [self.link.creationDate relativeDateString], edited, self.link.author];
+	[mutAttrMetadata appendAttributedString:cell.metadata.attributedText];
+	
+	cell.metadata.attributedText = mutAttrMetadata;
+	
+	// comments section header
+	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
+	[ThemeManager styleSmallcapsHeader:cell.numComments];
+	
+	cell.separator.backgroundColor = [ThemeManager backgroundColor];
+	cell.backgroundColor = [UIColor clearColor];
+	cell.mainBackground.backgroundColor = [ThemeManager contentBackgroundColor];
 }
 
 - (TGCommentTableViewCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
