@@ -42,8 +42,6 @@
 	self.listings = [NSMutableArray new];
 	self.listingCellHeights = [NSMutableDictionary new];
 	
-	self.pagination = [TGPagination new];
-	
 	// TODO custom refreshControl
 	self.refreshControl = [UIRefreshControl new];
 	[self.refreshControl addTarget:self
@@ -53,9 +51,11 @@
 	
 	[self themeAppearance];
 	
+	self.pagination = [TGPagination new];
 	[self loadSubreddit:self.pagination.subreddit];
 	
 	[self scrollToTopWithAnimation:NO];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kThemeDidChangeNotification object:nil];
 }
 
@@ -424,7 +424,7 @@
 
 - (NSString *) titleFromPagination
 {
-	return [self.pagination.subreddit isEqualToString:@"/"] ? @"Front Page" : self.pagination.subreddit;
+	return [self.pagination.subreddit isEqualToString:kSubredditFrontPage] ? @"Front Page" : self.pagination.subreddit;
 }
 
 #pragma mark - Navigation

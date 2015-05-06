@@ -10,6 +10,8 @@
 #import "TGSubreddit.h"
 #import "TGLink.h"
 
+static NSString * const kSubredditFrontPage = @"/";
+
 @interface TGPagination : NSObject
 
 @property (nonatomic, strong) NSString *subreddit;
