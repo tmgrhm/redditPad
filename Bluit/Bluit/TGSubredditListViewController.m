@@ -18,7 +18,6 @@ NSString * const kFrontPageDisplayName = @"Front Page";
 NSString * const kAllSubredditsDisplayName = @"All";
 NSString * const kRandomSubreddit = @"Random Subreddit";
 NSString * const kDiscoverSubreddits = @"Discover Subreddits";
-NSString * const kFrontPageURL = @"hot";
 NSString * const kAllSubredditsURL = @"/r/all/";
 NSString * const kRandomSubredditURL = @"/r/random/";
 
@@ -127,11 +126,11 @@ NSString * const kRandomSubredditURL = @"/r/random/";
 		{
 			NSString *selectedString = self.navigationOptions[indexPath.row];
 			if ([selectedString isEqualToString:kFrontPageDisplayName])
-				self.selectedSubreddit = kFrontPageURL;			// TODO make @"" and pass the sort method with the requestURL
+				self.selectedSubreddit = kSubredditFrontPage;
 			else if ([selectedString isEqualToString:kAllSubredditsDisplayName])
 				self.selectedSubreddit = kAllSubredditsURL;
 			else if ([selectedString isEqualToString:kRandomSubreddit])
-				self.selectedSubreddit = kRandomSubredditURL;	// TODO set the listing navbar title correctly
+				self.selectedSubreddit = kRandomSubredditURL;
 			break;
 		}
 		case 1:
