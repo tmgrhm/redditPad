@@ -36,6 +36,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 @property (strong, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSString *refreshToken;
 @property (strong, nonatomic) NSDate *currentTokenExpirationDate;
+@property (nonatomic) BOOL isRefreshingToken;
 
 @property (strong, nonatomic) NSString *baseURLString;
 
@@ -342,6 +343,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (void) refreshOAuthTokenWithSuccess:(void (^)())success
 {
+	self.isRefreshingToken = YES;
 	// TODO handle currentTokenExpirationDate = nil
 	
 	if (![self accessTokenHasExpired])
@@ -365,6 +367,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 				   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
 				   NSLog(@"accessToken refreshed");
 				   success();
+				   weakSelf.isRefreshingToken = NO;
 			   }
 			   failure:^(NSURLSessionDataTask *task, NSError *error) {
 				   [self failureWithError:error];
@@ -400,6 +403,21 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		}];
 		NSLog(@"Retrying because accessTokenHasExpired");
 		return;
+		if ([self isRefreshingToken])
+		{
+			// TODO handle isRefreshing properly
+			NSLog(@"isRefreshingToken");
+			return;
+		}
+		else
+		{
+			__weak __typeof(self)weakSelf = self;
+			[self refreshOAuthTokenWithSuccess:^{
+				[weakSelf POST:stringURL parameters:parameters success:success failure:failure];
+			}];
+			NSLog(@"Retrying because accessTokenHasExpired");
+			return;
+		}
 	}
 	
 	[self.manager POST:stringURL
@@ -422,6 +440,21 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		}];
 		NSLog(@"Retrying because accessTokenHasExpired");
 		return;
+		if ([self isRefreshingToken])
+		{
+			// TODO handle isRefreshing properly
+			NSLog(@"isRefreshingToken");
+			return;
+		}
+		else
+		{
+			__weak __typeof(self)weakSelf = self;
+			[self refreshOAuthTokenWithSuccess:^{
+				[weakSelf GET:stringURL parameters:parameters success:success failure:failure];
+			}];
+			NSLog(@"Retrying because accessTokenHasExpired");
+			return;
+		}
 	}
 	
 	[self.manager GET:stringURL

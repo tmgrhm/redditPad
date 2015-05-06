@@ -18,16 +18,24 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 + (instancetype)sharedClient;
 
-- (void) requestSubredditWithPagination:(TGPagination *)pagination withCompletion:(TGListingCompletionBlock)completion;
+#pragma mark - Authentication
 
 - (NSURL *) oAuthLoginURL;
 - (void) loginWithOAuthResponse:(NSURL *)url;
 
-- (void) setSerializerHTTPHeaders:(NSString *)modhash and:(NSString *)sessionIdentifier;
+#pragma mark - Subreddits
 
 - (void) retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion;
 
+#pragma mark - Listings
+
+- (void) requestSubredditWithPagination:(TGPagination *)pagination withCompletion:(TGListingCompletionBlock)completion;
+
+#pragma mark - Comments
+
 - (void) requestCommentsForLink:(TGLink *)link withCompletion:(void (^)(NSArray* comments))completion;
+
+#pragma mark - Thing Actions
 
 - (void) hide:(TGThing *)thing;
 - (void) unhide:(TGThing *)thing;
