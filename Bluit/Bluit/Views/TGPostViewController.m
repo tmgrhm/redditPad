@@ -598,8 +598,17 @@
 - (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
 	self.interactedURL = URL;
-	[self performSegueWithIdentifier:@"openLink" sender:self];
-	return NO;
+	
+	if ([URL.scheme isEqualToString:[TGRedditClient uriScheme]])
+	{
+		[self dismissViewControllerAnimated:YES completion:nil];
+		return YES; // let application delegate handle it
+	}
+	else
+	{
+		[self performSegueWithIdentifier:@"openLink" sender:self];
+		return NO;
+	}
 }
 
 #pragma mark - Navigation

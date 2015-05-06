@@ -61,6 +61,40 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+-(BOOL) application:(UIApplication *)application
+			openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+		 annotation:(id)annotation
+{
+	NSLog(@"AppDelegate passed URL: %@", [url absoluteString]);
+	
+	if ([url.scheme isEqualToString: [TGRedditClient uriScheme]])
+	{
+		// check our `host` value to see what screen to display
+		if ([url.host isEqualToString: @"showSubreddit"])
+		{
+			// break down NSURL, get subreddit `name` queryItem
+			NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
+														resolvingAgainstBaseURL:NO];
+			NSArray *queryItems = urlComponents.queryItems;
+			NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name=name"];
+			NSURLQueryItem *queryItem = [[queryItems filteredArrayUsingPredicate:predicate] firstObject];
+			NSString *subreddit = [NSString stringWithFormat:@"/r/%@/", queryItem.value];
+			
+			// make root listingVC loadSubreddit — specific to splitVC implementation
+			UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+			FrontPageViewController *listingVC = (FrontPageViewController *) [[splitViewController.viewControllers lastObject] topViewController];
+			[listingVC loadSubreddit:subreddit];
+		}
+		else
+		{
+			NSLog(@"An unknown action was passed.");
+		}
+	}
+	
+	return NO;
+}
+
 #pragma mark - Customisation
 
 - (void) themeAppearance
