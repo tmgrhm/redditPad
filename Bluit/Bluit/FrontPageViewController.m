@@ -13,6 +13,7 @@
 #import "TGPostViewController.h"
 #import "TGImageViewController.h"
 #import "TGSearchViewController.h"
+#import "TGSubredditInfoViewController.h"
 
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
@@ -88,6 +89,9 @@
 	titleLabel.frame = CGRectMake(0, 0, width, 30);
 	self.navigationItem.titleView = titleLabel;
 	
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleTapped)];
+	titleLabel.userInteractionEnabled = YES;
+	[titleLabel addGestureRecognizer:tapGesture];
 }
 
 - (void) themeAppearance
@@ -484,6 +488,12 @@
 	{
 		TGSearchViewController *searchVC = segue.destinationViewController;
 		searchVC.listingViewController = self;
+	}
+	else if ([segue.identifier isEqualToString:@"listingToSubredditInfo"])
+	{
+		TGSubredditInfoViewController *subredditInfoVC = segue.destinationViewController;
+		subredditInfoVC.popoverPresentationController.sourceRect = self.navigationItem.titleView.frame;
+		[subredditInfoVC loadInfoForSubreddit:self.pagination.subreddit];
 	}
 
 }
