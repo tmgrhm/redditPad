@@ -16,7 +16,9 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 @interface TGRedditClient : NSObject
 
-+ (instancetype)sharedClient;
++ (instancetype) sharedClient;
+
++ (NSString *) uriScheme;
 
 #pragma mark - Authentication
 

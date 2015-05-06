@@ -22,7 +22,8 @@ static NSString * const kBaseHTTPSURLString = @"https://ssl.reddit.com/";
 // OAuth parameters
 static NSString * const client_id = @"l5iDc07xOgRpug";
 static NSString * const oAuthState = @"login";
-static NSString * const redirect_uri = @"redditpad://redirect";
+static NSString * const kURIscheme = @"redditpad";
+static NSString * const kRedirectPath = @"redirect";
 static NSString * const scope = @"identity,edit,history,mysubreddits,read,report,save,submit,subscribe,vote";
 
 @interface TGRedditClient ()
@@ -44,7 +45,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 @implementation TGRedditClient
 
-+ (instancetype)sharedClient
++ (instancetype) sharedClient
 {
 	static TGRedditClient *sharedClient = nil;
 	static dispatch_once_t oncePredicate;
@@ -70,6 +71,11 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	}
 	
 	return self;
+}
+
++ (NSString *) uriScheme
+{
+	return kURIscheme;
 }
 
 #pragma mark - Listings
@@ -298,7 +304,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 {
 	// https://github.com/reddit/reddit/wiki/OAuth2#authorization
 	
-	NSString *urlString = [NSString stringWithFormat:@"https://www.reddit.com/api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@&duration=permanent&scope=%@", client_id, oAuthState, redirect_uri, scope];
+	NSString *urlString = [NSString stringWithFormat:@"https://www.reddit.com/api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@://%@&duration=permanent&scope=%@", client_id, oAuthState, kURIscheme, kRedirectPath, scope];
 	NSURL *url = [NSURL URLWithString:urlString];
 	return url;
 }
@@ -327,7 +333,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
 		NSDictionary *parameters = @{@"grant_type" :		@"authorization_code",
 									 @"code" :			code,
-									 @"redirect_uri" :	redirect_uri};
+									 @"redirect_uri" :	[NSString stringWithFormat:@"%@://%@", kURIscheme, kRedirectPath]};
 		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:client_id
 																	   password:@""]; // password empty due to being a confidential client
 		[self POST:accessURL
