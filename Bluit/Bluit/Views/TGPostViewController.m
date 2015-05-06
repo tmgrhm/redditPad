@@ -20,14 +20,15 @@
 
 #import "NSDate+RelativeDateString.h"
 
+#import "TGFormPresentationController.h"
+#import "TGFormAnimationController.h"
+
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
 
-@property (weak, nonatomic) IBOutlet UIView *shadowView;
-@property (weak, nonatomic) IBOutlet UIView *fadeView;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
@@ -53,6 +54,27 @@
 @end
 
 @implementation TGPostViewController
+
+- (instancetype) initWithCoder:(NSCoder *)aDecoder
+{
+	self = [super initWithCoder:aDecoder];
+	[self commonInit];
+	return self;
+}
+
+- (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+	self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+	[self commonInit];
+	return self;
+}
+
+- (void) commonInit
+{
+	self.transitioningDelegate = self;
+	self.modalTransitionStyle = UIModalPresentationCustom;
+	self.preferredContentSize = CGSizeMake(668, 876);
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -82,19 +104,9 @@
 
 - (void)createShadow
 {
-	CALayer *containerCALayer = self.shadowView.layer;
-	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
-	containerCALayer.borderWidth = 0.6f;
-	// TODO get a performant shadow
-	CGRect bounds = self.shadowView.bounds;
-	bounds = CGRectMake(bounds.origin.x, bounds.origin.y + 2, bounds.size.width, bounds.size.height);
-	containerCALayer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:bounds cornerRadius:containerCALayer.cornerRadius].CGPath;
-	containerCALayer.shadowColor = [[ThemeManager shadowColor] CGColor];
-	containerCALayer.shadowOpacity = 0.5f;
-	containerCALayer.shadowRadius = 6.0f;
-	
-	self.fadeView.backgroundColor = [ThemeManager shadeColor];
-	self.fadeView.alpha = 0.7f;
+//	CALayer *containerCALayer = self.shadowView.layer;
+//	containerCALayer.borderColor = [[ThemeManager shadowBorderColor] CGColor];
+//	containerCALayer.borderWidth = 0.6f;
 }
 
 - (void) themeAppearance
@@ -163,12 +175,9 @@
 
 #pragma mark - IBActions
 
-- (IBAction)closePressed:(id)sender {
+- (IBAction)closePressed:(id)sender
+{
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)titlePressed:(id)sender {
-	[self performSegueWithIdentifier:@"linkViewToWebView" sender:self];
 }
 
 - (IBAction)savePostPressed:(id)sender
@@ -301,6 +310,8 @@
 
 - (TGLinkPostCell *) postHeaderCell
 {
+    if (self.postHeader) return self.postHeader;
+    
 	TGLinkPostCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
 	[self configureHeaderCell:cell];
 	
@@ -324,7 +335,11 @@
 		[self.previewImage setImageWithURL:self.link.url];
 		self.previewImageHeight.constant = 300;
 		cell.topMargin.constant = 200;
-	} else {
+		
+		// TODO add shadow to topToolbar buttons
+	}
+	else
+	{
 		self.topToolbar.layer.borderColor = [[ThemeManager separatorColor] CGColor];
 		self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
 		
@@ -357,13 +372,7 @@
 	cell.metadata.textColor = [ThemeManager secondaryTextColor];
 	
 	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
-	cell.numComments.textColor = [ThemeManager smallcapsHeaderColor];
-	cell.numComments.alpha = 0.5f;
-	NSMutableAttributedString *mutAttrComms = [cell.numComments.attributedText mutableCopy];
-	[mutAttrComms addAttribute:NSKernAttributeName
-						 value:@(1.5)
-						 range:NSMakeRange(0, mutAttrComms.length)];
-	cell.numComments.attributedText = mutAttrComms;
+	[ThemeManager styleSmallcapsHeader:cell.numComments];
 	
 	cell.separator.backgroundColor = [ThemeManager backgroundColor];
 	cell.backgroundColor = [UIColor clearColor];
@@ -595,10 +604,8 @@
 
 #pragma mark - Navigation
 
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
-	
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
 	if ([segue.identifier isEqualToString:@"linkViewToWebView"])
 	{
 		TGWebViewController *webVC = segue.destinationViewController;
@@ -609,6 +616,29 @@
 		TGWebViewController *webVC = segue.destinationViewController;
 		webVC.url = self.interactedURL;
 	}
+}
+
+#pragma mark - Controller Transitioning
+
+- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source
+{
+	if (presented == self) return [[TGFormAnimationController alloc] initPresenting:YES];
+	else return nil;
+}
+
+- (id <UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed
+{
+	if (dismissed == self) return [[TGFormAnimationController alloc] initPresenting:NO];
+	else return nil;
+}
+
+- (UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented
+													  presentingViewController:(UIViewController *)presenting
+														  sourceViewController:(UIViewController *)source
+{
+	if (presented == self) return [[TGFormPresentationController alloc] initWithPresentedViewController:presented
+																			   presentingViewController:presenting];
+	else return nil;
 }
 
 #pragma mark - Utility

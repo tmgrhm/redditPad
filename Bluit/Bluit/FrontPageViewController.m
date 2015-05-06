@@ -462,6 +462,8 @@
 	if ([segue.identifier isEqualToString:@"listingToPostView"])
 	{
 		TGPostViewController *linkVC = segue.destinationViewController;
+		linkVC.transitioningDelegate = linkVC;
+		linkVC.modalPresentationStyle = UIModalPresentationCustom;
 		
 		NSInteger indexPathRow = 0;
 		if ([sender isKindOfClass:[UIButton class]])

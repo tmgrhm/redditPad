@@ -141,6 +141,8 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 	if ([segue.identifier isEqualToString:@"webViewToPostView"])
 	{
 		TGPostViewController *postVC = [segue destinationViewController];
+		postVC.transitioningDelegate = postVC;
+		postVC.modalPresentationStyle = UIModalPresentationCustom;
 		postVC.link = self.link;
 	}
 }

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TGLink.h"
 
-@interface TGPostViewController : UIViewController
+@interface TGPostViewController : UIViewController <UIViewControllerTransitioningDelegate>
 
 @property (strong, nonatomic) TGLink *link;
 
