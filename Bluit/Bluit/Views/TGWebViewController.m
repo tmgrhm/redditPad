@@ -11,6 +11,8 @@
 
 #import "ThemeManager.h"
 
+#import <TUSafariActivity/TUSafariActivity.h>
+
 @interface TGWebViewController () <UIWebViewDelegate, UIGestureRecognizerDelegate, UINavigationBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
@@ -90,7 +92,7 @@
 { 	// TODO
 	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
 											initWithActivityItems:@[self.link.title, self.url] // TODO handle !self.link
-											applicationActivities:nil];
+											applicationActivities:@[safariActivity]];
 	
 	shareSheet.popoverPresentationController.sourceView = self.view;
 	
