@@ -445,7 +445,6 @@
 	[cell.timestampLabel setText:[NSString stringWithFormat:@"%@%@", [comment.creationDate relativeDateString], edited]];
 	
 	cell.indentationLevel = comment.indentationLevel;
-	cell.leftMargin.constant = cell.originalLeftMargin + (cell.indentationLevel * cell.indentationWidth);
 	
 	cell.pointsLabel.textColor = [ThemeManager secondaryTextColor];
 	cell.timestampLabel.textColor = [ThemeManager secondaryTextColor];
