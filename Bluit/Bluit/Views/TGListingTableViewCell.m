@@ -15,4 +15,10 @@
 	return UIEdgeInsetsZero;
 }
 
+- (void) prepareForReuse
+{
+	self.domain.hidden = NO;
+	[self.thumbnail setImage:nil];
+}
+
 @end

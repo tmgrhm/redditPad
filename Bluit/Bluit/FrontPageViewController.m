@@ -372,31 +372,19 @@
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
 	cell.commentsButton.tag = indexPath.row; // TODO better way
 	
-	if (link.thumbnailURL == nil) {
-		[cell.thumbnail setImage:nil];
-	} else {
-		[cell.thumbnail setImageWithURL:link.thumbnailURL];
-	}
-	
-	if (link.isSelfpost) {
-		cell.domain.hidden = YES;
-	} else {
-		cell.domain.text = link.domain;
-		cell.domain.hidden = NO;
-	}
-	
-	if (link.isSticky)	// TODO
-		cell.title.textColor = [ThemeManager stickyColor];
-	else
-		cell.title.textColor = [ThemeManager textColor];
-	
 	cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Inactive"];
 	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Inactive"];
 	
-	if (link.isUpvoted)
-		cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Active"];		// TODO consts?
-	else if (link.isDownvoted)
-		cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Active"];
+	if (link.isUpvoted)			cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Active"];
+	else if (link.isDownvoted)	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Active"];
+	
+	if (link.thumbnailURL != nil) [cell.thumbnail setImageWithURL:link.thumbnailURL];
+	
+	if (link.isSelfpost)	cell.domain.hidden = YES;
+	else						cell.domain.text = link.domain;
+	
+	if (link.isSticky)		cell.title.textColor = [ThemeManager stickyColor];
+	else						cell.title.textColor = [ThemeManager textColor];
 	
 	cell.score.textColor = [ThemeManager secondaryTextColor];
 	cell.timestamp.textColor = [ThemeManager secondaryTextColor];
