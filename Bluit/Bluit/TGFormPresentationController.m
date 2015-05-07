@@ -44,6 +44,12 @@
 
 - (void) presentationTransitionWillBegin
 {
+	// customise // TODO imrpove appearance
+	self.presentedView.layer.borderColor = [[[ThemeManager shadowBorderColor] colorWithAlphaComponent:0.5f] CGColor];
+	self.presentedView.layer.borderWidth = 1.0f;
+	self.presentedView.layer.cornerRadius = 8.0f;
+	self.presentedView.clipsToBounds = YES;
+	
 	// add dim + presented views to hierarchy
 	[self.containerView addSubview:self.dimmingView];
 	[self.containerView addSubview:self.presentedView];

@@ -1147,11 +1147,6 @@
                                     <constraint firstAttribute="centerX" secondItem="ArW-f8-L6R" secondAttribute="centerX" id="nIw-zx-giL"/>
                                     <constraint firstAttribute="trailing" secondItem="j2d-22-q4I" secondAttribute="trailing" id="v1p-mS-86Q"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
