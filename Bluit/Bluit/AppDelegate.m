@@ -84,7 +84,7 @@
 			// make root listingVC loadSubreddit — specific to splitVC implementation
 			UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
 			FrontPageViewController *listingVC = (FrontPageViewController *) [[splitViewController.viewControllers lastObject] topViewController];
-			[listingVC loadSubreddit:subreddit];
+			[listingVC didSelectSubreddit:subreddit];
 		}
 		else
 		{
