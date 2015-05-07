@@ -31,7 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	self.preferredContentSize = CGSizeMake(450, 1000); // TODO
+	self.preferredContentSize = CGSizeMake(450, 450);
 
 	self.actionButtons = @[@"Add to a Multireddit",
 						   @"Message the Mods",
@@ -51,7 +51,8 @@
 {
 	[[TGRedditClient sharedClient] getSubredditInfoFor:subredditTitle withCompletion:^(TGSubreddit *subreddit) {
 		self.subreddit = subreddit;
-		[self.tableView reloadData];
+		[self reloadTableViewData];
+		self.preferredContentSize = CGSizeMake(450, self.tableView.contentSize.height);
 	}];
 }
 
@@ -74,8 +75,10 @@
 
 - (void) reloadTableViewData
 {
+	[self.tableView reloadData];
 	[self.tableView beginUpdates];
-	[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.tableView.numberOfSections)] withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.tableView.numberOfSections)]
+				  withRowAnimation:UITableViewRowAnimationAutomatic];
 	[self.tableView endUpdates];
 }
 
