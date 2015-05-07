@@ -77,6 +77,8 @@
 
 - (void) configureNavigationBarTitle
 {
+	UIView *titleView = [UIView new];
+	
 	UILabel *titleLabel = [UILabel new];
 	titleLabel.text = [self titleFromPagination];
 	
@@ -95,14 +97,33 @@
 		attrTitle = [[attrTitle attributedSubstringFromRange:NSMakeRange(0, attrTitle.length-1)] mutableCopy];
 	}
 	titleLabel.attributedText = attrTitle;
+	CGFloat titleLabelWidth = [titleLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
+	titleLabel.frame = CGRectMake(0, 0, titleLabelWidth, 30);
+	[titleView addSubview:titleLabel];
 	
-	CGFloat width = [titleLabel sizeThatFits:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)].width;
-	titleLabel.frame = CGRectMake(0, 0, width, 30);
-	self.navigationItem.titleView = titleLabel;
+	CGFloat titleViewWidth = titleLabelWidth;
 	
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleTapped)];
-	titleLabel.userInteractionEnabled = YES;
-	[titleLabel addGestureRecognizer:tapGesture];
+	if (![self.pagination.subreddit isEqualToString:kSubredditFrontPage]) // title is not "Front Page"
+	{
+		CGFloat padding = 4.0f;
+		// create & add dropdownIndicator
+		UIImageView *dropdownImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon-Navbar-TitleDropdown"]];
+		CGFloat imageX = titleLabel.frame.size.width + titleLabel.frame.origin.x + padding;
+		CGFloat imageY = ceilf((titleLabel.frame.size.height - dropdownImage.frame.size.height) / 2.0f);
+		dropdownImage.frame = CGRectMake(imageX, imageY, dropdownImage.frame.size.width, dropdownImage.frame.size.height);
+		
+		[titleView addSubview:dropdownImage];
+		titleViewWidth += dropdownImage.frame.size.width + padding;
+		
+		// create titleTapped gestureRecognizer
+		UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(titleTapped)];
+		titleView.userInteractionEnabled = YES;
+		[titleView addGestureRecognizer:tapGesture];
+	}
+	
+	titleView.frame = CGRectMake(0, 0, titleViewWidth, 30);
+	
+	self.navigationItem.titleView = titleView;
 }
 
 - (void) themeAppearance
