@@ -12,14 +12,13 @@
 
 @implementation TGSubredditInfoCell
 
-- (void)awakeFromNib {
-    // Initialization code
-	
-	self.nameLabel.textColor = [ThemeManager textColor]; // TODO attrText /r/styling
-	
+- (void)awakeFromNib
+{
+	// these textColors are apparently necessary for setting colour correctly later via attributedText (wtf)
+	self.nameLabel.textColor = [ThemeManager textColor];
 	self.descriptionLabel.textColor = [ThemeManager secondaryTextColor];
-//	[ThemeManager styleSmallcapsHeader:self.subscribersLabel];
-//	[ThemeManager styleSmallcapsHeader:self.hereNowLabel];
+	self.subscribersLabel.textColor = [ThemeManager textColor];
+	self.hereNowLabel.textColor = [ThemeManager textColor];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -30,21 +29,36 @@
 
 - (void) setNumSubscribers:(unsigned long)subscribers
 {
-	self.subscribersLabel.text = [NSString stringWithFormat:@"%lu SUBSCRIBERS", subscribers];
-	[ThemeManager styleSmallcapsHeader:self.subscribersLabel];
+	self.subscribersLabel.attributedText = [self attributedSubscriberStatisticsWithNumber:subscribers text:@" subscribers"];
 }
 
 - (void) setNumActiveUsers:(unsigned long)activeUsers
 {
-	self.hereNowLabel.text = [NSString stringWithFormat:@"%lu HERE NOW", activeUsers];
-	[ThemeManager styleSmallcapsHeader:self.hereNowLabel];
+	self.hereNowLabel.attributedText = [self attributedSubscriberStatisticsWithNumber:activeUsers text:@" here now"];
 }
 
 - (void) setSubscribeButtonTitle:(NSString *)title
 {
-//	[self.subscribeButton setTitle:title forState:UIControlStateNormal];
 	self.subscribeButton.titleLabel.text = title;
 	[ThemeManager styleSmallcapsButton:self.subscribeButton];
+}
+
+#pragma mark - Convenience
+- (NSAttributedString *) attributedSubscriberStatisticsWithNumber:(unsigned long)number text:(NSString *)text
+{
+	NSDictionary *numberAttributes = @{NSForegroundColorAttributeName:[ThemeManager textColor],
+									   NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:15.0f]};
+	NSDictionary *textAttributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+									 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Regular" size:15.0f]};
+	
+	NSString *numberStr = [NSString stringWithFormat:@"%lu", (unsigned long) number]; // TODO format nicely with commas
+	
+	NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:numberStr attributes:numberAttributes];
+	NSAttributedString *textStr = [[NSAttributedString alloc] initWithString:text attributes:textAttributes];
+	
+	[attrStr appendAttributedString:textStr];
+	
+	return attrStr;
 }
 
 @end
