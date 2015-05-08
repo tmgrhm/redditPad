@@ -392,7 +392,8 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 - (BOOL) accessTokenHasExpired
 {
-	return [self.currentTokenExpirationDate timeIntervalSinceNow] < 0.0;
+	// 10 second buffer to catch slow requests causing 401s
+	return [self.currentTokenExpirationDate timeIntervalSinceNow] < 10.0;
 }
 
 #pragma mark - Convenience
