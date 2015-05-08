@@ -449,17 +449,7 @@
 	cell.pointsLabel.textColor = [ThemeManager secondaryTextColor];
 	cell.timestampLabel.textColor = [ThemeManager secondaryTextColor];
 	
-	if ([self.collapsedComments containsObject:comment])
-	{
-		cell.backgroundColor = [ThemeManager backgroundColor];
-//		cell.bodyLabel.numberOfLines = 1;
-	}
-	else
-	{
-		cell.backgroundColor = [ThemeManager contentBackgroundColor];
-//		cell.bodyLabel.numberOfLines = 0;
-	}
-	
+	if ([self.collapsedComments containsObject:comment]) cell.collapsed = YES;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

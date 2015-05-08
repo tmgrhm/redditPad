@@ -34,5 +34,7 @@
 	<string>000000</string>
 	<key>shadeColor</key>
 	<string>000000</string>
+	<key>hiddenCommentBackground</key>
+	<string>F5F6FA</string>
 </dict>
 </plist>

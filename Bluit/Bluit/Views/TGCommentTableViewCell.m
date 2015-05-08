@@ -18,10 +18,10 @@
 
 @implementation TGCommentTableViewCell
 
-- (void)awakeFromNib {
-    // Initialization code
+- (void)awakeFromNib
+{
 	self.originalLeftMargin = self.leftMargin.constant;
-	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0); // TODO
+	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
 }
 
 - (void) setIndentationLevel:(NSInteger)indentationLevel
@@ -55,9 +55,25 @@
     // Configure the view for the selected state
 }
 
+- (void) setCollapsed:(BOOL)collapsed
+{
+	_collapsed = collapsed;
+
+	if (self.isCollapsed) // TODO
+	{
+		self.backgroundColor = [ThemeManager hiddenCommentBackground];
+	}
+	else
+	{
+		self.backgroundColor = [ThemeManager contentBackgroundColor];
+	}
+}
+
 - (void) prepareForReuse
 {
 	for (UIView *view in self.indentationLines) [view removeFromSuperview];
+
+	self.collapsed = NO;
 }
 
 @end

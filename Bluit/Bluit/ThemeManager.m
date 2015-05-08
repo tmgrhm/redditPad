@@ -85,6 +85,10 @@
 	return [self colorForKey:@"contentBackgroundColor"];
 }
 
++ (UIColor *) hiddenCommentBackground {
+	return [self colorForKey:@"hiddenCommentBackground"];
+}
+
 + (UIColor *) textColor {
 	return [self colorForKey:@"textColor"];
 }

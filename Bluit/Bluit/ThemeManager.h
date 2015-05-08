@@ -33,6 +33,7 @@ static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 
 + (UIColor *) backgroundColor;
 + (UIColor *) contentBackgroundColor;
++ (UIColor *) hiddenCommentBackground;
 
 + (UIColor *) textColor;
 + (UIColor *) secondaryTextColor;
