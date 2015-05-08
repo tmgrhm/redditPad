@@ -42,8 +42,9 @@
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
 
-@property (strong, nonatomic) NSArray *comments;
-@property (strong, nonatomic) NSMutableArray *collapsedComments;
+@property (strong, nonatomic) NSArray *originalComments; // original comments as returned from API
+@property (strong, nonatomic) NSMutableArray *comments; // comments to display (excluding collapsed children)
+@property (strong, nonatomic) NSMutableArray *collapsedComments; // comments at the root of a collapse
 @property (strong, nonatomic) NSMutableDictionary *commentHeights;
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 
@@ -54,6 +55,16 @@
 @end
 
 @implementation TGPostViewController
+
+#pragma mark - Getters & Setters
+
+- (void) setOriginalComments:(NSArray *)comments
+{
+	_originalComments = comments;
+	self.comments = [comments mutableCopy];
+}
+
+#pragma mark - Init
 
 - (instancetype) initWithCoder:(NSCoder *)aDecoder
 {
@@ -74,14 +85,15 @@
 	self.transitioningDelegate = self;
 	self.modalTransitionStyle = UIModalPresentationCustom;
 	self.preferredContentSize = CGSizeMake(668, 876);
+	
+	self.comments = [NSMutableArray new];
+	self.collapsedComments = [NSMutableArray new];
+	self.commentHeights = [NSMutableDictionary new];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-	
-	self.collapsedComments = [NSMutableArray new];
-	self.commentHeights = [NSMutableDictionary new];
 	
 	[self createShadow];
 	[self themeAppearance];
@@ -262,13 +274,14 @@
 - (void) singleSwipeLeft: (UIGestureRecognizer *)sender
 {
 	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
-	[self collapseCommentsAtIndexPath:indexPath];
+	[self collapseOrExpandCommentsAtIndexPath:indexPath];
 }
 
 - (void) doubleSwipeLeft: (UIGestureRecognizer *)sender
 {
 	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
-	[self collapseCommentsAtIndexPath:indexPath andParents:YES];
+	NSIndexPath *rootIndexPath = [self indexPathAtRootOfIndentationTree:indexPath];
+	[self collapseOrExpandCommentsAtIndexPath:rootIndexPath];
 }
 
 #pragma mark - TableView
@@ -557,52 +570,87 @@
 	}*/
 }
 
-- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath andParents:(BOOL)collapseParents
+- (NSIndexPath *) indexPathAtRootOfIndentationTree:(NSIndexPath *)indexPathInTree
 {
-	NSIndexPath *collapseRootIndex = indexPath;
+	NSIndexPath *rootIndex = indexPathInTree;
 	
-	if (collapseParents)
+	NSInteger row = indexPathInTree.row;
+	TGComment *currentComment = self.comments[row];
+	while (currentComment.indentationLevel != 0)
 	{
-		NSInteger row = indexPath.row;
-		TGComment *currentComment = self.comments[row];
-		while (currentComment.indentationLevel != 0)
-		{
-			row--;
-			currentComment = self.comments[row];
-		}
-		collapseRootIndex = [NSIndexPath indexPathForRow:row inSection:indexPath.section];
+		row--;
+		currentComment = self.comments[row];
 	}
 	
-	[self collapseCommentsAtIndexPath:collapseRootIndex];
+	rootIndex = [NSIndexPath indexPathForRow:row inSection:indexPathInTree.section];
+	return rootIndex;
 }
 
-- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath	// TODO look at using beginUpdates endUpdates instead of reloadData so only the relevant comments animate
+- (void) collapseOrExpandCommentsAtIndexPath:(NSIndexPath *)indexPath
 {
-	TGComment *comment = self.comments[indexPath.row];
-	NSMutableArray *newComments = [self.comments mutableCopy];
-	NSArray *children = [TGComment childrenRecursivelyForComment:comment];
+	TGComment *rootComment = self.comments[indexPath.row];
+	if ([self.collapsedComments containsObject:rootComment])	[self expandCommentsAtIndexPath:indexPath];
+	else															[self collapseCommentsAtIndexPath:indexPath];
+}
+
+- (void) collapseCommentsAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGComment *rootComment = self.comments[indexPath.row];
+	TGCommentTableViewCell *rootCell = (TGCommentTableViewCell *) [self.commentTableView cellForRowAtIndexPath:indexPath];
 	
-	if ([self.collapsedComments containsObject:comment])
+	// not yet collapsed; collapse it and remove its children
+	[self.collapsedComments addObject:rootComment];
+	rootCell.collapsed = YES;
+	
+	NSMutableArray *children = [[TGComment childrenRecursivelyForComment:rootComment] mutableCopy];
+	NSMutableArray *objectsToRemove = [NSMutableArray new];
+	NSMutableArray *indexesToRemove = [NSMutableArray new];
+	NSInteger skippedChildren = 0; // no. children skipped due to being collapsed under another collapse
+	for (int i=0; i + skippedChildren < children.count; i++)
 	{
-		[self.collapsedComments removeObject:comment];
-		NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, children.count)];
-		[newComments insertObjects:children atIndexes:indexes];
+		// add each child and its index to objectsToRemove and indexesToRemove
+		TGComment *comment = children[i+skippedChildren];
+		[objectsToRemove addObject:comment];
+		[indexesToRemove addObject:[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:indexPath.section]];
 		
-		for (TGComment *child in children)
-		{
-			if ([self.collapsedComments containsObject:child])
-				[newComments removeObjectsInArray:[TGComment childrenRecursivelyForComment:child]];
-		}
-	}
-	else
-	{
-		[self.collapsedComments addObject:comment];
-		[newComments removeObjectsInArray:children];
+		// if this child is root of (another) collapse, skip its children
+		if ([self.collapsedComments containsObject:comment]) skippedChildren += comment.numberOfChildrenRecursively;
 	}
 	
-	self.comments = newComments;
-	[self reloadCommentTableViewData];
-	// [self.commentTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES]; TODO
+	[self.commentTableView beginUpdates];
+	[self.comments removeObjectsInArray:objectsToRemove];
+	[self.commentTableView deleteRowsAtIndexPaths:indexesToRemove withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView endUpdates];
+}
+
+- (void) expandCommentsAtIndexPath:(NSIndexPath *)indexPath
+{
+	TGComment *rootComment = self.comments[indexPath.row];
+	TGCommentTableViewCell *rootCell = (TGCommentTableViewCell *) [self.commentTableView cellForRowAtIndexPath:indexPath];
+	
+	[self.collapsedComments removeObject:rootComment];
+	rootCell.collapsed = NO;
+	
+	NSMutableArray *children = [[TGComment childrenRecursivelyForComment:rootComment] mutableCopy];
+	NSMutableArray *indexesToAdd = [NSMutableArray new];
+	NSMutableArray *objectsToAdd = [NSMutableArray new];
+	NSInteger skippedChildren = 0; // no. children skipped due to being collapsed under another collapse
+	for (int i=0; i + skippedChildren < children.count; i++)
+	{
+		// add each child and its index to objectsToAdd and indexesToAdd
+		TGComment *comment = children[i+skippedChildren];
+		[objectsToAdd addObject:comment];
+		[indexesToAdd addObject:[NSIndexPath indexPathForRow:indexPath.row+i+1 inSection:indexPath.section]];
+		
+		// if this child is root of (another) collapse, skip its children
+		if ([self.collapsedComments containsObject:comment]) skippedChildren += comment.numberOfChildrenRecursively;
+	}
+	
+	[self.commentTableView beginUpdates];
+	NSIndexSet *indexSetToAdd = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, indexesToAdd.count)];
+	[self.comments insertObjects:objectsToAdd atIndexes:indexSetToAdd];
+	[self.commentTableView insertRowsAtIndexPaths:indexesToAdd withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView endUpdates];
 }
 
 #pragma mark - UITextView
