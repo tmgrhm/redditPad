@@ -60,12 +60,17 @@
 	return self;
 }
 
-- (NSUInteger) numReplies
+- (NSUInteger) numberOfDirectChildren
+{
+	return self.children.count;
+}
+
+- (NSUInteger) numberOfChildrenRecursively
 {
 	NSUInteger numReplies = self.children.count;
 	for (TGComment *child in self.children)
 	{
-		numReplies += [child numReplies];
+		numReplies += [child numberOfChildrenRecursively];
 	}
 	return numReplies;
 }

@@ -25,6 +25,7 @@
 
 - (instancetype) initCommentFromDictionary:(NSDictionary *)dict;
 
-- (NSUInteger) numReplies;
+- (NSUInteger) numberOfDirectChildren;
+- (NSUInteger) numberOfChildrenRecursively;
 
 @end
