@@ -278,8 +278,17 @@
 - (void) setPosts:(NSArray *)posts
 {
 	[self.refreshControl endRefreshing];
+	
+	NSMutableArray *indexPathsToAdd = [NSMutableArray new];
+	for (int i=0; i < posts.count; i++) [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+	NSMutableArray *indexPathsToRemove = [NSMutableArray new];
+	for (int i=0; i < self.listings.count; i++) [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+
+	[self.tableView beginUpdates];
 	self.listings = [posts mutableCopy];
-	[self reloadTableView];
+	[self.tableView deleteRowsAtIndexPaths:indexPathsToRemove withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView insertRowsAtIndexPaths:indexPathsToAdd withRowAnimation:UITableViewRowAnimationFade];
+	[self.tableView endUpdates];
 }
 
 - (void) appendPosts:(NSArray *)posts
@@ -310,7 +319,7 @@
 	
 	[self.tableView beginUpdates];
 	[self.listings addObjectsFromArray:newPosts];
-	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
 }
 
