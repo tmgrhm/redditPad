@@ -440,8 +440,20 @@
 	TGComment *comment = self.comments[indexPath.row];
 	
 	cell.bodyLabel.delegate = self;	// re-set the delegate *before* setting attrText to prevent null delegate crash
-	NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
-	[cell.bodyLabel setAttributedText:attrBody];
+	
+	if ([self.collapsedComments containsObject:comment])
+	{
+		NSString *collapsedText = [NSString stringWithFormat:@"Swipe to expand comment and %lu children", comment.numberOfChildrenRecursively];
+		NSDictionary *collapsedTextAttributes =
+	  @{NSForegroundColorAttributeName	: [ThemeManager secondaryTextColor],
+		NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-MediumItalic" size:15.0]};
+		cell.bodyLabel.attributedText = [[NSAttributedString alloc] initWithString:collapsedText attributes:collapsedTextAttributes];
+	}
+	else
+	{
+		NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
+		[cell.bodyLabel setAttributedText:attrBody];
+	}
 	
 	[cell.authorLabel setText:comment.author];
 	if ([comment.author isEqualToString:self.link.author])
@@ -601,6 +613,7 @@
 	// not yet collapsed; collapse it and remove its children
 	[self.collapsedComments addObject:rootComment];
 	rootCell.collapsed = YES;
+	[self.commentHeights removeObjectForKey:rootComment.id]; // invalidate cached height
 	
 	NSMutableArray *children = [[TGComment childrenRecursivelyForComment:rootComment] mutableCopy];
 	NSMutableArray *objectsToRemove = [NSMutableArray new];
@@ -619,7 +632,8 @@
 	
 	[self.commentTableView beginUpdates];
 	[self.comments removeObjectsInArray:objectsToRemove];
-	[self.commentTableView deleteRowsAtIndexPaths:indexesToRemove withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade]; // reload rootCell because height changed
+	[self.commentTableView deleteRowsAtIndexPaths:indexesToRemove withRowAnimation:UITableViewRowAnimationFade];
 	[self.commentTableView endUpdates];
 }
 
@@ -630,6 +644,7 @@
 	
 	[self.collapsedComments removeObject:rootComment];
 	rootCell.collapsed = NO;
+	[self.commentHeights removeObjectForKey:rootComment.id]; // invalidate cached height
 	
 	NSMutableArray *children = [[TGComment childrenRecursivelyForComment:rootComment] mutableCopy];
 	NSMutableArray *indexesToAdd = [NSMutableArray new];
@@ -649,7 +664,8 @@
 	[self.commentTableView beginUpdates];
 	NSIndexSet *indexSetToAdd = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row+1, indexesToAdd.count)];
 	[self.comments insertObjects:objectsToAdd atIndexes:indexSetToAdd];
-	[self.commentTableView insertRowsAtIndexPaths:indexesToAdd withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade]; // reload rootCell because height changed
+	[self.commentTableView insertRowsAtIndexPaths:indexesToAdd withRowAnimation:UITableViewRowAnimationFade];
 	[self.commentTableView endUpdates];
 }
 
