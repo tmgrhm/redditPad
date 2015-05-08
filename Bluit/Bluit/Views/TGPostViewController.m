@@ -675,7 +675,7 @@
 
 - (void) commentsFromResponse:(NSArray *)responseArray	// TODO move this into the MODEL - tgredditclient
 {
-	NSMutableArray *comments = [NSMutableArray array];
+	NSMutableArray *comments = [NSMutableArray new];
 	
 	for (id dict in responseArray)
 	{
@@ -688,9 +688,14 @@
 		}
 	}
 	
-	self.comments = [NSArray arrayWithArray:comments];
+	NSMutableArray *indexPaths = [NSMutableArray new];
+	for (int i=0; i < comments.count; i++)
+		[indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:1]];
 	
-	[self reloadCommentTableViewData];
+	[self.commentTableView beginUpdates];
+	self.originalComments = [NSArray arrayWithArray:comments];
+	[self.commentTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+	[self.commentTableView endUpdates];
 	
 	NSLog(@"Found %lu comments", (unsigned long)self.comments.count);
 }
