@@ -30,6 +30,7 @@ static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 
 + (UIStatusBarStyle) statusBarStyle;
 + (UIBarStyle) uiBarStyle;
++ (NSInteger) scrollViewIndicatorStyle;
 
 + (UIColor *) backgroundColor;
 + (UIColor *) contentBackgroundColor;

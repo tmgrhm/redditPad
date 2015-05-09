@@ -77,6 +77,11 @@
 	return [[self darkOrLight] isEqualToString:@"dark"] ? UIBarStyleBlack : UIBarStyleDefault;
 }
 
++ (NSInteger) scrollViewIndicatorStyle
+{
+	return [[self darkOrLight] isEqualToString:@"dark"] ? UIScrollViewIndicatorStyleWhite : UIScrollViewIndicatorStyleDefault;
+}
+
 + (UIColor *) backgroundColor {
 	return [self colorForKey:@"backgroundColor"];
 }

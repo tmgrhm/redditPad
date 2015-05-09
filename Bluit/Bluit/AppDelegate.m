@@ -109,7 +109,8 @@
 	[[UITableView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
 	[[UITableView appearance] setSeparatorColor: [ThemeManager separatorColor]];
 	
-//	[[UIScrollView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
+	[[UIScrollView appearance] setIndicatorStyle:(UIScrollViewIndicatorStyle) [ThemeManager scrollViewIndicatorStyle]];
+	
 	[[UIWebView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
 	
 	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
