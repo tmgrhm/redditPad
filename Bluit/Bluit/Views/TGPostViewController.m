@@ -379,11 +379,11 @@
 		attributes = @{NSForegroundColorAttributeName	: [ThemeManager textColor] };
 	else
 		attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
-					   NSLinkAttributeName				: self.link.url};
+					   NSLinkAttributeName				: self.link.url };
 	[mutAttrTitle addAttributes:attributes range:NSMakeRange(0, mutAttrTitle.length)];
 	cell.title.attributedText = mutAttrTitle;
 	
-	// content
+	// body/link content
 	if ([self.link isSelfpost])
 	{
 		cell.content.textColor = [ThemeManager textColor];
@@ -395,22 +395,30 @@
 	}
 	
 	// metadata
+	// subreddit link attributed substring
 	NSURL *subredditURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://showSubreddit?name=%@", [TGRedditClient uriScheme], self.link.subreddit]];
 	NSString *subredditString = [NSString stringWithFormat:@"/r/%@", self.link.subreddit];
 	attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
 				   NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-Medium" size:15.0],
 				   NSLinkAttributeName				: subredditURL};
 	NSAttributedString *subredditLink = [[NSAttributedString alloc] initWithString:subredditString attributes:attributes];
-	
-	NSString *edited = [self.link isEdited] ? [NSString stringWithFormat:@" (edited %@)", [self.link.editDate relativeDateString]] : @""; // TODO better edit indicator
+	// created timestamp
+	NSString *created = [self.link.creationDate relativeDateString];
+	if (![created isEqualToString:kRelativeDateStringSuffixJustNow]) created = [created stringByAppendingString:@" ago"];
+	// edited timestamp
+	NSString *edited = @"";
+	if ([self.link isEdited])
+	{
+		NSString *relativeEditDateString = [self.link.editDate relativeDateString];
+		if (![relativeEditDateString isEqualToString:kRelativeDateStringSuffixJustNow]) relativeEditDateString = [relativeEditDateString stringByAppendingString:@" ago"];
+		edited = [NSString stringWithFormat:@" (edit %@)", relativeEditDateString]; // TODO better edit indicator
+	}
 	
 	cell.metadata.textColor = [ThemeManager secondaryTextColor];
 	cell.metadata.text = [NSString stringWithFormat:@"%ld points in ", (long)self.link.score];
-	
 	NSMutableAttributedString *mutAttrMetadata = [cell.metadata.attributedText mutableCopy];
 	[mutAttrMetadata appendAttributedString:subredditLink];
-	
-	cell.metadata.text = [NSString stringWithFormat:@" %@%@ ago, by %@", [self.link.creationDate relativeDateString], edited, self.link.author];
+	cell.metadata.text = [NSString stringWithFormat:@" %@%@, by /u/%@", created, edited, self.link.author];
 	[mutAttrMetadata appendAttributedString:cell.metadata.attributedText];
 	
 	cell.metadata.attributedText = mutAttrMetadata;
@@ -458,15 +466,16 @@
 	[cell.authorLabel setText:comment.author];
 	if ([comment.author isEqualToString:self.link.author])
 	{
-		cell.authorLabel.text = [cell.authorLabel.text stringByAppendingString:@" (OP)"]; // TODO
 		cell.authorLabel.textColor = [ThemeManager tintColor];
-	} else {
+		cell.authorLabel.text = [cell.authorLabel.text stringByAppendingString:@" (OP)"]; // TODO
+	}
+	else {
 		cell.authorLabel.textColor = [ThemeManager textColor];
 	}
 	
 	[cell.pointsLabel setText:[NSString stringWithFormat:@"%ld points", (long)comment.score]];
 	
-	NSString *edited = [comment isEdited] ? [NSString stringWithFormat:@" (edited %@)", [comment.editDate relativeDateString]] : @""; // TODO better edit indicator
+	NSString *edited = [comment isEdited] ? [NSString stringWithFormat:@" (edit %@)", [comment.editDate relativeDateString]] : @""; // TODO better edit indicator
 	[cell.timestampLabel setText:[NSString stringWithFormat:@"%@%@", [comment.creationDate relativeDateString], edited]];
 	
 	cell.indentationLevel = comment.indentationLevel;

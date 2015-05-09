@@ -910,14 +910,13 @@
                                                                     </connections>
                                                                 </textView>
                                                                 <textView contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TU5-cU-OgG" userLabel="Metadata">
-                                                                    <rect key="frame" x="75" y="114" width="172" height="27"/>
+                                                                    <rect key="frame" x="75" y="114" width="568" height="27"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <attributedString key="attributedText">
-                                                                        <fragment content="Selfpost content or URL">
+                                                                        <fragment content="0 points in /r/nowhere, 0 mins ago by /u/nobody">
                                                                             <attributes>
                                                                                 <color key="NSColor" red="0.54005390405654907" green="0.57619529962539673" blue="0.60124874114990234" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                 <font key="NSFont" size="15" name="AvenirNext-Medium"/>
-                                                                                <font key="NSOriginalFont" size="15" name="AvenirNext-Medium"/>
                                                                                 <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                                                             </attributes>
                                                                         </fragment>
@@ -996,6 +995,7 @@
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="top" secondItem="Hn9-ej-aYd" secondAttribute="top" constant="26" id="WgG-ob-g08"/>
                                                                 <constraint firstItem="ekq-4S-enb" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="Z1c-46-IB8"/>
                                                                 <constraint firstAttribute="trailing" secondItem="ekq-4S-enb" secondAttribute="trailing" id="bTc-hj-OZX"/>
+                                                                <constraint firstAttribute="trailing" secondItem="TU5-cU-OgG" secondAttribute="trailing" constant="25" id="e77-0o-Hae"/>
                                                                 <constraint firstItem="5e7-Ys-PlF" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="f2z-Wi-ogV"/>
                                                                 <constraint firstItem="imt-rF-eLP" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="ni8-cx-dUv"/>
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="imt-rF-eLP" secondAttribute="trailing" constant="15" id="wpz-Id-I2K"/>

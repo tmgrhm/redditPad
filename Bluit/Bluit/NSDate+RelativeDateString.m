@@ -23,25 +23,31 @@
 	long value;
 	
 	if (components.year > 0) {
-		component = @"yr";
+		component = kRelativeDateStringSuffixYear;
 		value = components.year;
-	} else if (components.month > 0) {
-		component = @"mth";
+	}
+	else if (components.month > 0) {
+		component = kRelativeDateStringSuffixMonth;
 		value = components.month;
-	} else if (components.weekOfYear > 0) {
-		component = @"wk";
+	}
+	else if (components.weekOfYear > 0) {
+		component = kRelativeDateStringSuffixWeek;
 		value = components.weekOfYear;
-	} else if (components.day > 0) {
-		component = @"day";
+	}
+	else if (components.day > 0) {
+		component = kRelativeDateStringSuffixDay;
 		value = components.day;
-	} else if (components.hour > 0) {
-		component = @"hr";
+	}
+	else if (components.hour > 0) {
+		component = kRelativeDateStringSuffixHour;
 		value = components.hour;
-	} else if (components.minute > 0) {
-		component = @"min";
+	}
+	else if (components.minute > 0) {
+		component = kRelativeDateStringSuffixMinute;
 		value = components.minute;
-	} else {
-		return @"just now";
+	}
+	else {
+		return kRelativeDateStringSuffixJustNow;
 	}
 	
 	NSString *plural = value == 1 ? @"" : @"s";
