@@ -32,19 +32,28 @@
 	self.leftMargin.constant = self.originalLeftMargin + (self.indentationLevel * self.indentationWidth);
 	
 	// add indentation lines
-	self.indentationLines = [NSMutableArray new];
 	if (self.indentationLevel > 0)
 	{
+		self.indentationLines = [NSMutableArray new];
+		
+		UIBezierPath *path = [UIBezierPath bezierPath];
+		[path moveToPoint:CGPointMake(0, 0)];
+		[path addLineToPoint:CGPointMake(0, self.contentView.frame.size.height)];
+		[path closePath];
+		CGPathRef cgPath = path.CGPath;
+		
 		for (int i=1; i <= self.indentationLevel; i++)
 		{
-			UIView *indentLine = [UIView new];
-			[indentLine setBackgroundColor:[ThemeManager separatorColor]];
+			CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+			shapeLayer.path = cgPath;
+			shapeLayer.strokeColor = [ThemeManager separatorColor].CGColor;
+			shapeLayer.lineWidth = 1.0;
 			
 			CGFloat lineX = i * self.indentationWidth;
-			indentLine.frame = CGRectMake(lineX, 0.0f, 1.0f, self.contentView.frame.size.height);
+			shapeLayer.position = CGPointMake(lineX, 0.0);
 			
-			[self.indentationLines addObject:indentLine];
-			[self.contentView addSubview:indentLine];
+			[self.layer addSublayer:shapeLayer];
+			[self.indentationLines addObject:shapeLayer];
 		}
 	}
 }
@@ -82,7 +91,7 @@
 
 - (void) prepareForReuse
 {
-	for (UIView *view in self.indentationLines) [view removeFromSuperview];
+	for (CALayer *layer in self.indentationLines) [layer removeFromSuperlayer];
 
 	self.collapsed = NO;
 }
