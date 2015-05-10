@@ -21,4 +21,18 @@
 	[self.thumbnail setImage:nil];
 }
 
+- (void) setBackgroundColor:(UIColor *)backgroundColor
+{
+	[super setBackgroundColor:backgroundColor];
+	
+	self.contentView.backgroundColor = backgroundColor;
+	self.score.backgroundColor = backgroundColor;
+	self.title.backgroundColor = backgroundColor;
+	self.subreddit.backgroundColor = backgroundColor;
+	self.timestamp.backgroundColor = backgroundColor;
+	self.author.backgroundColor = backgroundColor;
+	self.domain.backgroundColor = backgroundColor;
+	self.totalComments.backgroundColor = backgroundColor;
+}
+
 @end

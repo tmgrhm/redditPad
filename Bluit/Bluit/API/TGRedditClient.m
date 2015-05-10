@@ -412,21 +412,21 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 {
 	if ([self accessTokenHasExpired])
 	{
-		if ([self isRefreshingToken])
+		/*if ([self isRefreshingToken])
 		{
 			// TODO handle isRefreshing properly
 			NSLog(@"isRefreshingToken");
 			return;
 		}
 		else
-		{
+		{*/
 			__weak __typeof(self)weakSelf = self;
 			[self refreshOAuthTokenWithSuccess:^{
 				[weakSelf POST:stringURL parameters:parameters success:success failure:failure];
 			}];
 			NSLog(@"Retrying because accessTokenHasExpired");
 			return;
-		}
+//		}
 	}
 	
 	[self.manager POST:stringURL
@@ -441,21 +441,21 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 {
 	if ([self accessTokenHasExpired])
 	{
-		if ([self isRefreshingToken])
-		{
+		/*if ([self isRefreshingToken])
+		 {
 			// TODO handle isRefreshing properly
 			NSLog(@"isRefreshingToken");
 			return;
-		}
-		else
-		{
+		 }
+		 else
+		 {*/
 			__weak __typeof(self)weakSelf = self;
 			[self refreshOAuthTokenWithSuccess:^{
 				[weakSelf GET:stringURL parameters:parameters success:success failure:failure];
 			}];
 			NSLog(@"Retrying because accessTokenHasExpired");
 			return;
-		}
+//		}
 	}
 	
 	[self.manager GET:stringURL

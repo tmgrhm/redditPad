@@ -49,6 +49,17 @@
 	}
 }
 
+- (void) setBackgroundColor:(UIColor *)backgroundColor
+{
+	[super setBackgroundColor:backgroundColor];
+	
+	self.contentView.backgroundColor = backgroundColor;
+	self.bodyLabel.backgroundColor = backgroundColor;
+	self.authorLabel.backgroundColor = backgroundColor;
+	self.pointsLabel.backgroundColor = backgroundColor;
+	self.timestampLabel.backgroundColor = backgroundColor;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

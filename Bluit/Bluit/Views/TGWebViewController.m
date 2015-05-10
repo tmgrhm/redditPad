@@ -158,7 +158,7 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
 
 - (BOOL) isLinkPostWebView
 {
-	return self.link;
+	return (self.link);
 }
 
 @end

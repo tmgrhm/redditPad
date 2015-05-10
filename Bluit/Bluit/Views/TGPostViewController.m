@@ -44,8 +44,9 @@
 
 @property (strong, nonatomic) NSArray *originalComments; // original comments as returned from API
 @property (strong, nonatomic) NSMutableArray *comments; // comments to display (excluding collapsed children)
-@property (strong, nonatomic) NSMutableArray *collapsedComments; // comments at the root of a collapse
+@property (strong, nonatomic) NSMutableSet *collapsedComments; // comments at the root of a collapse
 @property (strong, nonatomic) NSMutableDictionary *commentHeights;
+@property (strong, nonatomic) NSMutableDictionary *commentBodies;
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 
 @property (strong, nonatomic) NSURL *interactedURL;
@@ -87,8 +88,9 @@
 	self.preferredContentSize = CGSizeMake(668, 876);
 	
 	self.comments = [NSMutableArray new];
-	self.collapsedComments = [NSMutableArray new];
+	self.collapsedComments = [NSMutableSet new];
 	self.commentHeights = [NSMutableDictionary new];
+	self.commentBodies = [NSMutableDictionary new];
 }
 
 - (void)viewDidLoad {
@@ -328,8 +330,8 @@
 	TGLinkPostCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
 	[self configureHeaderCell:cell];
 	
-	[cell setNeedsLayout];
-	[cell layoutIfNeeded];
+//	[cell setNeedsLayout];
+//	[cell layoutIfNeeded];
 	
 	return cell;
 }
@@ -437,8 +439,8 @@
 	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
 	[self configureCommentCell:cell atIndexPath:indexPath];
 	
-	[cell setNeedsLayout];
-	[cell layoutIfNeeded];
+//	[cell setNeedsLayout]; TODO needed?
+//	[cell layoutIfNeeded];
 	
 	return cell;
 }
@@ -451,7 +453,7 @@
 	
 	if ([self.collapsedComments containsObject:comment])
 	{
-		NSString *collapsedText = [NSString stringWithFormat:@"Swipe to expand comment and %lu children", comment.numberOfChildrenRecursively];
+		NSString *collapsedText = [NSString stringWithFormat:@"Swipe to expand comment and %lu children", (unsigned long) comment.numberOfChildrenRecursively];
 		NSDictionary *collapsedTextAttributes =
 	  @{NSForegroundColorAttributeName	: [ThemeManager secondaryTextColor],
 		NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-MediumItalic" size:15.0]};
@@ -459,7 +461,12 @@
 	}
 	else
 	{
-		NSAttributedString *attrBody = [self attributedStringFromMarkdown:comment.body];
+		NSAttributedString *attrBody = [self.commentBodies objectForKey:comment.id]; // if cached, use that
+		if (!attrBody) // else create new one and cache it
+		{
+			attrBody = [self attributedStringFromMarkdown:comment.body];
+			[self.commentBodies setObject:attrBody forKey:comment.id];
+		}
 		[cell.bodyLabel setAttributedText:attrBody];
 	}
 	
