@@ -363,8 +363,8 @@
 	TGListingTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"TGListingTableViewCell" forIndexPath:indexPath];
 	[self configureListingCell:cell atIndexPath:indexPath];
 	
-	[cell setNeedsLayout];
-	[cell layoutIfNeeded];
+//	[cell setNeedsLayout];
+//	[cell layoutIfNeeded];
 	
 	return cell;
 }
@@ -372,6 +372,8 @@
 - (void)configureListingCell:(TGListingTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
 	TGLink *link = ((TGLink *)self.listings[indexPath.row]);
+	
+	cell.backgroundColor = [ThemeManager contentBackgroundColor];
 	
 	cell.title.text = link.title;
 	cell.score.text = [NSString stringWithFormat:@"%ld", (long)link.score];
