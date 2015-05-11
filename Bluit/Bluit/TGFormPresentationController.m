@@ -79,14 +79,25 @@
 	if (completed) [self.dimmingView removeFromSuperview];
 }
 
+- (BOOL) shouldPresentInFullscreen
+{
+	return NO;
+}
+
+- (BOOL) shouldRemovePresentersView
+{
+	return NO;
+}
+
 - (CGRect) frameOfPresentedViewInContainerView
 {
 	CGSize presentedVCSize = self.presentedViewController.preferredContentSize;
-	CGRect frame = self.containerView.frame;
+	CGRect frame = self.containerView.bounds;
 	float widthDiff = frame.size.width - presentedVCSize.width;
 	float heightDiff = frame.size.height - presentedVCSize.height;
+	frame = CGRectInset(frame, widthDiff/2, heightDiff/2);
 	
-	return CGRectInset(frame, widthDiff/2, heightDiff/2);
+	return frame;
 }
 
 @end

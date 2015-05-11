@@ -1182,8 +1182,8 @@
                         <outlet property="savePostButton" destination="Vfb-ku-gBd" id="7j9-Gs-kMP"/>
                         <outlet property="sharePostButton" destination="b9V-pB-qqY" id="aUd-W4-ZL0"/>
                         <outlet property="topToolbar" destination="ArW-f8-L6R" id="vSI-0b-ohg"/>
-                        <segue destination="gFf-Ur-DKX" kind="presentation" identifier="linkViewToWebView" id="F0Z-Ku-XRv"/>
-                        <segue destination="gFf-Ur-DKX" kind="presentation" identifier="openLink" id="fTW-1s-qNd"/>
+                        <segue destination="gFf-Ur-DKX" kind="presentation" identifier="linkViewToWebView" modalPresentationStyle="overFullScreen" id="F0Z-Ku-XRv"/>
+                        <segue destination="gFf-Ur-DKX" kind="presentation" identifier="openLink" modalPresentationStyle="overFullScreen" id="fTW-1s-qNd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sh5-B1-hbb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1216,7 +1216,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="qgV-3d-NLN"/>
-        <segue reference="YFw-Df-Uep"/>
         <segue reference="iGZ-e7-hTh"/>
+        <segue reference="YFw-Df-Uep"/>
     </inferredMetricsTieBreakers>
 </document>
