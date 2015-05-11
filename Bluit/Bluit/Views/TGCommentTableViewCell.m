@@ -22,6 +22,8 @@
 {
 	self.originalLeftMargin = self.leftMargin.constant;
 	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
+	
+	self.backgroundColor = [ThemeManager contentBackgroundColor];
 }
 
 - (void) setIndentationLevel:(NSInteger)indentationLevel
