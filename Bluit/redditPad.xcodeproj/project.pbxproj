@@ -29,7 +29,6 @@
 		E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */; };
 		E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */; };
 		E28BB7F61AB17ED2005E47B8 /* TGLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */; };
-		E2A512871AC0CEF80007A842 /* TGCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A512861AC0CEF80007A842 /* TGCommentCell.m */; };
 		E2A5128A1AC0D42C0007A842 /* TGPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A512891AC0D42C0007A842 /* TGPostViewController.m */; };
 		E2A5128E1AC354D50007A842 /* TGLinkPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A5128D1AC354D50007A842 /* TGLinkPostCell.m */; };
 		E2A512971AC4AC990007A842 /* ThemeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E2A512961AC4AC990007A842 /* ThemeManager.m */; };
@@ -102,8 +101,6 @@
 		E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGWebViewController.m; path = Views/TGWebViewController.m; sourceTree = "<group>"; };
 		E28BB7F41AB17ED2005E47B8 /* TGLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLoginViewController.h; path = Views/TGLoginViewController.h; sourceTree = "<group>"; };
 		E28BB7F51AB17ED2005E47B8 /* TGLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGLoginViewController.m; path = Views/TGLoginViewController.m; sourceTree = "<group>"; };
-		E2A512851AC0CEF80007A842 /* TGCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGCommentCell.h; path = Views/TGCommentCell.h; sourceTree = "<group>"; };
-		E2A512861AC0CEF80007A842 /* TGCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGCommentCell.m; path = Views/TGCommentCell.m; sourceTree = "<group>"; };
 		E2A512881AC0D42C0007A842 /* TGPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGPostViewController.h; path = Views/TGPostViewController.h; sourceTree = "<group>"; };
 		E2A512891AC0D42C0007A842 /* TGPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGPostViewController.m; path = Views/TGPostViewController.m; sourceTree = "<group>"; };
 		E2A5128C1AC354D50007A842 /* TGLinkPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGLinkPostCell.h; path = Views/TGLinkPostCell.h; sourceTree = "<group>"; };
@@ -272,12 +269,10 @@
 				E245146E1AA6448500B80D2E /* Images.xcassets */,
 				E28BB7EE1AAFB0B7005E47B8 /* TGListingTableViewCell.h */,
 				E28BB7EF1AAFB0B7005E47B8 /* TGListingTableViewCell.m */,
-				E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */,
-				E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */,
-				E2A512851AC0CEF80007A842 /* TGCommentCell.h */,
-				E2A512861AC0CEF80007A842 /* TGCommentCell.m */,
 				E2A5128C1AC354D50007A842 /* TGLinkPostCell.h */,
 				E2A5128D1AC354D50007A842 /* TGLinkPostCell.m */,
+				E210FE9F1AB2DA240000E739 /* TGCommentTableViewCell.h */,
+				E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */,
 				E2BDB7731AE8CF2000FEB59C /* TGSubredditInfoCell.h */,
 				E2BDB7741AE8CF2000FEB59C /* TGSubredditInfoCell.m */,
 				E2BDB7761AE8CF3200FEB59C /* TGSubredditSidebarCell.h */,
@@ -492,7 +487,6 @@
 				E24514671AA6448500B80D2E /* FrontPageViewController.m in Sources */,
 				E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */,
 				E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */,
-				E2A512871AC0CEF80007A842 /* TGCommentCell.m in Sources */,
 				E24514611AA6448500B80D2E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
