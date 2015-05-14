@@ -18,7 +18,10 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 + (instancetype) sharedClient;
 
+#pragma mark - Internal URLs
+
 + (NSString *) uriScheme;
+- (NSURL *) urlToSubreddit:(NSString *)subreddit;
 
 #pragma mark - Authentication
 

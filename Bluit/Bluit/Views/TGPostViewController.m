@@ -398,7 +398,7 @@
 	
 	// metadata
 	// subreddit link attributed substring
-	NSURL *subredditURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://showSubreddit?name=%@", [TGRedditClient uriScheme], self.link.subreddit]];
+	NSURL *subredditURL = [[TGRedditClient sharedClient] urlToSubreddit:self.link.subreddit];
 	NSString *subredditString = [NSString stringWithFormat:@"/r/%@", self.link.subreddit];
 	attributes = @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeTintColor],
 				   NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-Medium" size:15.0],

@@ -73,9 +73,16 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	return self;
 }
 
+#pragma mark - Internal URLs
+
 + (NSString *) uriScheme
 {
 	return kURIscheme;
+}
+
+- (NSURL *) urlToSubreddit:(NSString *)subreddit
+{
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@://showSubreddit?name=%@", [TGRedditClient uriScheme], subreddit]];
 }
 
 #pragma mark - Listings
