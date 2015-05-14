@@ -25,7 +25,6 @@
 	_author =			data[@"author"];
 	_domain =			data[@"domain"];
 	_url =				[NSURL URLWithString:data[@"url"]];
-	_selfTextHTML =		data[@"body_html"];
 	_edited =			[data[@"edited"] boolValue];
 	_editDate =			_edited ? [NSDate dateWithTimeIntervalSince1970:[data[@"edited"] unsignedIntegerValue]] : nil;
 	_selfpost =			[data[@"is_self"] boolValue];
@@ -41,7 +40,8 @@
 		selfText = [selfText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
 		selfText = [selfText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
 	}
-	_selfText =	data[@"selftext"];
+	_selfText =		data[@"selftext"];
+	_selfTextHTML =	data[@"selftext_html"] == [NSNull null] ? @"" : data[@"selftext_html"];
 	
 	NSString *lastPathComponent = _url.lastPathComponent;
 	_isImageLink = [lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"];
