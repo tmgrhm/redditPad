@@ -52,9 +52,9 @@
 	
 	// add dim + presented views to hierarchy
 	[self.containerView addSubview:self.dimmingView];
-	[self.containerView addSubview:self.presentedView];
 	// fade in dim alongside other animations
 	[self.presentingViewController.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+		[self.containerView addSubview:self.presentedView]; // TODO hacky temp fix, should be above
 		self.dimmingView.alpha = 0.7;
 	} completion:nil];
 }
