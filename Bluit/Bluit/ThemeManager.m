@@ -82,71 +82,11 @@
 	return [[self darkOrLight] isEqualToString:@"dark"] ? UIScrollViewIndicatorStyleWhite : UIScrollViewIndicatorStyleDefault;
 }
 
-+ (UIColor *) backgroundColor {
-	return [self colorForKey:@"backgroundColor"];
-}
-
-+ (UIColor *) contentBackgroundColor {
-	return [self colorForKey:@"contentBackgroundColor"];
-}
-
-+ (UIColor *) hiddenCommentBackground {
-	return [self colorForKey:@"hiddenCommentBackground"];
-}
-
-+ (UIColor *) textColor {
-	return [self colorForKey:@"textColor"];
-}
-
-+ (UIColor *) secondaryTextColor {
-	return [self colorForKey:@"secondaryTextColor"];
-}
-
-+ (UIColor *) smallcapsHeaderColor {
-	return [self colorForKey:@"smallcapsHeaderColor"];
-}
-
-+ (UIColor *) tintColor {
-	return [self colorForKey:@"tintColor"];
-}
-
-+ (UIColor *) inactiveColor {
-	return [self colorForKey:@"inactiveColor"];
-}
-
-+ (UIColor *) downvoteColor {
-	return [self colorForKey:@"downvoteColor"];
-}
-
-+ (UIColor *) saveColor {
-	return [self colorForKey:@"saveColor"];
-}
-
-+ (UIColor *) stickyColor {
-	return [self colorForKey:@"stickyColor"];
-}
-
-+ (UIColor *) separatorColor {
-	return [self colorForKey:@"separatorColor"];
-}
-
-+ (UIColor *) shadowColor {
-	return [self colorForKey:@"shadowColor"];
-}
-
-+ (UIColor *) shadowBorderColor {
-	return [self colorForKey:@"shadowBorderColor"];
-}
-
-+ (UIColor *) shadeColor {
-	return [self colorForKey:@"shadeColor"];
-}
-
 #pragma mark - Styling methods
 
 + (void) styleSmallcapsHeader:(UILabel *)label
 {
-	label.textColor = [ThemeManager smallcapsHeaderColor];
+	label.textColor = [ThemeManager colorForKey:kTGThemeSmallcapsHeaderColor];
 	label.alpha = 0.5f;
 	NSMutableAttributedString *mutAttrStr = [label.attributedText mutableCopy];
 	[mutAttrStr addAttribute:NSKernAttributeName
@@ -157,7 +97,7 @@
 
 + (void) styleSmallcapsButton:(UIButton *)button // TODO setTitle:(NSString *)title andStyleSmallcapsButton:(UIButton *)button
 {
-	button.tintColor = [ThemeManager tintColor];
+	button.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
 	NSMutableAttributedString *mutAttrStr = [button.titleLabel.attributedText mutableCopy];
 	[mutAttrStr addAttribute:NSKernAttributeName
 					   value:@(1.5)

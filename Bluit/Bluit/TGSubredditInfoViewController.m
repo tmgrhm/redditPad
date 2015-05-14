@@ -134,7 +134,7 @@
 	cell.nameLabel.text = [self.subreddit.url absoluteString];
 	NSMutableAttributedString *attrName = [cell.nameLabel.attributedText mutableCopy];
 	// style leading `/r/`
-	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeSecondaryTextColor],
 								 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Medium" size:17.0f]};
 	[attrName addAttributes:attributes range:NSMakeRange(0, 3)];
 	// trim trailing `/`
@@ -168,9 +168,9 @@
 	
 	if (indexPath.row == 0)	{
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator; // TODO custom
-		cell.textLabel.textColor = [ThemeManager textColor];
+		cell.textLabel.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 	}
-	else cell.textLabel.textColor = [ThemeManager tintColor];
+	else cell.textLabel.textColor = [ThemeManager colorForKey:kTGThemeTintColor];
 }
 
 - (TGSubredditSidebarCell *) sidebarCell
@@ -193,8 +193,8 @@
 	// TODO
 	cell.sidebarContent.text = self.subreddit.sidebar;
 	
-	cell.sidebarContent.textColor = [ThemeManager textColor];
-	cell.sidebarHeaderBG.backgroundColor = [ThemeManager backgroundColor];
+	cell.sidebarContent.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
+	cell.sidebarHeaderBG.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

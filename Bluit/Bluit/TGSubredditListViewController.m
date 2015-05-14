@@ -67,7 +67,7 @@ NSString * const kRandomSubredditURL = @"/r/random/";
 
 - (void) themeAppearance
 {
-	self.view.backgroundColor = [ThemeManager backgroundColor];
+	self.view.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 }
 
 #pragma mark - UITableView

@@ -56,7 +56,7 @@
 
 - (void) themeAppearance
 {
-	self.fadeView.backgroundColor = [ThemeManager backgroundColor];
+	self.fadeView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	self.fadeView.alpha = 0.5f;
 }
 

@@ -103,41 +103,41 @@
 												animated:UIStatusBarAnimationFade]; // TODO
 	
 	UIView *selectedTableViewBG = [UIView new];
-	[selectedTableViewBG setBackgroundColor:[ThemeManager backgroundColor]];
+	[selectedTableViewBG setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];
 	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
-	[[UITableViewCell appearance] setBackgroundColor:[ThemeManager contentBackgroundColor]];
-	[[UITableView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
-	[[UITableView appearance] setSeparatorColor: [ThemeManager separatorColor]];
+	[[UITableViewCell appearance] setBackgroundColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
+	[[UITableView appearance] setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];
+	[[UITableView appearance] setSeparatorColor: [ThemeManager colorForKey:kTGThemeSeparatorColor]];
 	
 	[[UIScrollView appearance] setIndicatorStyle:(UIScrollViewIndicatorStyle) [ThemeManager scrollViewIndicatorStyle]];
 	
-	[[UIWebView appearance] setBackgroundColor:[ThemeManager backgroundColor]];
+	[[UIWebView appearance] setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];
 	
 	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
-	[[UINavigationBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UINavigationBar appearance] setTintColor:[ThemeManager tintColor]];
-	NSDictionary *attributes = @{NSForegroundColorAttributeName:	[ThemeManager textColor],
+	[[UINavigationBar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
+	[[UINavigationBar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:	[ThemeManager colorForKey:kTGThemeTextColor],
 								 NSFontAttributeName:			[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	[[UINavigationBar appearance] setTitleTextAttributes:attributes];
-	[[UIToolbar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UIToolbar appearance] setTintColor:[ThemeManager tintColor]];
-	[[UITabBar appearance] setBarTintColor:[ThemeManager contentBackgroundColor]];
-	[[UITabBar appearance] setTintColor:[ThemeManager tintColor]];
+	[[UIToolbar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
+	[[UIToolbar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
+	[[UITabBar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
+	[[UITabBar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	
-	[[UILabel appearance] setTextColor:[ThemeManager textColor]];
+	[[UILabel appearance] setTextColor:[ThemeManager colorForKey:kTGThemeTextColor]];
 	
 	[[UITextField appearance] setFont:[UIFont fontWithName:@"AvenirNext-Medium" size:15.0f]];
-	[[UITextField appearance] setTintColor:[ThemeManager tintColor]];
-	[[UITextField appearance] setTextColor:[ThemeManager textColor]];
+	[[UITextField appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
+	[[UITextField appearance] setTextColor:[ThemeManager colorForKey:kTGThemeTextColor]];
 	
-	[[UITextView appearance] setTintColor:[ThemeManager tintColor]];
+	[[UITextView appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 
-	[[UIButton appearance] setTitleColor:[ThemeManager tintColor] forState:UIControlStateNormal];
+	[[UIButton appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	
-	[[UISegmentedControl appearance] setTintColor:[ThemeManager tintColor]];
+	[[UISegmentedControl appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	attributes = @{NSFontAttributeName: [UIFont fontWithName:@"AvenirNext-Medium" size:14.0f]};
 	[[UISegmentedControl appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
-	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
+	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]} forState:UIControlStateSelected];
 }
 
 @end

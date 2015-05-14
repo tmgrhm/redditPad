@@ -126,7 +126,7 @@
 - (void) themeAppearance
 {
 	self.commentTableView.backgroundColor = [UIColor clearColor];
-	self.containerView.backgroundColor = [ThemeManager backgroundColor];
+	self.containerView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 }
 
 - (void) configureContentInsets
@@ -153,7 +153,7 @@
 - (void) updateSaveButton
 {
 	// TODO get colours working properly
-	self.savePostButton.tintColor = self.link.isSaved ? [ThemeManager saveColor] : [ThemeManager inactiveColor];
+	self.savePostButton.tintColor = self.link.isSaved ? [ThemeManager colorForKey:kTGThemeSaveColor] : [ThemeManager colorForKey:kTGThemeInactiveColor];
 }
 
 - (void) updateHideButton
@@ -161,10 +161,10 @@
 	if (self.link.isHidden)
 	{
 		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Active"];	// TODO consts?
-		self.hidePostButton.tintColor = [ThemeManager tintColor];					// TODO not working
+		self.hidePostButton.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];					// TODO not working
 	} else {
 		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Inactive"];
-		self.hidePostButton.tintColor = [ThemeManager inactiveColor];
+		self.hidePostButton.tintColor = [ThemeManager colorForKey:kTGThemeInactiveColor];
 	}
 }
 
@@ -356,7 +356,7 @@
 	}
 	else
 	{
-		self.topToolbar.layer.borderColor = [[ThemeManager separatorColor] CGColor];
+		self.topToolbar.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
 		self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
 		
 		self.previewImage.image = nil;
@@ -378,9 +378,9 @@
 	NSMutableAttributedString *mutAttrTitle = [cell.title.attributedText mutableCopy];
 	NSDictionary *attributes;
 	if ([self.link isSelfpost])
-		attributes = @{NSForegroundColorAttributeName	: [ThemeManager textColor] };
+		attributes = @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeTextColor] };
 	else
-		attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
+		attributes = @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeTintColor],
 					   NSLinkAttributeName				: self.link.url };
 	[mutAttrTitle addAttributes:attributes range:NSMakeRange(0, mutAttrTitle.length)];
 	cell.title.attributedText = mutAttrTitle;
@@ -391,7 +391,7 @@
 		cell.content.textColor = [ThemeManager textColor];
 		cell.content.attributedText = [self attributedStringFromMarkdown:self.link.selfText];
 	} else {
-		cell.content.textColor = [ThemeManager secondaryTextColor];
+		cell.content.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
 		cell.content.text = [self.link.url absoluteString];
 		cell.content.dataDetectorTypes = UIDataDetectorTypeNone;
 	}
@@ -400,7 +400,7 @@
 	// subreddit link attributed substring
 	NSURL *subredditURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://showSubreddit?name=%@", [TGRedditClient uriScheme], self.link.subreddit]];
 	NSString *subredditString = [NSString stringWithFormat:@"/r/%@", self.link.subreddit];
-	attributes = @{NSForegroundColorAttributeName	: [ThemeManager tintColor],
+	attributes = @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeTintColor],
 				   NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-Medium" size:15.0],
 				   NSLinkAttributeName				: subredditURL};
 	NSAttributedString *subredditLink = [[NSAttributedString alloc] initWithString:subredditString attributes:attributes];
@@ -416,7 +416,7 @@
 		edited = [NSString stringWithFormat:@" (edit %@)", relativeEditDateString]; // TODO better edit indicator
 	}
 	
-	cell.metadata.textColor = [ThemeManager secondaryTextColor];
+	cell.metadata.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
 	cell.metadata.text = [NSString stringWithFormat:@"%ld points in ", (long)self.link.score];
 	NSMutableAttributedString *mutAttrMetadata = [cell.metadata.attributedText mutableCopy];
 	[mutAttrMetadata appendAttributedString:subredditLink];
@@ -429,9 +429,9 @@
 	cell.numComments.text = [NSString stringWithFormat:@"%lu COMMENTS", (unsigned long)self.link.totalComments];
 	[ThemeManager styleSmallcapsHeader:cell.numComments];
 	
-	cell.separator.backgroundColor = [ThemeManager backgroundColor];
+	cell.separator.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	cell.backgroundColor = [UIColor clearColor];
-	cell.mainBackground.backgroundColor = [ThemeManager contentBackgroundColor];
+	cell.mainBackground.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 }
 
 - (TGCommentTableViewCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath
@@ -455,7 +455,7 @@
 	{
 		NSString *collapsedText = [NSString stringWithFormat:@"Swipe to expand comment and %lu children", (unsigned long) comment.numberOfChildrenRecursively];
 		NSDictionary *collapsedTextAttributes =
-	  @{NSForegroundColorAttributeName	: [ThemeManager secondaryTextColor],
+	  @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeSecondaryTextColor],
 		NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-MediumItalic" size:15.0]};
 		cell.bodyLabel.attributedText = [[NSAttributedString alloc] initWithString:collapsedText attributes:collapsedTextAttributes];
 	}
@@ -473,11 +473,11 @@
 	[cell.authorLabel setText:comment.author];
 	if ([comment.author isEqualToString:self.link.author])
 	{
-		cell.authorLabel.textColor = [ThemeManager tintColor];
+		cell.authorLabel.textColor = [ThemeManager colorForKey:kTGThemeTintColor];
 		cell.authorLabel.text = [cell.authorLabel.text stringByAppendingString:@" (OP)"]; // TODO
 	}
 	else {
-		cell.authorLabel.textColor = [ThemeManager textColor];
+		cell.authorLabel.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 	}
 	
 	[cell.pointsLabel setText:[NSString stringWithFormat:@"%ld points", (long)comment.score]];
@@ -487,8 +487,8 @@
 	
 	cell.indentationLevel = comment.indentationLevel;
 	
-	cell.pointsLabel.textColor = [ThemeManager secondaryTextColor];
-	cell.timestampLabel.textColor = [ThemeManager secondaryTextColor];
+	cell.pointsLabel.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	cell.timestampLabel.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
 	
 	if ([self.collapsedComments containsObject:comment]) cell.collapsed = YES;
 }

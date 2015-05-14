@@ -25,7 +25,7 @@
 		UIButton *dim = [UIButton new];
 		dim.frame = self.containerView.bounds;
 		dim.alpha = 0.0;
-		dim.backgroundColor = [ThemeManager shadeColor];
+		dim.backgroundColor = [ThemeManager colorForKey:kTGThemeDimmerColor];
 		[dim setTitle:@"" forState:UIControlStateNormal];
 		[dim addTarget:self action:@selector(didTapOutsidePresentedView:) forControlEvents:UIControlEventTouchUpInside];
 		_dimmingView = dim;
@@ -45,7 +45,7 @@
 - (void) presentationTransitionWillBegin
 {
 	// customise // TODO imrpove appearance
-	self.presentedView.layer.borderColor = [[[ThemeManager shadowBorderColor] colorWithAlphaComponent:0.5f] CGColor];
+	self.presentedView.layer.borderColor = [[[ThemeManager colorForKey:kTGThemeShadowBorderColor] colorWithAlphaComponent:0.5f] CGColor];
 	self.presentedView.layer.borderWidth = 1.0f;
 	self.presentedView.layer.cornerRadius = 8.0f;
 	self.presentedView.clipsToBounds = YES;

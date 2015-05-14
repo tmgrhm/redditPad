@@ -23,7 +23,7 @@
 	self.originalLeftMargin = self.leftMargin.constant;
 	self.bodyLabel.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, 0);
 	
-	self.backgroundColor = [ThemeManager contentBackgroundColor];
+	self.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 }
 
 - (void) setIndentationLevel:(NSInteger)indentationLevel
@@ -48,7 +48,7 @@
 		{
 			CAShapeLayer *shapeLayer = [CAShapeLayer layer];
 			shapeLayer.path = cgPath;
-			shapeLayer.strokeColor = [ThemeManager separatorColor].CGColor;
+			shapeLayer.strokeColor = [ThemeManager colorForKey:kTGThemeSeparatorColor].CGColor;
 			shapeLayer.lineWidth = 1.0;
 			
 			CGFloat lineX = i * self.indentationWidth;
@@ -83,11 +83,11 @@
 
 	if (self.isCollapsed) // TODO
 	{
-		self.backgroundColor = [ThemeManager hiddenCommentBackground];
+		self.backgroundColor = [ThemeManager colorForKey:kTGThemeFadedBackgroundColor];
 	}
 	else
 	{
-		self.backgroundColor = [ThemeManager contentBackgroundColor];
+		self.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 	}
 }
 

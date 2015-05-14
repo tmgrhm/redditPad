@@ -15,6 +15,25 @@ static NSString * const kTGThemeDark = @"darkTheme";
 
 static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 
+static NSString * const kTGThemeBackgroundColor = @"backgroundColor";
+static NSString * const kTGThemeContentBackgroundColor = @"contentBackgroundColor";
+static NSString * const kTGThemeFadedBackgroundColor = @"hiddenCommentBackground";
+
+static NSString * const kTGThemeTextColor = @"textColor";
+static NSString * const kTGThemeSecondaryTextColor = @"secondaryTextColor";
+static NSString * const kTGThemeSmallcapsHeaderColor = @"smallcapsHeaderColor";
+
+static NSString * const kTGThemeTintColor = @"tintColor";
+static NSString * const kTGThemeInactiveColor = @"inactiveColor";
+static NSString * const kTGThemeDownvoteColor = @"downvoteColor";
+static NSString * const kTGThemeSaveColor = @"saveColor";
+static NSString * const kTGThemeStickyColor = @"stickyColor";
+
+static NSString * const kTGThemeSeparatorColor = @"separatorColor";
+static NSString * const kTGThemeShadowColor = @"shadowColor";
+static NSString * const kTGThemeShadowBorderColor = @"shadowBorderColor";
+static NSString * const kTGThemeDimmerColor = @"shadeColor";
+
 @interface ThemeManager : NSObject
 
 @property (strong, nonatomic) NSDictionary *theme;
@@ -31,25 +50,6 @@ static NSString * const kThemeDidChangeNotification = @"TGThemeDidChange";
 + (UIStatusBarStyle) statusBarStyle;
 + (UIBarStyle) uiBarStyle;
 + (NSInteger) scrollViewIndicatorStyle;
-
-+ (UIColor *) backgroundColor;
-+ (UIColor *) contentBackgroundColor;
-+ (UIColor *) hiddenCommentBackground;
-
-+ (UIColor *) textColor;
-+ (UIColor *) secondaryTextColor;
-+ (UIColor *) smallcapsHeaderColor;
-
-+ (UIColor *) tintColor;
-+ (UIColor *) inactiveColor;
-+ (UIColor *) downvoteColor;
-+ (UIColor *) saveColor;
-+ (UIColor *) stickyColor;
-
-+ (UIColor *) separatorColor;
-+ (UIColor *) shadowColor;
-+ (UIColor *) shadowBorderColor;
-+ (UIColor *) shadeColor;
 
 + (void) styleSmallcapsHeader:(UILabel *)label;
 + (void) styleSmallcapsButton:(UIButton *)button;

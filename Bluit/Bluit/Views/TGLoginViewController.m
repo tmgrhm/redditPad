@@ -45,7 +45,7 @@
 #pragma mark - Setup & Appearance
 - (void) themeAppearance
 {
-	self.view.backgroundColor = [ThemeManager backgroundColor];
+	self.view.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 }
 
 #pragma mark - IBAction

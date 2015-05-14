@@ -83,14 +83,14 @@
 	titleLabel.text = [self titleFromPagination];
 	
 	NSMutableAttributedString *attrTitle = [titleLabel.attributedText mutableCopy];
-	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager textColor],
+	NSDictionary *attributes = @{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeTextColor],
 								 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	[attrTitle addAttributes:attributes range:NSMakeRange(0, attrTitle.length)];
 	
 	if (![self.pagination.subreddit isEqualToString:kSubredditFrontPage]) // title is not "Front Page"
 	{
 		// style leading `/r/`
-		attributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+		attributes = @{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeSecondaryTextColor],
 					   NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Medium" size:17.0f]};
 		[attrTitle addAttributes:attributes range:NSMakeRange(0, 3)];
 		// trim trailing `/`
@@ -128,10 +128,10 @@
 
 - (void) themeAppearance
 {
-	self.view.backgroundColor = [ThemeManager backgroundColor];
+	self.view.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	
 	self.refreshControl.backgroundColor = [UIColor clearColor];
-	self.refreshControl.tintColor = [ThemeManager secondaryTextColor]; // TODO get better colour
+	self.refreshControl.tintColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor]; // TODO get better colour
 }
 
 - (void) themeDidChange
@@ -143,13 +143,13 @@
 	
 	UINavigationBar *navbar = self.navigationController.navigationBar;
 	navbar.barStyle = [ThemeManager uiBarStyle];
-	navbar.barTintColor = [ThemeManager contentBackgroundColor];
-	navbar.tintColor = [ThemeManager tintColor];
+	navbar.barTintColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
+	navbar.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
 	
-	self.sortControl.tintColor = [ThemeManager tintColor];
-	[self.sortControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager contentBackgroundColor]} forState:UIControlStateSelected];
+	self.sortControl.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
+	[self.sortControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]} forState:UIControlStateSelected];
 	
-	self.tableView.backgroundColor = [ThemeManager backgroundColor];
+	self.tableView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	[self reloadTableView];
 }
 
@@ -373,7 +373,7 @@
 {
 	TGLink *link = ((TGLink *)self.listings[indexPath.row]);
 	
-	cell.backgroundColor = [ThemeManager contentBackgroundColor];
+	cell.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 	
 	cell.title.text = link.title;
 	cell.score.text = [NSString stringWithFormat:@"%ld", (long)link.score];
@@ -394,14 +394,14 @@
 	if (link.isSelfpost)	cell.domain.hidden = YES;
 	else						cell.domain.text = link.domain;
 	
-	if (link.isSticky)		cell.title.textColor = [ThemeManager stickyColor];
-	else						cell.title.textColor = [ThemeManager textColor];
+	if (link.isSticky)		cell.title.textColor = [ThemeManager colorForKey:kTGThemeStickyColor];
+	else						cell.title.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 	
-	cell.score.textColor = [ThemeManager secondaryTextColor];
-	cell.timestamp.textColor = [ThemeManager secondaryTextColor];
-	cell.author.textColor = [ThemeManager secondaryTextColor];
-	cell.domain.textColor = [ThemeManager secondaryTextColor];
-	cell.totalComments.textColor = [ThemeManager tintColor];
+	cell.score.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	cell.timestamp.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	cell.author.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	cell.domain.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	cell.totalComments.textColor = [ThemeManager colorForKey:kTGThemeTintColor];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

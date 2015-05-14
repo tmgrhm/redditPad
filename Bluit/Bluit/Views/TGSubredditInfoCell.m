@@ -15,10 +15,10 @@
 - (void)awakeFromNib
 {
 	// these textColors are apparently necessary for setting colour correctly later via attributedText (wtf)
-	self.nameLabel.textColor = [ThemeManager textColor];
-	self.descriptionLabel.textColor = [ThemeManager secondaryTextColor];
-	self.subscribersLabel.textColor = [ThemeManager textColor];
-	self.hereNowLabel.textColor = [ThemeManager textColor];
+	self.nameLabel.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
+	self.descriptionLabel.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
+	self.subscribersLabel.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
+	self.hereNowLabel.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -46,9 +46,9 @@
 #pragma mark - Convenience
 - (NSAttributedString *) attributedSubscriberStatisticsWithNumber:(unsigned long)number text:(NSString *)text
 {
-	NSDictionary *numberAttributes = @{NSForegroundColorAttributeName:[ThemeManager textColor],
+	NSDictionary *numberAttributes = @{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeTextColor],
 									   NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-DemiBold" size:15.0f]};
-	NSDictionary *textAttributes = @{NSForegroundColorAttributeName:[ThemeManager secondaryTextColor],
+	NSDictionary *textAttributes = @{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeSecondaryTextColor],
 									 NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Regular" size:15.0f]};
 	
 	NSString *numberStr = [NSString stringWithFormat:@"%lu", (unsigned long) number]; // TODO format nicely with commas
