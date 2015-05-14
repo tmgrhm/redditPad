@@ -7,3 +7,5 @@ pod 'XNGMarkdownParser', :inhibit_warnings => true
 # pod 'URBMediaFocusViewController'
 # pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 pod 'TUSafariActivity', '~> 1.0'
+# pod 'DTCoreText', '~> 1.6'
+pod 'MWFeedParser', '~> 1.0'

@@ -21,18 +21,29 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - fmemopen (0.0.1)
+  - MWFeedParser (1.0.1):
+    - MWFeedParser/FeedParser (= 1.0.1)
+    - MWFeedParser/NSDate+InternetDateTime (= 1.0.1)
+    - MWFeedParser/NSString+HTML (= 1.0.1)
+  - MWFeedParser/FeedParser (1.0.1):
+    - MWFeedParser/NSDate+InternetDateTime
+    - MWFeedParser/NSString+HTML
+  - MWFeedParser/NSDate+InternetDateTime (1.0.1)
+  - MWFeedParser/NSString+HTML (1.0.1)
   - TUSafariActivity (1.0.4)
   - XNGMarkdownParser (0.3.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5)
   - fmemopen
+  - MWFeedParser (~> 1.0)
   - TUSafariActivity (~> 1.0)
   - XNGMarkdownParser
 
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   fmemopen: dc31f7d3004644b33deee95e047305d23f8cfdd4
+  MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   XNGMarkdownParser: aed98c14f0c0eb20064184ddf9bac26c482722b2
 
