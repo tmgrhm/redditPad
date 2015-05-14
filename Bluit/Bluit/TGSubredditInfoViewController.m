@@ -12,7 +12,7 @@
 #import "TGSubredditSidebarCell.h"
 
 #import "ThemeManager.h"
-
+#import "TGRedditMarkdownParser.h"
 #import "TGRedditClient.h"
 
 @interface TGSubredditInfoViewController ()
@@ -191,7 +191,8 @@
 - (void) configureSidebarCell:(TGSubredditSidebarCell *)cell
 {
 	// TODO
-	cell.sidebarContent.text = self.subreddit.sidebar;
+//	cell.sidebarContent.attributedText = [TGRedditMarkdownParser attributedStringFromMarkdown:self.subreddit.sidebar];
+	cell.sidebarContent.attributedText = [TGRedditMarkdownParser attributedStringFromHTML:self.subreddit.sidebarHTML];
 	
 	cell.sidebarContent.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 	cell.sidebarHeaderBG.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];

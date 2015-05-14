@@ -8,9 +8,6 @@
 
 #import "TGPostViewController.h"
 
-#import "ThemeManager.h"
-
-#import "TGRedditClient.h"
 #import "TGComment.h"
 #import "TGMoreComments.h"
 
@@ -18,12 +15,14 @@
 #import "TGWebViewController.h"
 #import "TGLinkPostCell.h"
 
+#import "ThemeManager.h"
+#import "TGRedditClient.h"
+#import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
 
 #import "TGFormPresentationController.h"
 #import "TGFormAnimationController.h"
 
-#import <XNGMarkdownParser/XNGMarkdownParser.h>
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
@@ -46,7 +45,7 @@
 @property (strong, nonatomic) NSMutableArray *comments; // comments to display (excluding collapsed children)
 @property (strong, nonatomic) NSMutableSet *collapsedComments; // comments at the root of a collapse
 @property (strong, nonatomic) NSMutableDictionary *commentHeights;
-@property (strong, nonatomic) NSMutableDictionary *commentBodies;
+@property (strong, nonatomic) NSMutableDictionary *cachedAttributedStrings;
 @property (strong, nonatomic) TGCommentTableViewCell *sizingCell;
 
 @property (strong, nonatomic) NSURL *interactedURL;
@@ -90,7 +89,7 @@
 	self.comments = [NSMutableArray new];
 	self.collapsedComments = [NSMutableSet new];
 	self.commentHeights = [NSMutableDictionary new];
-	self.commentBodies = [NSMutableDictionary new];
+	self.cachedAttributedStrings = [NSMutableDictionary new];
 }
 
 - (void)viewDidLoad {
@@ -386,11 +385,23 @@
 	cell.title.attributedText = mutAttrTitle;
 	
 	// body/link content
-	if ([self.link isSelfpost])
+	if ([self.link isSelfpost] && !([self.link.selfTextHTML isEqualToString:@""])) // if selfpost and has selftext
 	{
-		cell.content.textColor = [ThemeManager textColor];
-		cell.content.attributedText = [self attributedStringFromMarkdown:self.link.selfText];
-	} else {
+//		cell.content.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
+		
+		NSAttributedString *attrBody = [self.cachedAttributedStrings objectForKey:self.link.id]; // if cached, use that
+		if (!attrBody) // else create new one and cache it
+		{
+//			attrBody = [TGRedditMarkdownParser attributedStringFromMarkdown:self.link.selfText];
+			
+			attrBody = [TGRedditMarkdownParser attributedStringFromHTML:self.link.selfTextHTML];
+			
+			[self.cachedAttributedStrings setObject:attrBody forKey:self.link.id];
+		}
+		cell.content.attributedText = attrBody;
+	}
+	else
+	{
 		cell.content.textColor = [ThemeManager colorForKey:kTGThemeSecondaryTextColor];
 		cell.content.text = [self.link.url absoluteString];
 		cell.content.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -461,13 +472,16 @@
 	}
 	else
 	{
-		NSAttributedString *attrBody = [self.commentBodies objectForKey:comment.id]; // if cached, use that
+		NSAttributedString *attrBody = [self.cachedAttributedStrings objectForKey:comment.id]; // if cached, use that
 		if (!attrBody) // else create new one and cache it
 		{
-			attrBody = [self attributedStringFromMarkdown:comment.body];
-			[self.commentBodies setObject:attrBody forKey:comment.id];
+//			attrBody = [TGRedditMarkdownParser attributedStringFromMarkdown:comment.body];
+			
+			attrBody = [TGRedditMarkdownParser attributedStringFromHTML:comment.bodyHTML];
+			
+			[self.cachedAttributedStrings setObject:attrBody forKey:comment.id];
 		}
-		[cell.bodyLabel setAttributedText:attrBody];
+		cell.bodyLabel.attributedText = attrBody;
 	}
 	
 	[cell.authorLabel setText:comment.author];
@@ -690,7 +704,7 @@
 {
 	self.interactedURL = URL;
 	
-	if ([URL.scheme isEqualToString:[TGRedditClient uriScheme]])
+	if ([self.interactedURL.scheme isEqualToString:[TGRedditClient uriScheme]])
 	{
 		[self dismissViewControllerAnimated:YES completion:nil];
 		return YES; // let application delegate handle it
@@ -768,39 +782,6 @@
 	[self.commentTableView endUpdates];
 	
 	NSLog(@"Found %lu comments", (unsigned long)self.comments.count);
-}
-
-- (NSAttributedString *) attributedStringFromMarkdown:(NSString *)markdown
-{
-	// remove trailing newlines
-	NSString *newMarkdown = markdown;
-	while ([newMarkdown hasSuffix:@"\n"])
-		newMarkdown = [newMarkdown substringToIndex:newMarkdown.length-1];
-	// replace 2+ consecutive returns with single new paragraphs
-	while ([newMarkdown rangeOfString:@"\n\n"].location != NSNotFound)
-	{
-		newMarkdown = [newMarkdown stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
-	}
-	markdown = newMarkdown;
-	
-	XNGMarkdownParser *parser = [XNGMarkdownParser new];
-	parser.paragraphFont = [UIFont fontWithName:@"AvenirNext-Medium" size:15];
-	parser.boldFontName = @"AvenirNext-DemiBold";
-	parser.italicFontName = @"AvenirNext-MediumItalic";
-	parser.boldItalicFontName = @"AvenirNext-DemiBoldItalic";
-	parser.linkFontName = @"AvenirNext-DemiBold";
-	parser.topAttributes = @{NSForegroundColorAttributeName : [ThemeManager textColor]};
-	
-	NSMutableAttributedString *string = [[parser attributedStringFromMarkdownString:markdown] mutableCopy]; // TODO I think XNG allows you to set paragraph style on the parser instead
-	NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-	[paragraphStyle setMinimumLineHeight:21.0];
-	[paragraphStyle setParagraphSpacing:6.0];
-	
-	[string addAttribute:NSParagraphStyleAttributeName
-				   value:paragraphStyle
-				   range:NSMakeRange(0, string.length)];
-	
-	return string;
 }
 
 @end
