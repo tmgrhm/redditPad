@@ -541,7 +541,7 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ooL-sO-oJf" id="KPc-0V-y91">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptz-2k-vKh">
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="1000" horizontalCompressionResistancePriority="249" verticalCompressionResistancePriority="1000" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptz-2k-vKh">
                                             <rect key="frame" x="30" y="76" width="400" height="353"/>
                                             <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                             <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="14"/>
@@ -576,7 +576,7 @@
                                         <constraint firstItem="ptz-2k-vKh" firstAttribute="top" secondItem="A5Q-t2-FF0" secondAttribute="bottom" constant="20" id="4BI-az-PdB"/>
                                         <constraint firstAttribute="bottom" secondItem="ptz-2k-vKh" secondAttribute="bottom" priority="998" constant="20" id="8KU-NJ-uod"/>
                                         <constraint firstItem="A5Q-t2-FF0" firstAttribute="top" secondItem="KPc-0V-y91" secondAttribute="top" id="Fyf-Gf-bL5"/>
-                                        <constraint firstAttribute="trailing" secondItem="ptz-2k-vKh" secondAttribute="trailing" constant="20" id="GGu-g5-ksD"/>
+                                        <constraint firstAttribute="trailing" secondItem="ptz-2k-vKh" secondAttribute="trailing" priority="999" constant="20" id="GGu-g5-ksD"/>
                                         <constraint firstItem="A5Q-t2-FF0" firstAttribute="leading" secondItem="KPc-0V-y91" secondAttribute="leading" id="RK6-WH-av5"/>
                                         <constraint firstAttribute="trailing" secondItem="A5Q-t2-FF0" secondAttribute="trailing" id="luF-Fy-hor"/>
                                         <constraint firstItem="ptz-2k-vKh" firstAttribute="leading" secondItem="KPc-0V-y91" secondAttribute="leading" constant="30" id="r9t-Ap-CpW"/>
