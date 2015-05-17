@@ -25,8 +25,11 @@
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import "UIImageEffects.h"
 
-@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate>
+static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
+
+@interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 
@@ -38,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
+@property (nonatomic) BOOL isImagePost;
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
 
@@ -62,6 +66,45 @@
 {
 	_originalComments = comments;
 	self.comments = [comments mutableCopy];
+}
+
+- (void) setIsImagePost:(BOOL)isImagePost
+{
+	_isImagePost = isImagePost;
+	
+	[self setToolbarAlpha:!isImagePost]; // isImagePost == YES == 1, alpha should be 0 so invert
+	
+	if (isImagePost)
+	{
+		// set placeholder from blurredthumbnail
+		// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
+		[self.previewImage setImageWithURL:self.link.thumbnailURL];
+		UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+		
+		// request real previewImage and fade in
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.link.url];
+		[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+		[self.previewImage setImageWithURLRequest:request placeholderImage:placeholder success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+			{
+				[UIView transitionWithView:self.previewImage
+								  duration:0.3f
+								   options:UIViewAnimationOptionTransitionCrossDissolve
+								animations:^{[self.previewImage setImage:image];}
+								completion:NULL];
+			} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+				// TODO
+			}];
+		
+		// add extra spacing at top to let previewImage show
+		self.previewImageHeight.constant = kTGPostViewImagePostHeaderHeight;
+		
+		// TODO add shadow to topToolbar buttons
+	}
+	else
+	{
+		self.previewImage.image = nil;
+		self.previewImageHeight.constant = 0;
+	}
 }
 
 #pragma mark - Init
@@ -151,20 +194,32 @@
 
 - (void) updateSaveButton
 {
-	// TODO get colours working properly
-	self.savePostButton.tintColor = self.link.isSaved ? [ThemeManager colorForKey:kTGThemeSaveColor] : [ThemeManager colorForKey:kTGThemeInactiveColor];
+	UIColor *tintColor;
+	if (self.link.isSaved)	tintColor = [ThemeManager colorForKey:kTGThemeSaveColor];
+	else						tintColor = [self toolbarIsTransparent] ? [UIColor whiteColor] : [ThemeManager colorForKey:kTGThemeInactiveColor];
+	
+	self.savePostButton.tintColor = tintColor;
 }
 
 - (void) updateHideButton
 {
+	UIImage *image;
+	UIColor *tintColor;
+	
 	if (self.link.isHidden)
 	{
-		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Active"];	// TODO consts?
-		self.hidePostButton.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];					// TODO not working
-	} else {
-		self.hidePostButton.image = [UIImage imageNamed:@"Icon-Post-Hide-Inactive"];
-		self.hidePostButton.tintColor = [ThemeManager colorForKey:kTGThemeInactiveColor];
+		image = [UIImage imageNamed:@"Icon-Post-Hide-Active"];
+		tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
 	}
+	else
+	{
+		image = [UIImage imageNamed:@"Icon-Post-Hide-Inactive"];
+		tintColor = [ThemeManager colorForKey:kTGThemeInactiveColor];
+	}
+	if ([self toolbarIsTransparent]) tintColor = [UIColor whiteColor];
+	
+	self.hidePostButton.image = image;
+	self.hidePostButton.tintColor = tintColor;
 }
 
 - (void) updateVoteButtons
@@ -184,6 +239,81 @@
 			self.postHeader.downvoteButton.selected = NO;
 			break;
 	}
+}
+
+- (void) setToolbarAlpha:(CGFloat)alpha
+{
+	UIColor *barBackgroundColor;
+	UIImage *barBackgroundImage;
+	UIImage *barShadowImage;
+	UIColor *barShadowColor;
+	CGFloat barShadowWidth;
+	UIColor *buttonTintColor;
+	
+	CGFloat currentAlpha;
+	[self.topToolbar.backgroundColor getWhite:nil alpha:&currentAlpha];
+	
+	// if alpha == 0, should be clear BG + white tint
+	// if 0 < alpha < 1, should be calculated
+	// if alpha > 1, should be white BG + blue tint
+	
+	if (alpha <= 0.0f) // definitely transparent
+	{
+		if (currentAlpha == 0.0f) return;
+		
+		barBackgroundColor = [UIColor clearColor];
+		barBackgroundImage = [UIImage imageNamed:@"BG-Navbar-OverImage"];
+		barShadowImage = [UIImage imageNamed:@"BG-Navbar-OverImage-Shadow"];
+		barShadowColor = [UIColor clearColor];
+		barShadowWidth = 0.0f;
+		buttonTintColor = [UIColor whiteColor];
+	}
+	else if (alpha >= 1.0f) // definitely opaque
+	{
+		if (currentAlpha == 1.0f) return;
+		
+		barBackgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
+		barBackgroundImage = [UIImage new];
+		barShadowImage = [UIImage new];
+		barShadowColor = [ThemeManager colorForKey:kTGThemeSeparatorColor];
+		barShadowWidth = 1.0f / [[UIScreen mainScreen] scale];
+		buttonTintColor = [ThemeManager colorForKey:kTGThemeTintColor];
+	}
+	else // in between transparent and opaque
+	{
+		// get start color's saturation and brightness
+		CGFloat startSaturation, startBrightness;
+		[[UIColor whiteColor] getHue:nil saturation:&startSaturation brightness:&startBrightness alpha:nil];
+		// get end color's saturation and brightness
+		CGFloat endHue, endSaturation, endBrightness;
+		[[ThemeManager colorForKey:kTGThemeTintColor] getHue:&endHue saturation:&endSaturation brightness:&endBrightness alpha:nil];
+		// calculate difference from start to end, multiply by progress factor
+		CGFloat progress = alpha;
+		UIColor *tintColor = [UIColor colorWithHue:endHue
+										saturation:startSaturation - ((startSaturation - endSaturation) * progress)
+										brightness:startBrightness - ((startBrightness - endBrightness) * progress)
+											 alpha:1.0];
+		
+		barBackgroundColor = [[ThemeManager colorForKey:kTGThemeContentBackgroundColor] colorWithAlphaComponent:alpha];
+		barShadowColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] colorWithAlphaComponent:alpha];
+		barShadowWidth = 1.0f / [[UIScreen mainScreen] scale];
+		buttonTintColor = tintColor;
+	}
+	
+	// toolbar background
+	[self.topToolbar setBarTintColor:barBackgroundColor];
+	self.topToolbar.backgroundColor = barBackgroundColor;
+	[self.topToolbar setBackgroundImage:barBackgroundImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+	[self.topToolbar setShadowImage:barShadowImage forToolbarPosition:UIBarPositionTop];
+	
+	// set barButtonItem color
+	self.topToolbar.tintColor = buttonTintColor;
+	[self updateSaveButton]; // must be after setting toolbarBG color (uses it to decide what color)
+	[self updateHideButton]; // ^ same
+	
+	// toolbar border/shadow
+	self.topToolbar.layer.borderColor = [barShadowColor CGColor];
+	self.topToolbar.layer.borderWidth = barShadowWidth;
 }
 
 #pragma mark - IBActions
@@ -337,34 +467,9 @@
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
-	// image-specific stuff
-	if (self.link.isImageLink)
-	{
-		self.topToolbar.tintColor = [UIColor whiteColor];
-		[self.topToolbar setBackgroundImage:[UIImage new]
-						 forToolbarPosition:UIBarPositionAny
-								 barMetrics:UIBarMetricsDefault];
-		[self.topToolbar setShadowImage:[UIImage new]
-					 forToolbarPosition:UIToolbarPositionAny];
-		
-		[self.previewImage setImageWithURL:self.link.url];
-		self.previewImageHeight.constant = 300;
-		cell.topMargin.constant = 200;
-		
-		// TODO add shadow to topToolbar buttons
-	}
-	else
-	{
-		self.topToolbar.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
-		self.topToolbar.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
-		
-		self.previewImage.image = nil;
-		self.previewImageHeight.constant = 0;
-		cell.topMargin.constant = 0;
-	}
-	
-	[self updateSaveButton];
-	[self updateHideButton];
+	self.isImagePost = self.link.isImageLink;
+	cell.topMargin.constant = self.isImagePost ? kTGPostViewImagePostHeaderHeight : 0;
+
 	[self updateVoteButtons];
 	
 	// clear the delegates to prevent crashes — TODO solve?
@@ -699,6 +804,40 @@
 	[self.commentTableView endUpdates];
 }
 
+#pragma mark - UIScrollView
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	if (!self.isImagePost) return; // don't do anything if we're not an imagePost
+
+	CGFloat offsetY = scrollView.contentOffset.y;
+	
+	/*
+	CGFloat const transformDistance = 20.0f;
+	CGFloat const scrollThreshold = kTGPostViewImagePostHeaderHeight - 44.0f - transformDistance;
+	if (offsetY > scrollThreshold)
+	{
+		CGFloat progress = 1 - ((scrollThreshold + transformDistance - offsetY) / transformDistance); // 0.0 to 1.0
+		[self setToolbarAlpha:progress];
+	}
+	else [self setToolbarAlpha:0.0];
+	*/
+	
+	CGFloat const scrollThreshold = kTGPostViewImagePostHeaderHeight - 44.0f; // image height - toolbar height
+	if (offsetY > scrollThreshold)
+	{
+		[UIView animateWithDuration:0.2f animations:^{
+			[self setToolbarAlpha:1.0];
+		}];
+	}
+	else
+	{
+		[UIView animateWithDuration:0.2f animations:^{
+			[self setToolbarAlpha:0.0];
+		}];
+	}
+}
+
 #pragma mark - UITextView
 - (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
@@ -714,6 +853,15 @@
 		[self performSegueWithIdentifier:@"openLink" sender:self];
 		return NO;
 	}
+}
+
+#pragma mark - UIBarPosition
+
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar
+{
+	if (bar == self.topToolbar) return UIBarPositionTop;
+	
+	return UIBarPositionTop;
 }
 
 #pragma mark - Navigation
@@ -782,6 +930,14 @@
 	[self.commentTableView endUpdates];
 	
 	NSLog(@"Found %lu comments", (unsigned long)self.comments.count);
+}
+
+- (BOOL) toolbarIsTransparent
+{
+	CGFloat currentAlpha;
+	[self.topToolbar.backgroundColor getWhite:nil alpha:&currentAlpha];
+	
+	return (currentAlpha < 1.0f);
 }
 
 @end
