@@ -102,6 +102,8 @@
 	[[UIApplication sharedApplication] setStatusBarStyle:[ThemeManager statusBarStyle]
 												animated:UIStatusBarAnimationFade]; // TODO
 	
+	self.window.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
+	
 	UIView *selectedTableViewBG = [UIView new];
 	[selectedTableViewBG setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];
 	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
@@ -115,26 +117,17 @@
 	
 	[[UINavigationBar appearance] setBarStyle:[ThemeManager uiBarStyle]];
 	[[UINavigationBar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
-	[[UINavigationBar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	NSDictionary *attributes = @{NSForegroundColorAttributeName:	[ThemeManager colorForKey:kTGThemeTextColor],
 								 NSFontAttributeName:			[UIFont fontWithName:@"AvenirNext-DemiBold" size:17.0f]};
 	[[UINavigationBar appearance] setTitleTextAttributes:attributes];
 	[[UIToolbar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
-	[[UIToolbar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	[[UITabBar appearance] setBarTintColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
-	[[UITabBar appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	
 	[[UILabel appearance] setTextColor:[ThemeManager colorForKey:kTGThemeTextColor]];
 	
 	[[UITextField appearance] setFont:[UIFont fontWithName:@"AvenirNext-Medium" size:15.0f]];
-	[[UITextField appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	[[UITextField appearance] setTextColor:[ThemeManager colorForKey:kTGThemeTextColor]];
 	
-	[[UITextView appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
-
-	[[UIButton appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
-	
-	[[UISegmentedControl appearance] setTintColor:[ThemeManager colorForKey:kTGThemeTintColor]];
 	attributes = @{NSFontAttributeName: [UIFont fontWithName:@"AvenirNext-Medium" size:14.0f]};
 	[[UISegmentedControl appearance] setTitleTextAttributes:attributes forState:UIControlStateNormal];
 	[[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]} forState:UIControlStateSelected];
