@@ -157,6 +157,7 @@
 
 - (void)refreshData	// pull-to-refresh
 {
+	self.pagination.afterLink = nil;
 	[self loadSubredditWithCurrentPagination];
 }
 
