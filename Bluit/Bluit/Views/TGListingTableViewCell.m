@@ -18,7 +18,9 @@
 - (void) prepareForReuse
 {
 	self.domain.hidden = NO;
-	[self.thumbnail setImage:nil];
+	
+	self.thumbnail.image = nil;
+	self.thumbnail.backgroundColor = self.backgroundColor;
 }
 
 - (void) setBackgroundColor:(UIColor *)backgroundColor

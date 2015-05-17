@@ -390,7 +390,25 @@
 	if (link.isUpvoted)			cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Active"];
 	else if (link.isDownvoted)	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Active"];
 	
-	if (link.thumbnailURL != nil) [cell.thumbnail setImageWithURL:link.thumbnailURL];
+	if (link.thumbnailURL != nil && !([[link.thumbnailURL absoluteString] isEqualToString:@"default"])) // not empty nor "default"
+	{
+		cell.thumbnail.backgroundColor = [ThemeManager colorForKey:kTGThemeFadedBackgroundColor];
+		// load thumbnail and fade in
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:link.thumbnailURL];
+		[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+		[cell.thumbnail setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+			{
+				[UIView transitionWithView:cell.thumbnail
+								  duration:0.1f
+								   options:UIViewAnimationOptionTransitionCrossDissolve
+								animations:^{[cell.thumbnail setImage:image];}
+								completion:NULL];
+			} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+				// TODO
+				 NSLog(@"error loading thumbnail: %@\nFailing URL: %@", error, request.URL);
+				cell.thumbnail.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
+			}];
+	}
 	
 	if (link.isSelfpost)	cell.domain.hidden = YES;
 	else						cell.domain.text = link.domain;
