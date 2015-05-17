@@ -212,7 +212,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		   NSLog(@"Success!\n%@", responseObject);
+		   // TODO
 	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
 		   // TODO
 		   [self failureWithError:error];
@@ -227,7 +227,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		   NSLog(@"Success!\n%@", responseObject);
+		   // TODO
 	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
 		   // TODO
 		   [self failureWithError:error];
@@ -245,7 +245,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		   NSLog(@"Success!\n%@", responseObject);
+		   // TODO
 	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
 		   // TODO
 		   [self failureWithError:error];
@@ -260,7 +260,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		   NSLog(@"Success!\n%@", responseObject);
+		   // TODO
 	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
 		   // TODO
 		   [self failureWithError:error];
@@ -278,7 +278,7 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		   NSLog(@"Success!\n%@", responseObject);
+		   // TODO
 	   } failure:^(NSURLSessionDataTask *task, NSError *error) {
 		   // TODO
 		   [self failureWithError:error];

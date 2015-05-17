@@ -136,14 +136,14 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 }
 
 - (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+	[super viewDidLoad];
+	// Do any additional setup after loading the view.
 	
 	[self createShadow];
 	[self themeAppearance];
 	[self configureContentInsets];
 	[self configureGestureRecognizer];
-
+	
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
 	 {
@@ -152,8 +152,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 }
 
 - (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+	[super didReceiveMemoryWarning];
+	// Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Setup & Customisation
@@ -338,8 +338,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	[self updateSaveButton];
 }
 
-- (IBAction)hidePostPressed:(id)sender {
-	NSLog(@"Hide post");
+- (IBAction)hidePostPressed:(id)sender
+{
 	if ([self.link isHidden])
 	{
 		[[TGRedditClient sharedClient] unhide:self.link];
@@ -354,12 +354,14 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	[self updateHideButton];
 }
 
-- (IBAction)reportPostPressed:(id)sender {
+- (IBAction)reportPostPressed:(id)sender
+{
 	NSLog(@"Reprot post");
 	// TODO API call with success&failure blocks
 }
 
-- (IBAction)sharePostPressed:(id)sender {
+- (IBAction)sharePostPressed:(id)sender
+{
 	TUSafariActivity *safariActivity = [TUSafariActivity new];
 	UIActivityViewController *shareSheet = [[UIActivityViewController alloc]
 											initWithActivityItems:@[self.link.title, self.link.url]
@@ -372,7 +374,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 					 completion:nil];
 }
 
-- (IBAction)upvoteButtonPressed:(id)sender {
+- (IBAction)upvoteButtonPressed:(id)sender
+{
 	if (self.link.isUpvoted)
 	{
 		self.link.voteStatus = TGVoteStatusNone;
@@ -387,7 +390,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	[self updateVoteButtons];
 }
 
-- (IBAction)downvoteButtonPressed:(id)sender {
+- (IBAction)downvoteButtonPressed:(id)sender
+{
 	if (self.link.isDownvoted)
 	{
 		self.link.voteStatus = TGVoteStatusNone;
@@ -454,8 +458,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 
 - (TGLinkPostCell *) postHeaderCell
 {
-    if (self.postHeader) return self.postHeader;
-    
+	if (self.postHeader) return self.postHeader;
+	
 	TGLinkPostCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
 	[self configureHeaderCell:cell];
 	
@@ -571,8 +575,8 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	{
 		NSString *collapsedText = [NSString stringWithFormat:@"Swipe to expand comment and %lu children", (unsigned long) comment.numberOfChildrenRecursively];
 		NSDictionary *collapsedTextAttributes =
-	  @{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeSecondaryTextColor],
-		NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-MediumItalic" size:15.0]};
+		@{NSForegroundColorAttributeName	: [ThemeManager colorForKey:kTGThemeSecondaryTextColor],
+		  NSFontAttributeName				: [UIFont fontWithName:@"AvenirNext-MediumItalic" size:15.0]};
 		cell.bodyLabel.attributedText = [[NSAttributedString alloc] initWithString:collapsedText attributes:collapsedTextAttributes];
 	}
 	else
@@ -630,7 +634,7 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	dispatch_once(&onceToken, ^{
 		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
 	});
-
+	
 	[self configureHeaderCell:sizingCell];
 	
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
@@ -681,7 +685,7 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 - (CGFloat)calculateHeightForConfiguredCommentCell:(TGCommentTableViewCell *)sizingCell
 {
 	sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.commentTableView.frame), CGRectGetHeight(sizingCell.bounds));
-
+	
 	// constrain contentView.width to same as table.width
 	// required for correct height calculation with UITextView
 	// http://stackoverflow.com/questions/27064070/
@@ -839,6 +843,7 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 }
 
 #pragma mark - UITextView
+
 - (BOOL) textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
 	self.interactedURL = URL;
@@ -866,7 +871,7 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 
 #pragma mark - Navigation
 
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if ([segue.identifier isEqualToString:@"linkViewToWebView"])
 	{
