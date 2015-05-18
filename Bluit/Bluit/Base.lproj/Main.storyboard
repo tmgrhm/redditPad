@@ -863,7 +863,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E7D-AF-goE" userLabel="Container">
                                 <rect key="frame" x="0.0" y="0.0" width="668" height="876"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-22-q4I">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-22-q4I">
                                         <rect key="frame" x="0.0" y="0.0" width="668" height="0.0"/>
                                         <constraints>
                                             <constraint firstAttribute="height" id="0We-rI-RMx"/>

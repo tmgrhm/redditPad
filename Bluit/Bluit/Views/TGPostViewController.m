@@ -27,7 +27,7 @@
 #import <TUSafariActivity/TUSafariActivity.h>
 #import "UIImageEffects.h"
 
-static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
+static CGFloat const PreviewImageMaxHeight = 300.0f;
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
@@ -89,16 +89,29 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 				[UIView transitionWithView:self.previewImage
 								  duration:0.3f
 								   options:UIViewAnimationOptionTransitionCrossDissolve
-								animations:^{[self.previewImage setImage:image];}
+								animations:^{[self.previewImage setImage:image];} // TODO make consistently smooth + performant
 								completion:NULL];
 			} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
 				// TODO
 			}];
 		
 		// add extra spacing at top to let previewImage show
-		self.previewImageHeight.constant = kTGPostViewImagePostHeaderHeight;
+		UIImage *image = self.previewImage.image; // thumbnail, generally has same aspect ratio
+		if (image != nil)
+		{
+			CGFloat newWidth = self.previewImage.frame.size.width;
+			CGFloat aspectFilledImageHeight = (image.size.height / image.size.width) * newWidth;
+			self.previewImageHeight.constant = MIN(PreviewImageMaxHeight, aspectFilledImageHeight); // restrict to max height
+		}
+		else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
 		
-		// TODO add shadow to topToolbar buttons
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// TODO
+		// parallax/blur overscroll
+		// pull images for use as previewImage from APIs, e.g. imgur
+		// tap previewImage to view in fullscreen picture viewer
+		// swiping between images in previewImage if gallery?
 	}
 	else
 	{
@@ -472,7 +485,7 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
 	self.isImagePost = self.link.isImageLink;
-	cell.topMargin.constant = self.isImagePost ? kTGPostViewImagePostHeaderHeight : 0;
+	cell.topMargin.constant = self.isImagePost ? self.previewImageHeight.constant - 44.0f : 0; // -44.0f for toolbar
 
 	[self updateVoteButtons];
 	
@@ -814,11 +827,10 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 {
 	if (!self.isImagePost) return; // don't do anything if we're not an imagePost
 
-	CGFloat offsetY = scrollView.contentOffset.y;
-	
 	/*
+	CGFloat offsetY = scrollView.contentOffset.y;
 	CGFloat const transformDistance = 20.0f;
-	CGFloat const scrollThreshold = kTGPostViewImagePostHeaderHeight - 44.0f - transformDistance;
+	CGFloat const scrollThreshold = self.previewImageHeight.constant - 44.0f - transformDistance;
 	if (offsetY > scrollThreshold)
 	{
 		CGFloat progress = 1 - ((scrollThreshold + transformDistance - offsetY) / transformDistance); // 0.0 to 1.0
@@ -827,19 +839,12 @@ static CGFloat const kTGPostViewImagePostHeaderHeight = 300.0f;
 	else [self setToolbarAlpha:0.0];
 	*/
 	
-	CGFloat const scrollThreshold = kTGPostViewImagePostHeaderHeight - 44.0f; // image height - toolbar height
-	if (offsetY > scrollThreshold)
-	{
-		[UIView animateWithDuration:0.2f animations:^{
-			[self setToolbarAlpha:1.0];
-		}];
-	}
-	else
-	{
-		[UIView animateWithDuration:0.2f animations:^{
-			[self setToolbarAlpha:0.0];
-		}];
-	}
+	CGFloat const scrollThreshold = self.postHeader.topMargin.constant - 44.0f; // image height - toolbar height
+	
+	CGFloat alpha = (scrollView.contentOffset.y > scrollThreshold) ? 1.0f : 0.0f;
+	[UIView animateWithDuration:0.3f animations:^{
+		[self setToolbarAlpha:alpha]; // TODO test performance of calling this on every scrollViewDidScroll instead of determining whether necessary *here* instead of inside -setToolbarAlpha:
+	}];
 }
 
 #pragma mark - UITextView
