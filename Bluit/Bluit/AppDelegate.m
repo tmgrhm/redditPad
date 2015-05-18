@@ -105,7 +105,7 @@
 	self.window.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
 	
 	UIView *selectedTableViewBG = [UIView new];
-	[selectedTableViewBG setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];
+	[selectedTableViewBG setBackgroundColor:[ThemeManager colorForKey:kTGThemeFadedBackgroundColor]];
 	[[UITableViewCell appearance] setSelectedBackgroundView: selectedTableViewBG];
 	[[UITableViewCell appearance] setBackgroundColor:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]];
 	[[UITableView appearance] setBackgroundColor:[ThemeManager colorForKey:kTGThemeBackgroundColor]];

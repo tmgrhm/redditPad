@@ -737,17 +737,25 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[tableView deselectRowAtIndexPath:indexPath animated:NO];
-/*	switch(indexPath.section) {
+	switch(indexPath.section) {
 		case 0:
-			[tableView deselectRowAtIndexPath:indexPath animated:NO];
+		{
+			if (self.link.isSelfpost) [tableView deselectRowAtIndexPath:indexPath animated:NO];
+			else
+			{
+				[tableView deselectRowAtIndexPath:indexPath animated:YES];
+				[self performSegueWithIdentifier:@"linkViewToWebView" sender:self];
+			}
 			// TODO header tapped
 			break;
+		}
 		case 1:
+		{
 			[tableView deselectRowAtIndexPath:indexPath animated:YES];
-			[self collapseCommentsAtIndexPath:indexPath];
+			[self collapseOrExpandCommentsAtIndexPath:indexPath];
 			break;
-	}*/
+		}
+	}
 }
 
 - (NSIndexPath *) indexPathAtRootOfIndentationTree:(NSIndexPath *)indexPathInTree
