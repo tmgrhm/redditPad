@@ -99,8 +99,7 @@
 
 - (void) themeAppearance
 {
-	[[UIApplication sharedApplication] setStatusBarStyle:[ThemeManager statusBarStyle]
-												animated:UIStatusBarAnimationFade]; // TODO
+	[[UIApplication sharedApplication] setStatusBarStyle:[ThemeManager statusBarStyle] animated:YES];
 	
 	self.window.tintColor = [ThemeManager colorForKey:kTGThemeTintColor];
 	
