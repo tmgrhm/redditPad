@@ -36,5 +36,7 @@
 	<string>000000</string>
 	<key>hiddenCommentBackground</key>
 	<string>2D2D2E</string>
+	<key>imageOverlayBorder</key>
+	<string>FF0000</string>
 </dict>
 </plist>

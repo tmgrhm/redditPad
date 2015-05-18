@@ -565,6 +565,22 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	cell.separator.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	cell.backgroundColor = [UIColor clearColor];
 	cell.mainBackground.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
+	
+	if (self.isImagePost)// add border to top of postHeaderCell
+	{
+		UIBezierPath *path = [UIBezierPath bezierPath];
+		[path moveToPoint:CGPointMake(0, 0)];
+		[path addLineToPoint:CGPointMake(self.view.frame.size.width, 0)]; // TODO why cell.bounds.size.width == 40 here; temp using self.view instead
+		[path closePath];
+		
+		CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+		shapeLayer.path = [path CGPath];
+		shapeLayer.strokeColor = [[[ThemeManager colorForKey:kTGThemeImageOverlayBorderColor] colorWithAlphaComponent:0.08f] CGColor];
+		shapeLayer.lineWidth = 1.0f;
+		
+		shapeLayer.position = CGPointMake(0.0, cell.topMargin.constant);
+		[cell.layer addSublayer:shapeLayer];
+	}
 }
 
 - (TGCommentTableViewCell *)commentCellAtIndexPath:(NSIndexPath *)indexPath

@@ -33,6 +33,7 @@ static NSString * const kTGThemeSeparatorColor = @"separatorColor";
 static NSString * const kTGThemeShadowColor = @"shadowColor";
 static NSString * const kTGThemeShadowBorderColor = @"shadowBorderColor";
 static NSString * const kTGThemeDimmerColor = @"shadeColor";
+static NSString * const kTGThemeImageOverlayBorderColor = @"imageOverlayBorder";
 
 @interface ThemeManager : NSObject
 
