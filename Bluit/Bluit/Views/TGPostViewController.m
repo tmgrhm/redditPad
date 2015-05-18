@@ -897,7 +897,8 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	}
 	else
 	{
-		[self performSegueWithIdentifier:@"openLink" sender:self];
+		if ([URL isEqual:self.link.url])	[self performSegueWithIdentifier:@"linkViewToWebView" sender:self];
+		else								[self performSegueWithIdentifier:@"openLink" sender:self];
 		return NO;
 	}
 }
