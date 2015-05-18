@@ -105,10 +105,11 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 		}
 		else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
 		
+		self.commentTableView.contentInset = UIEdgeInsetsMake(self.previewImageHeight.constant, 0, 0, 0); // add empty space to top of tableView
+		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// TODO
-		// parallax/blur overscroll
 		// pull images for use as previewImage from APIs, e.g. imgur
 		// tap previewImage to view in fullscreen picture viewer
 		// swiping between images in previewImage if gallery?
@@ -485,7 +486,6 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
 	self.isImagePost = self.link.isImageLink;
-	cell.topMargin.constant = self.isImagePost ? self.previewImageHeight.constant - 44.0f : 0; // -44.0f for toolbar
 
 	[self updateVoteButtons];
 	
@@ -578,7 +578,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 		shapeLayer.strokeColor = [[[ThemeManager colorForKey:kTGThemeImageOverlayBorderColor] colorWithAlphaComponent:0.08f] CGColor];
 		shapeLayer.lineWidth = 1.0f;
 		
-		shapeLayer.position = CGPointMake(0.0, cell.topMargin.constant);
+		shapeLayer.position = CGPointMake(0, 0);
 		[cell.layer addSublayer:shapeLayer];
 	}
 }
@@ -843,24 +843,45 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 {
 	if (!self.isImagePost) return; // don't do anything if we're not an imagePost
 
-	/*
-	CGFloat offsetY = scrollView.contentOffset.y;
-	CGFloat const transformDistance = 20.0f;
-	CGFloat const scrollThreshold = self.previewImageHeight.constant - 44.0f - transformDistance;
-	if (offsetY > scrollThreshold)
-	{
-		CGFloat progress = 1 - ((scrollThreshold + transformDistance - offsetY) / transformDistance); // 0.0 to 1.0
-		[self setToolbarAlpha:progress];
-	}
-	else [self setToolbarAlpha:0.0];
-	*/
+	[self updatePreviewImageSizeBasedOnScrollView:scrollView];
 	
-	CGFloat const scrollThreshold = self.postHeader.topMargin.constant - 44.0f; // image height - toolbar height
-	
+	CGFloat const scrollThreshold = -44.0f; // when scrollView content is toolbar height away from top of screen
 	CGFloat alpha = (scrollView.contentOffset.y > scrollThreshold) ? 1.0f : 0.0f;
 	[UIView animateWithDuration:0.3f animations:^{
 		[self setToolbarAlpha:alpha]; // TODO test performance of calling this on every scrollViewDidScroll instead of determining whether necessary *here* instead of inside -setToolbarAlpha:
 	}];
+	
+	/*
+	 CGFloat offsetY = scrollView.contentOffset.y;
+	 CGFloat const transformDistance = 20.0f;
+	 CGFloat const scrollThreshold = self.previewImageHeight.constant - 44.0f - transformDistance;
+	 if (offsetY > scrollThreshold)
+	 {
+		CGFloat progress = 1 - ((scrollThreshold + transformDistance - offsetY) / transformDistance); // 0.0 to 1.0
+		[self setToolbarAlpha:progress];
+	 }
+	 else [self setToolbarAlpha:0.0];
+	 */
+}
+
+- (void) updatePreviewImageSizeBasedOnScrollView:(UIScrollView *)scrollView
+{
+	CGFloat yOffset = scrollView.contentOffset.y;
+	if (yOffset > 0) return;
+	
+	CGRect frame = self.previewImage.frame;
+	
+	if (yOffset > -self.previewImageHeight.constant)
+	{
+		frame.origin.y = - ((self.previewImageHeight.constant + yOffset) / 2);
+	}
+	else
+	{
+		frame.origin.y = 0;
+		frame.size.height = -yOffset;
+	}
+
+	self.previewImage.frame = frame;
 }
 
 #pragma mark - UITextView
