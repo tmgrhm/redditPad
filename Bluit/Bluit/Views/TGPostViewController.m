@@ -35,6 +35,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 
 @property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
+@property (weak, nonatomic) CAShapeLayer *topToolbarShadow;
 @property (weak, nonatomic) IBOutlet UIImageView *previewImage;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewImageHeight;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *savePostButton;
@@ -183,6 +184,8 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 {
 	self.commentTableView.backgroundColor = [UIColor clearColor];
 	self.containerView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
+	
+	[self configureToolbarShadow];
 }
 
 - (void) configureContentInsets
@@ -315,7 +318,6 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	}
 	
 	// toolbar background
-	[self.topToolbar setBarTintColor:barBackgroundColor];
 	self.topToolbar.backgroundColor = barBackgroundColor;
 	[self.topToolbar setBackgroundImage:barBackgroundImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 	[self.topToolbar setShadowImage:barShadowImage forToolbarPosition:UIBarPositionTop];
@@ -325,9 +327,23 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	[self updateSaveButton]; // must be after setting toolbarBG color (uses it to decide what color)
 	[self updateHideButton]; // ^ same
 	
-	// toolbar border/shadow
-	self.topToolbar.layer.borderColor = [barShadowColor CGColor];
-	self.topToolbar.layer.borderWidth = barShadowWidth;
+	// toolbar border/shadow // TODO test performance between two
+//	self.topToolbar.layer.borderColor = [barShadowColor CGColor];
+//	self.topToolbar.layer.borderWidth = barShadowWidth;
+	
+	self.topToolbarShadow.fillColor = [barShadowColor CGColor];
+}
+
+- (void) configureToolbarShadow
+{
+	CGRect shadowRect = CGRectMake(0, 0, self.topToolbar.frame.size.width, 0.5f);
+	CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+	shapeLayer.path = CGPathCreateWithRect(shadowRect, NULL);
+	shapeLayer.fillColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
+	shapeLayer.position = CGPointMake(0.0, self.topToolbar.frame.size.height);
+
+	[self.topToolbar.layer addSublayer:shapeLayer];
+	self.topToolbarShadow = shapeLayer;
 }
 
 #pragma mark - IBActions
@@ -487,7 +503,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 {
 	self.isImagePost = self.link.isImageLink;
 
-	[self updateVoteButtons];
+	[self updateVoteButtons]; // TODO why is this not working
 	
 	// clear the delegates to prevent crashes — TODO solve?
 	cell.title.delegate = self;
@@ -745,8 +761,8 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 			{
 				[tableView deselectRowAtIndexPath:indexPath animated:YES];
 				[self performSegueWithIdentifier:@"linkViewToWebView" sender:self];
+				// TODO stop comments header BG gettign highlighted
 			}
-			// TODO header tapped
 			break;
 		}
 		case 1:

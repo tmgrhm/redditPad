@@ -43,12 +43,13 @@
 		[path addLineToPoint:CGPointMake(0, self.contentView.frame.size.height)];
 		[path closePath];
 		CGPathRef cgPath = path.CGPath;
+		CGColorRef separatorColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
 		
 		for (int i=1; i <= self.indentationLevel; i++)
 		{
 			CAShapeLayer *shapeLayer = [CAShapeLayer layer];
 			shapeLayer.path = cgPath;
-			shapeLayer.strokeColor = [ThemeManager colorForKey:kTGThemeSeparatorColor].CGColor;
+			shapeLayer.strokeColor = separatorColor;
 			shapeLayer.lineWidth = 1.0;
 			
 			CGFloat lineX = i * self.indentationWidth;
