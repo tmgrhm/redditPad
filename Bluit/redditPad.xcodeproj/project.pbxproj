@@ -320,16 +320,16 @@
 		E2A512941AC4AC850007A842 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E2158CFE1B08B05B00A809D9 /* UIImageEffects.h */,
-				E2158CFF1B08B05B00A809D9 /* UIImageEffects.m */,
 				E2A512951AC4AC990007A842 /* ThemeManager.h */,
 				E2A512961AC4AC990007A842 /* ThemeManager.m */,
-				E2A5129A1AC4B6030007A842 /* UIColor+HexColors.h */,
-				E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */,
-				E288CB9F1AD2EABB0059855E /* NSDate+RelativeDateString.h */,
-				E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */,
 				E22A6F991B051ACC00B31F16 /* TGRedditMarkdownParser.h */,
 				E22A6F9A1B051ACC00B31F16 /* TGRedditMarkdownParser.m */,
+				E288CB9F1AD2EABB0059855E /* NSDate+RelativeDateString.h */,
+				E288CBA01AD2EABB0059855E /* NSDate+RelativeDateString.m */,
+				E2158CFE1B08B05B00A809D9 /* UIImageEffects.h */,
+				E2158CFF1B08B05B00A809D9 /* UIImageEffects.m */,
+				E2A5129A1AC4B6030007A842 /* UIColor+HexColors.h */,
+				E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
