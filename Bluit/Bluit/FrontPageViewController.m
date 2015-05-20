@@ -150,6 +150,7 @@
 	[self.sortControl setTitleTextAttributes:@{NSForegroundColorAttributeName:[ThemeManager colorForKey:kTGThemeContentBackgroundColor]} forState:UIControlStateSelected];
 	
 	self.tableView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
+	self.tableView.separatorColor = [ThemeManager colorForKey:kTGThemeSeparatorColor];
 	[self reloadTableView];
 }
 
