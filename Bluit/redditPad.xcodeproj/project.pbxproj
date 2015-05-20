@@ -41,6 +41,8 @@
 		E2BDB7751AE8CF2000FEB59C /* TGSubredditInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB7741AE8CF2000FEB59C /* TGSubredditInfoCell.m */; };
 		E2BDB7781AE8CF3200FEB59C /* TGSubredditSidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */; };
 		E2BDB77B1AE8D13400FEB59C /* TGSubredditInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2BDB77A1AE8D13400FEB59C /* TGSubredditInfoViewController.m */; };
+		E2C5CABE1B0BC79E00A6C303 /* TGAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E2C5CABD1B0BC79E00A6C303 /* TGAPIClient.m */; };
+		E2C5CAC11B0BDDE500A6C303 /* TGImgurClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E2C5CAC01B0BDDE500A6C303 /* TGImgurClient.m */; };
 		E2C8A9641B04941100E49169 /* markdownStyle.html in Resources */ = {isa = PBXBuildFile; fileRef = E2C8A9631B04941100E49169 /* markdownStyle.html */; };
 		E2DE9BFF1AF932A000BACD5E /* TGFormPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */; };
 		E2DE9C021AF942B100BACD5E /* TGFormAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */; };
@@ -118,6 +120,7 @@
 		E2A5129A1AC4B6030007A842 /* UIColor+HexColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColors.h"; sourceTree = "<group>"; };
 		E2A5129B1AC4B6030007A842 /* UIColor+HexColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColors.m"; sourceTree = "<group>"; };
 		E2A5129D1AC564BF0007A842 /* lightTheme.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = lightTheme.plist; sourceTree = "<group>"; };
+		E2B88B7E1B0C789700238922 /* TGAPIClient+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TGAPIClient+Private.h"; sourceTree = "<group>"; };
 		E2BDB76D1AE7779200FEB59C /* TGPagination.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPagination.h; sourceTree = "<group>"; };
 		E2BDB76E1AE7779200FEB59C /* TGPagination.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPagination.m; sourceTree = "<group>"; };
 		E2BDB7731AE8CF2000FEB59C /* TGSubredditInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSubredditInfoCell.h; path = Views/TGSubredditInfoCell.h; sourceTree = "<group>"; };
@@ -126,6 +129,10 @@
 		E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSubredditSidebarCell.m; path = Views/TGSubredditSidebarCell.m; sourceTree = "<group>"; };
 		E2BDB7791AE8D13400FEB59C /* TGSubredditInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSubredditInfoViewController.h; sourceTree = "<group>"; };
 		E2BDB77A1AE8D13400FEB59C /* TGSubredditInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSubredditInfoViewController.m; sourceTree = "<group>"; usesTabs = 1; };
+		E2C5CABC1B0BC79E00A6C303 /* TGAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAPIClient.h; sourceTree = "<group>"; };
+		E2C5CABD1B0BC79E00A6C303 /* TGAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAPIClient.m; sourceTree = "<group>"; };
+		E2C5CABF1B0BDDE500A6C303 /* TGImgurClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGImgurClient.h; sourceTree = "<group>"; };
+		E2C5CAC01B0BDDE500A6C303 /* TGImgurClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGImgurClient.m; sourceTree = "<group>"; };
 		E2C8A9631B04941100E49169 /* markdownStyle.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = markdownStyle.html; sourceTree = "<group>"; };
 		E2DE9BFD1AF932A000BACD5E /* TGFormPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFormPresentationController.h; sourceTree = "<group>"; };
 		E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFormPresentationController.m; sourceTree = "<group>"; };
@@ -241,8 +248,13 @@
 		E25C5E5C1AA653CA00690896 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				E2C5CABC1B0BC79E00A6C303 /* TGAPIClient.h */,
+				E2C5CABD1B0BC79E00A6C303 /* TGAPIClient.m */,
+				E2B88B7E1B0C789700238922 /* TGAPIClient+Private.h */,
 				E25C5E5D1AA6541100690896 /* TGRedditClient.h */,
 				E24514871AA64C1200B80D2E /* TGRedditClient.m */,
+				E2C5CABF1B0BDDE500A6C303 /* TGImgurClient.h */,
+				E2C5CAC01B0BDDE500A6C303 /* TGImgurClient.m */,
 			);
 			name = API;
 			sourceTree = "<group>";
@@ -491,6 +503,7 @@
 				E2A5129C1AC4B6030007A842 /* UIColor+HexColors.m in Sources */,
 				E2DE9C021AF942B100BACD5E /* TGFormAnimationController.m in Sources */,
 				E2158D001B08B05B00A809D9 /* UIImageEffects.m in Sources */,
+				E2C5CAC11B0BDDE500A6C303 /* TGImgurClient.m in Sources */,
 				E2BDB77B1AE8D13400FEB59C /* TGSubredditInfoViewController.m in Sources */,
 				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,
@@ -501,6 +514,7 @@
 				E28BB7F01AAFB0B7005E47B8 /* TGListingTableViewCell.m in Sources */,
 				E2A5128A1AC0D42C0007A842 /* TGPostViewController.m in Sources */,
 				E24514671AA6448500B80D2E /* FrontPageViewController.m in Sources */,
+				E2C5CABE1B0BC79E00A6C303 /* TGAPIClient.m in Sources */,
 				E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */,
 				E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */,
 				E24514611AA6448500B80D2E /* main.m in Sources */,

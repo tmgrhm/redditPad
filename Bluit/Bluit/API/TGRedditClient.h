@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TGAPIClient.h"
 
 #import "TGLink.h"
 #import "TGSubreddit.h"
@@ -14,19 +15,9 @@
 
 typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); // TODO move
 
-@interface TGRedditClient : NSObject
+@interface TGRedditClient : TGAPIClient
 
-+ (instancetype) sharedClient;
-
-#pragma mark - Internal URLs
-
-+ (NSString *) uriScheme;
 - (NSURL *) urlToSubreddit:(NSString *)subreddit;
-
-#pragma mark - Authentication
-
-- (NSURL *) oAuthLoginURL;
-- (void) loginWithOAuthResponse:(NSURL *)url;
 
 #pragma mark - Subreddits
 

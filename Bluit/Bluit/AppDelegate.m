@@ -68,7 +68,7 @@
 {
 	NSLog(@"AppDelegate passed URL: %@", [url absoluteString]);
 	
-	if ([url.scheme isEqualToString: [TGRedditClient uriScheme]])
+	if ([url.scheme isEqualToString: [[TGRedditClient sharedClient] uriScheme]])
 	{
 		// check our `host` value to see what screen to display
 		if ([url.host isEqualToString: @"showSubreddit"])

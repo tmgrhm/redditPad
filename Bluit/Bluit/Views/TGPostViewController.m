@@ -914,7 +914,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 {
 	self.interactedURL = URL;
 	
-	if ([self.interactedURL.scheme isEqualToString:[TGRedditClient uriScheme]])
+	if ([self.interactedURL.scheme isEqualToString:[[TGRedditClient sharedClient] uriScheme]])
 	{
 		[self dismissViewControllerAnimated:YES completion:nil];
 		return YES; // let application delegate handle it
