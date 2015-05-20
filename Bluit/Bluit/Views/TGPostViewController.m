@@ -17,6 +17,8 @@
 
 #import "ThemeManager.h"
 #import "TGRedditClient.h"
+#import "TGImgurClient.h"
+
 #import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
 
@@ -28,6 +30,15 @@
 #import "UIImageEffects.h"
 
 static CGFloat const PreviewImageMaxHeight = 300.0f;
+
+typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
+{
+	EmbeddedMediaNone = 0,
+	EmbeddedMediaDirectImage,
+	EmbeddedMediaImgur,
+	EmbeddedMediaInstagram,
+	EmbeddedMediaTweet
+};
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
@@ -42,6 +53,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
+@property (nonatomic) PostViewEmbeddedMediaType embeddedMediaType;
 @property (nonatomic) BOOL isImagePost;
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
@@ -69,57 +81,20 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	self.comments = [comments mutableCopy];
 }
 
-- (void) setIsImagePost:(BOOL)isImagePost
+- (BOOL) isImagePost
 {
-	_isImagePost = isImagePost;
-	
-	[self setToolbarAlpha:!isImagePost]; // isImagePost == YES == 1, alpha should be 0 so invert
-	
-	if (isImagePost)
+	if (self.link.isImageLink)
 	{
-		// set placeholder from blurredthumbnail
-		// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
-		[self.previewImage setImageWithURL:self.link.thumbnailURL];
-		UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
-		
-		// request real previewImage and fade in
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.link.url];
-		[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-		[self.previewImage setImageWithURLRequest:request placeholderImage:placeholder success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
-			{
-				[UIView transitionWithView:self.previewImage
-								  duration:0.3f
-								   options:UIViewAnimationOptionTransitionCrossDissolve
-								animations:^{[self.previewImage setImage:image];} // TODO make consistently smooth + performant
-								completion:NULL];
-			} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-				// TODO
-			}];
-		
-		// add extra spacing at top to let previewImage show
-		UIImage *image = self.previewImage.image; // thumbnail, generally has same aspect ratio
-		if (image != nil)
-		{
-			CGFloat newWidth = self.previewImage.frame.size.width;
-			CGFloat aspectFilledImageHeight = (image.size.height / image.size.width) * newWidth;
-			self.previewImageHeight.constant = MIN(PreviewImageMaxHeight, aspectFilledImageHeight); // restrict to max height
-		}
-		else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
-		
-		self.commentTableView.contentInset = UIEdgeInsetsMake(self.previewImageHeight.constant, 0, 0, 0); // add empty space to top of tableView
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// TODO
-		// pull images for use as previewImage from APIs, e.g. imgur
-		// tap previewImage to view in fullscreen picture viewer
-		// swiping between images in previewImage if gallery?
+		self.embeddedMediaType = EmbeddedMediaDirectImage;
+		return YES;
 	}
-	else
+	if ([[TGImgurClient sharedClient] URLisImgurLink:self.link.url])
 	{
-		self.previewImage.image = nil;
-		self.previewImageHeight.constant = 0;
+		self.embeddedMediaType = EmbeddedMediaImgur;
+		return YES;
 	}
+	
+	return NO;
 }
 
 #pragma mark - Init
@@ -164,6 +139,9 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	 {
 		 [weakSelf commentsFromResponse:comments];
 	 }];
+	
+	if (self.isImagePost) [self configureImagePost];
+	else [self setToolbarAlpha:1];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -207,6 +185,77 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	doubleSwipeLeft.numberOfTouchesRequired = 2;
 	doubleSwipeLeft.delegate = self;
 	[self.commentTableView addGestureRecognizer:doubleSwipeLeft];
+}
+
+- (void) configureImagePost
+{
+	switch (self.embeddedMediaType) {
+		case EmbeddedMediaDirectImage:
+		{
+			// set placeholder from blurredthumbnail
+			// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
+			[self.previewImage setImageWithURL:self.link.thumbnailURL];
+			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+			
+			[self setPreviewImageWithURL:self.link.url andPlaceholder:placeholder];
+			break;
+		}
+		case EmbeddedMediaImgur:
+		{
+			// set placeholder from blurredthumbnail
+			// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
+			[self.previewImage setImageWithURL:self.link.thumbnailURL];
+			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+			self.previewImage.image = placeholder;
+
+			[[TGImgurClient sharedClient] imageURLfromURL:self.link.url success:^(NSURL *imageURL) {
+				[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
+			}];
+			break;
+		}
+		default:
+		{
+			NSLog(@"I shouldn't be here…"); // doublecheck
+			return;
+		}
+	}
+	
+	// add extra spacing at top to let previewImage show
+	UIImage *image = self.previewImage.image; // thumbnail, generally has same aspect ratio
+	if (image != nil)
+	{
+		CGFloat newWidth = self.previewImage.frame.size.width;
+		CGFloat aspectFilledImageHeight = (image.size.height / image.size.width) * newWidth;
+		self.previewImageHeight.constant = MIN(PreviewImageMaxHeight, aspectFilledImageHeight); // restrict to max height
+	}
+	else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
+	
+	self.commentTableView.contentInset = UIEdgeInsetsMake(self.previewImageHeight.constant, 0, 0, 0); // add empty space to top of tableView
+	
+	[self setToolbarAlpha:0];
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// TODO
+	// pull images for use as previewImage from APIs, e.g. imgur
+	// tap previewImage to view in fullscreen picture viewer
+	// swiping between images in previewImage if gallery?
+}
+
+- (void) setPreviewImageWithURL:(NSURL *)imageURL andPlaceholder:(UIImage *)placeholder
+{
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL];
+	[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+	[self.previewImage setImageWithURLRequest:request placeholderImage:placeholder success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+		{
+			[UIView transitionWithView:self.previewImage
+							  duration:0.3f
+							   options:UIViewAnimationOptionTransitionCrossDissolve
+							animations:^{[self.previewImage setImage:image];} // TODO make consistently smooth + performant
+							completion:NULL];
+		} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+			// TODO
+		}];
 }
 
 - (void) updateSaveButton
@@ -501,8 +550,6 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
-	self.isImagePost = self.link.isImageLink;
-
 	[self updateVoteButtons]; // TODO why is this not working
 	
 	// clear the delegates to prevent crashes — TODO solve?
