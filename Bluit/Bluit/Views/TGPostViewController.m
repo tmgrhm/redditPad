@@ -488,12 +488,16 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 - (void) singleSwipeLeft: (UIGestureRecognizer *)sender
 {
 	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
+	if (!indexPath) return; // swiped somewhere that wasn't a cell
+	
 	[self collapseOrExpandCommentsAtIndexPath:indexPath];
 }
 
 - (void) doubleSwipeLeft: (UIGestureRecognizer *)sender
 {
 	NSIndexPath *indexPath = [self.commentTableView indexPathForRowAtPoint:[sender locationInView:self.commentTableView]];
+	if (!indexPath) return; // swiped somewhere that wasn't a cell
+	
 	NSIndexPath *rootIndexPath = [self indexPathAtRootOfIndentationTree:indexPath];
 	[self collapseOrExpandCommentsAtIndexPath:rootIndexPath];
 }
