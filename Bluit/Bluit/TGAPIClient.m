@@ -73,53 +73,6 @@
 	return [NSURL new];
 }
 
-- (void) loginWithOAuthResponse:(NSURL *)url
-{
-	// https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
-	
-	NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
-												resolvingAgainstBaseURL:NO];
-	NSArray *queryItems = urlComponents.queryItems;
-	NSString *error = [self valueForKey:@"error" fromQueryItems:queryItems];
-	
-	if (error)
-	{
-		// TODO errors https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
-		NSLog(@"Error: %@", error);
-		return;
-	}
-	
-	NSString *state = [self valueForKey:@"state" fromQueryItems:queryItems];
-	NSString *code = [self valueForKey:@"code" fromQueryItems:queryItems];
-	
-	if ([state isEqualToString:[self oAuthState]])
-	{
-		NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
-		NSDictionary *parameters = @{@"grant_type" :		@"authorization_code",
-									 @"code" :			code,
-									 @"redirect_uri" :	[NSString stringWithFormat:@"%@://%@", kURIscheme, [self uriRedirectPath]]};
-		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self clientID]
-																	   password:@""]; // password empty due to being a confidential client
-		[self POST:accessURL
-		parameters:parameters
-		   success:^(NSURLSessionDataTask *task, id responseObject) {
-			   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
-			   self.accessToken = responseObject[@"access_token"];
-			   self.refreshToken = responseObject[@"refresh_token"];
-			   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
-			   // TODO use global notification centre to announce login
-		   }
-		   failure:^(NSURLSessionDataTask *task, NSError *error) {
-			   [self failureWithError:error];
-		   }];
-		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:nil password:nil];
-	}
-	else
-	{
-		NSLog(@"Error: state doesn't match oAuth state, ur bein haxed"); // TODO handle unsafe state
-	}
-}
-
 - (void) refreshOAuthTokenWithSuccess:(void (^)())success
 {
 	self.isRefreshingToken = YES;
@@ -134,7 +87,7 @@
 	NSLog(@"date has passed, token needs refreshing (%@ — %f seconds ago)", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
 	
 	NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
-	NSDictionary *parameters = @{@"grant_type" :		@"refresh_token",
+	NSDictionary *parameters = @{@"grant_type" :	@"refresh_token",
 								 @"refresh_token" :	self.refreshToken};
 	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self clientID]
 																   password:@""]; // password empty due to being a confidential client
@@ -241,7 +194,7 @@
 	// TODO investigate & handle nil/empty cases
 	
 	_accessToken = accessToken;
-	[[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:@"accessToken"];
+	[[NSUserDefaults standardUserDefaults] setObject:accessToken forKey:[NSString stringWithFormat:@"%@-accessToken", NSStringFromClass([self class])]];
 	[self.manager.requestSerializer setValue:[NSString stringWithFormat:@"bearer %@", accessToken] forHTTPHeaderField:@"Authorization"];
 	
 	self.baseURLString = [self httpsBaseURLString]; // switch to oAuth HTTPS URL because we are oAuth'd
@@ -250,13 +203,13 @@
 - (void) setRefreshToken:(NSString *)refreshToken
 {
 	_refreshToken = refreshToken;
-	[[NSUserDefaults standardUserDefaults] setObject:refreshToken forKey:@"refreshToken"];
+	[[NSUserDefaults standardUserDefaults] setObject:refreshToken forKey:[NSString stringWithFormat:@"%@-refreshToken", NSStringFromClass([self class])]];
 }
 
 - (void) setCurrentTokenExpirationDate:(NSDate *)currentTokenExpirationDate
 {
 	_currentTokenExpirationDate = currentTokenExpirationDate;
-	[[NSUserDefaults standardUserDefaults] setObject:currentTokenExpirationDate forKey:@"currentTokenExpirationDate"];
+	[[NSUserDefaults standardUserDefaults] setObject:currentTokenExpirationDate forKey:[NSString stringWithFormat:@"%@-currentTokenExpirationDate", NSStringFromClass([self class])]];
 }
 
 #pragma mark - Errors

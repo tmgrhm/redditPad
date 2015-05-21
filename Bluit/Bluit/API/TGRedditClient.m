@@ -41,9 +41,9 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	self = [super init];
 	if (self)
 	{
-		self.currentTokenExpirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:@"currentTokenExpirationDate"];
-		self.accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"];
-		self.refreshToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"refreshToken"];
+		self.currentTokenExpirationDate = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@-currentTokenExpirationDate", NSStringFromClass([self class])]];
+		self.accessToken = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@-accessToken", NSStringFromClass([self class])]];
+		self.refreshToken = [[NSUserDefaults standardUserDefaults] objectForKey:[NSString stringWithFormat:@"%@-refreshToken", NSStringFromClass([self class])]];
 	}
 	return self;
 }
@@ -70,6 +70,8 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	return oAuthState;
 }
 
+#pragma mark - Authentication
+
 - (NSURL *) oAuthLoginURL
 {
 	// https://github.com/reddit/reddit/wiki/OAuth2#authorization
@@ -77,6 +79,87 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 	NSString *urlString = [NSString stringWithFormat:@"https://www.reddit.com/api/v1/authorize.compact?client_id=%@&response_type=code&state=%@&redirect_uri=%@://%@&duration=permanent&scope=%@", client_id, oAuthState, kURIscheme, kURIRedirectPath, scope];
 	NSURL *url = [NSURL URLWithString:urlString];
 	return url;
+}
+
+- (void) loginWithOAuthResponse:(NSURL *)url
+{
+	// https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
+	
+	NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
+												resolvingAgainstBaseURL:NO];
+	NSArray *queryItems = urlComponents.queryItems;
+	NSString *error = [self valueForKey:@"error" fromQueryItems:queryItems];
+	
+	if (error)
+	{
+		// TODO errors https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
+		NSLog(@"Error: %@", error);
+		return;
+	}
+	
+	NSString *state = [self valueForKey:@"state" fromQueryItems:queryItems];
+	NSString *code = [self valueForKey:@"code" fromQueryItems:queryItems];
+	
+	if ([state isEqualToString:[self oAuthState]])
+	{
+		NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
+		NSDictionary *parameters = @{@"grant_type" :		@"authorization_code",
+									 @"code" :			code,
+									 @"redirect_uri" :	[NSString stringWithFormat:@"%@://%@", kURIscheme, [self uriRedirectPath]]};
+		[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self clientID]
+																	   password:@""]; // password empty due to being a confidential client
+		[self POST:accessURL
+		parameters:parameters
+		   success:^(NSURLSessionDataTask *task, id responseObject) {
+			   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval-code-flow
+			   self.accessToken = responseObject[@"access_token"];
+			   self.refreshToken = responseObject[@"refresh_token"];
+			   self.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
+			   // TODO use global notification centre to announce login
+		   }
+		   failure:^(NSURLSessionDataTask *task, NSError *error) {
+			   [self failureWithError:error];
+		   }];
+		[self.manager.requestSerializer clearAuthorizationHeader];
+	}
+	else
+	{
+		NSLog(@"Error: state doesn't match oAuth state, ur bein haxed"); // TODO handle unsafe state
+	}
+}
+
+- (void) refreshOAuthTokenWithSuccess:(void (^)())success
+{
+	self.isRefreshingToken = YES;
+	// TODO handle currentTokenExpirationDate = nil
+	
+	if (![self accessTokenHasExpired])
+	{
+		NSLog(@"date has not passed\n%@\n%f", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
+		return;
+	}
+	
+	NSLog(@"date has passed, token needs refreshing (%@ — %f seconds ago)", self.currentTokenExpirationDate, [self.currentTokenExpirationDate timeIntervalSinceNow]); // TODO
+	
+	NSString *accessURL = @"https://www.reddit.com/api/v1/access_token";
+	NSDictionary *parameters = @{@"grant_type" :		@"refresh_token",
+								 @"refresh_token" :	self.refreshToken};
+	[self.manager.requestSerializer setAuthorizationHeaderFieldWithUsername:[self clientID]
+																   password:@""]; // password empty due to being a confidential client
+	__weak __typeof(self)weakSelf = self;
+	[self.manager POST:accessURL	// SHOULD be self.manager: want to bypass expiredToken check
+			parameters:parameters
+			   success:^(NSURLSessionDataTask *task, id responseObject) {
+				   // TODO handle errors as per https://github.com/reddit/reddit/wiki/OAuth2#refreshing-the-token
+				   weakSelf.accessToken = responseObject[@"access_token"];
+				   weakSelf.currentTokenExpirationDate = [NSDate dateWithTimeIntervalSinceNow:[responseObject[@"expires_in"] doubleValue]];
+				   NSLog(@"accessToken refreshed");
+				   success();
+				   weakSelf.isRefreshingToken = NO;
+			   }
+			   failure:^(NSURLSessionDataTask *task, NSError *error) {
+				   [self failureWithError:error];
+			   }];
 }
 
 #pragma mark - Listings

@@ -34,11 +34,6 @@ static NSString * const oAuthState;
 - (NSString *) uriRedirectPath;
 - (NSString *) oAuthState;
 
-#pragma mark - Authentication
-
-- (NSURL *) oAuthLoginURL;
-- (void) loginWithOAuthResponse:(NSURL *)url;
-
 #pragma mark - Convenience
 
 - (void) POST:(NSString *)stringURL parameters:(NSDictionary *)parameters success:(void (^)(NSURLSessionDataTask* task, id responseObject))success failure:(void (^)(NSURLSessionDataTask* task, NSError* error))failure;

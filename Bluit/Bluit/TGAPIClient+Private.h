@@ -24,4 +24,7 @@
 
 @property (strong, nonatomic) NSString *baseURLString;
 
+- (NSString *)valueForKey:(NSString *)key fromQueryItems:(NSArray *)queryItems;
+- (BOOL) accessTokenHasExpired;
+
 @end

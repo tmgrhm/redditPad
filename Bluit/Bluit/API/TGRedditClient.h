@@ -17,9 +17,14 @@ typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); /
 
 @interface TGRedditClient : TGAPIClient
 
-- (NSURL *) urlToSubreddit:(NSString *)subreddit;
+#pragma mark - Authentication
+
+- (NSURL *) oAuthLoginURL;
+- (void) loginWithOAuthResponse:(NSURL *)url;
 
 #pragma mark - Subreddits
+
+- (NSURL *) urlToSubreddit:(NSString *)subreddit;
 
 - (void) retrieveUserSubscriptionsWithCompletion:(void (^)(NSArray *subreddits))completion;
 - (void) getSubredditInfoFor:(NSString *)subreddit withCompletion:(void (^)(TGSubreddit *subreddit))completion;
