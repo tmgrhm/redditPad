@@ -19,9 +19,9 @@
 	
 	NSDictionary *data = dict[@"data"];
 	
-	_title =			data[@"title"];
+	_title =				data[@"title"]; // TODO unescape HTML entities
 	_totalComments =	[data[@"num_comments"] unsignedIntegerValue];
-	_subreddit =		data[@"subreddit"];
+	_subreddit =			data[@"subreddit"];
 	_author =			data[@"author"];
 	_domain =			data[@"domain"];
 	_url =				[NSURL URLWithString:data[@"url"]];

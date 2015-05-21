@@ -36,7 +36,6 @@ static NSString * const kURIRedirectPath = nil;
 	self = [super init];
 	if (self)
 	{
-		[self.manager.requestSerializer clearAuthorizationHeader];
 		[self.manager.requestSerializer setValue:[NSString stringWithFormat:@"Client-ID %@", [self clientID]] forHTTPHeaderField:@"Authorization"];
 		
 		self.baseURLString = [self httpsBaseURLString];
@@ -99,12 +98,12 @@ static NSString * const kURIRedirectPath = nil;
 
 - (void) imageDataFromURL:(NSURL *)url success:(void (^)(id responseObject))success
 {
-	NSString *path = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO].path;
+	NSString *path = url.path;
 	NSString *imageID = [path stringByReplacingOccurrencesOfString:@"/" withString:@""];
 	NSInteger numSlashes = [path length] - [imageID length];
 	
 	if (numSlashes == 1) [self imageDataWithID:imageID success:success];
-	else if ([path hasPrefix:@"/a/"]) [self albumDataWithID:@"hello" success:success];
+	else if ([path hasPrefix:@"/a/"]) [self albumDataWithID:[self albumIDfromLink:url] success:success];
 }
 
 - (void) imageDataWithID:(NSString *)imageID success:(void (^)(id responseObject))success
@@ -167,9 +166,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (BOOL) URLisImgurLink:(NSURL *)url
 {
-	NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url
-												resolvingAgainstBaseURL:NO];
-	if ([urlComponents.host isEqualToString:@"imgur.com"])
+	if ([url.host isEqualToString:@"imgur.com"])
 	{
 		if ([self URLisAlbumLink:url]) return YES;
 		if ([self URLisSingleImageLink:url]) return YES;
@@ -180,7 +177,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (BOOL) URLisSingleImageLink:(NSURL *)url
 {
-	NSString *path = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO].path;
+	NSString *path = url.path;
 	NSInteger numSlashes = [path length] - [[path stringByReplacingOccurrencesOfString:@"/" withString:@""] length];
 	
 	if (numSlashes == 1) return YES;
@@ -189,7 +186,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (BOOL) URLisAlbumLink:(NSURL *)url
 {
-	NSString *path = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO].path;
+	NSString *path = url.path;
 	
 	if ([path hasPrefix:@"/a/"]) return YES;
 	else return NO;
@@ -199,7 +196,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (NSString *) imageIDfromLink:(NSURL *)url
 {
-	NSString *path = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO].path;
+	NSString *path = url.path;
 	
 	NSString *imageID = [path stringByReplacingOccurrencesOfString:@"/" withString:@""]; // single image
 	if (path.length - imageID.length == 1) return imageID;
@@ -209,7 +206,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (NSString *) albumIDfromLink:(NSURL *)url
 {
-	NSString *path = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO].path;
+	NSString *path = url.path;
 	
 	NSString *albumCoverImageID = [path stringByReplacingOccurrencesOfString:@"/a/" withString:@""]; // album
 	if (path.length - albumCoverImageID.length == 3) return albumCoverImageID;

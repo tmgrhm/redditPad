@@ -14,9 +14,6 @@
 @property (strong, nonatomic) AFHTTPRequestSerializer *serializer;
 @property (strong, nonatomic) AFHTTPSessionManager *manager;
 
-@property (strong, nonatomic) NSString *modhash;
-@property (strong, nonatomic) NSString *sessionIdentifier;
-
 @property (strong, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSString *refreshToken;
 @property (strong, nonatomic) NSDate *currentTokenExpirationDate;
