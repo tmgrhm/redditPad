@@ -6,8 +6,10 @@
 	<string>lightTheme</string>
 	<key>darkOrLight</key>
 	<string>light</string>
-	<key>backgroundColor</key>
+	<key>oldBackgroundColor</key>
 	<string>E9EAF0</string>
+	<key>backgroundColor</key>
+	<string>EDEFF5</string>
 	<key>contentBackgroundColor</key>
 	<string>FFFFFF</string>
 	<key>textColor</key>
