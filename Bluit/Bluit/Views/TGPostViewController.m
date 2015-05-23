@@ -14,10 +14,12 @@
 #import "TGCommentTableViewCell.h"
 #import "TGWebViewController.h"
 #import "TGLinkPostCell.h"
+#import "TGTweetView.h"
 
 #import "ThemeManager.h"
 #import "TGRedditClient.h"
 #import "TGImgurClient.h"
+#import "TGTwitterClient.h"
 
 #import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
@@ -27,6 +29,7 @@
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import <MWFeedParser/NSString+HTML.h>
 #import "UIImageEffects.h"
 
 static CGFloat const PreviewImageMaxHeight = 300.0f;
@@ -54,6 +57,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
 @property (nonatomic) PostViewEmbeddedMediaType embeddedMediaType;
+@property (strong, nonatomic) NSDictionary *embeddedMediaData;
 @property (nonatomic) BOOL isImagePost;
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
@@ -81,20 +85,41 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	self.comments = [comments mutableCopy];
 }
 
-- (BOOL) isImagePost
+- (BOOL) isRichPost
 {
-	if (self.link.isImageLink)
+	if (self.embeddedMediaType != EmbeddedMediaNone) return YES; // cheap check after first use
+	
+	if ([[TGTwitterClient sharedClient] URLisTwitterLink:self.link.url])
+	{
+		self.embeddedMediaType = EmbeddedMediaTweet;
+		return YES;
+	}
+	else if (self.link.isImageLink)
 	{
 		self.embeddedMediaType = EmbeddedMediaDirectImage;
 		return YES;
 	}
-	if ([[TGImgurClient sharedClient] URLisImgurLink:self.link.url])
+	else if ([[TGImgurClient sharedClient] URLisImgurLink:self.link.url])
 	{
 		self.embeddedMediaType = EmbeddedMediaImgur;
 		return YES;
 	}
 	
 	return NO;
+}
+
+- (BOOL) isImagePost
+{
+	switch (self.embeddedMediaType) {
+		case EmbeddedMediaDirectImage:
+		case EmbeddedMediaImgur:
+		case EmbeddedMediaInstagram:
+			return YES;
+			break;
+		default:
+			return NO;
+			break;
+	}
 }
 
 #pragma mark - Init
@@ -125,7 +150,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	self.cachedAttributedStrings = [NSMutableDictionary new];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
 	[super viewDidLoad];
 	// Do any additional setup after loading the view.
 	
@@ -140,8 +166,14 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		 [weakSelf commentsFromResponse:comments];
 	 }];
 	
-	if (self.isImagePost) [self configureImagePost];
-	else [self setToolbarAlpha:1];
+	if ([self isRichPost])		[self configureEmbeddedMedia];
+	if (![self isImagePost])	[self setToolbarAlpha:1];
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+	// TODO only insert comments + tweetView after this?
+	// use NSNotification to trigger a method to display the comments + tweet content to prevent lagging while presenting the view
 }
 
 - (void)didReceiveMemoryWarning {
@@ -187,15 +219,18 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	[self.commentTableView addGestureRecognizer:doubleSwipeLeft];
 }
 
-- (void) configureImagePost
+- (void) configureEmbeddedMedia
 {
-	switch (self.embeddedMediaType) {
+	switch (self.embeddedMediaType)
+	{
 		case EmbeddedMediaDirectImage:
 		{
 			// set placeholder from blurredthumbnail
 			// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
 			[self.previewImage setImageWithURL:self.link.thumbnailURL];
 			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+			
+			[self preparePreviewImage]; // set up to display previewImage
 			
 			[self setPreviewImageWithURL:self.link.url andPlaceholder:placeholder];
 			break;
@@ -207,20 +242,61 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 			[self.previewImage setImageWithURL:self.link.thumbnailURL];
 			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
 			self.previewImage.image = placeholder;
-
+			
+			[self preparePreviewImage]; // set up to display previewImage
+			
 			[[TGImgurClient sharedClient] directImageURLfromImgurURL:self.link.url success:^(NSURL *imageURL) {
 				[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
 			}];
 			break;
 		}
+		case EmbeddedMediaTweet:
+		{
+			[[TGTwitterClient sharedClient] tweetWithID:[[TGTwitterClient sharedClient] tweetIDfromLink:self.link.url] success:^(id responseObject) {
+				self.embeddedMediaData = (NSDictionary *) responseObject;
+				
+				// check view in contentContainerView is a TweetView
+				UIView *contentContainerSubview = [self.postHeader.contentContainerView subviews][0];
+				TGTweetView *tweetView;
+				if ([contentContainerSubview class] == [TGTweetView class]) tweetView = (TGTweetView *) contentContainerSubview;
+				else
+				{
+					NSLog(@"error, abort abort, contentContainerSubview not a TweetView");
+					return;
+				}
+				
+				// configure tweet view data and colours
+				[self configureTweetView:tweetView];
+
+				// recalculate headerHeight
+				self.postHeaderHeight = 0;
+				[self.commentTableView beginUpdates];
+				// this causes a reload heights of cells; doesn't seem there's another easy way to do this
+				[self.commentTableView endUpdates];
+			}];
+			
+			break;
+		}
 		default:
 		{
-			NSLog(@"I shouldn't be here…"); // doublecheck
+			NSLog(@"I shouldn't be here…"); // TODO doublecheck
 			return;
 		}
 	}
 	
-	// add extra spacing at top to let previewImage show
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// TODO
+	// pull images for use as previewImage from APIs, e.g. imgur
+	// tap previewImage to view in fullscreen picture viewer
+	// swiping between images in previewImage if gallery?
+}
+
+- (void) preparePreviewImage
+{
+	[self setToolbarAlpha:0];
+	
+	// calculate height to be added to top of tableView
 	UIImage *image = self.previewImage.image; // thumbnail, generally has same aspect ratio
 	if (image != nil)
 	{
@@ -230,16 +306,10 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	}
 	else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
 	
-	self.commentTableView.contentInset = UIEdgeInsetsMake(self.previewImageHeight.constant, 0, 0, 0); // add empty space to top of tableView
-	
-	[self setToolbarAlpha:0];
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// TODO
-	// pull images for use as previewImage from APIs, e.g. imgur
-	// tap previewImage to view in fullscreen picture viewer
-	// swiping between images in previewImage if gallery?
+	// add empty space to top of tableView
+	UIEdgeInsets insets = self.commentTableView.contentInset;
+	insets.top = self.previewImageHeight.constant;
+	self.commentTableView.contentInset = insets;
 }
 
 - (void) setPreviewImageWithURL:(NSURL *)imageURL andPlaceholder:(UIImage *)placeholder
@@ -258,9 +328,35 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		}];
 }
 
+- (void) configureTweetView:(TGTweetView *)tweetView
+{
+	NSDictionary *data = self.embeddedMediaData;
+	if (data)
+	{
+		[UIView transitionWithView:tweetView
+						  duration:0.3f
+						   options:UIViewAnimationOptionTransitionCrossDissolve
+						animations:^{
+							[tweetView setSkeleton:NO]; // configure colours, undo skeleton structure appearance
+							
+							// get larger profile img size https://dev.twitter.com/overview/general/user-profile-images-and-banners
+							NSString *userProfileImageURL = [data[@"user"][@"profile_image_url_https"] stringByReplacingOccurrencesOfString:@"_normal" withString:@"_bigger"];
+							[tweetView.userProfileImage setImageWithURL:[NSURL URLWithString:userProfileImageURL]];
+							tweetView.userName.text = data[@"user"][@"name"];
+							tweetView.userScreenname.text = [@"@" stringByAppendingString:data[@"user"][@"screen_name"]];
+							tweetView.timestamp.text = data[@"created_at"];
+							
+							NSString *tweetText = [data[@"text"] stringByDecodingHTMLEntities];
+							tweetView.tweetText.text = tweetText;
+						}
+						completion:NULL];
+	}
+}
+
 - (void) updateSaveButton
 {
 	UIColor *tintColor;
+	
 	if (self.link.isSaved)	tintColor = [ThemeManager colorForKey:kTGThemeSaveColor];
 	else						tintColor = [self toolbarIsTransparent] ? [UIColor whiteColor] : [ThemeManager colorForKey:kTGThemeInactiveColor];
 	
@@ -390,7 +486,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	shapeLayer.path = CGPathCreateWithRect(shadowRect, NULL);
 	shapeLayer.fillColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
 	shapeLayer.position = CGPointMake(0.0, self.topToolbar.frame.size.height);
-
+	
 	[self.topToolbar.layer addSublayer:shapeLayer];
 	self.topToolbarShadow = shapeLayer;
 }
@@ -545,10 +641,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	
 	TGLinkPostCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
 	[self configureHeaderCell:cell];
-	
-//	[cell setNeedsLayout];
-//	[cell layoutIfNeeded];
-	
+		
 	return cell;
 }
 
@@ -574,7 +667,27 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	cell.title.attributedText = mutAttrTitle;
 	
 	// body/link content
-	if ([self.link isSelfpost] && !([self.link.selfTextHTML isEqualToString:@""])) // if selfpost and has selftext
+	if (self.embeddedMediaType == EmbeddedMediaTweet)
+	{
+		[cell.content removeFromSuperview];
+		TGTweetView *tweetView = [TGTweetView new];
+		
+		// configure tweetView // TODO move to [TGTweetView awakeFromNib] or similar?
+		tweetView.layer.cornerRadius = 4.0f;
+		tweetView.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
+		tweetView.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
+		tweetView.backgroundColor = [ThemeManager colorForKey:kTGThemeFadedBackgroundColor];
+		
+		[self configureTweetView:tweetView];
+		
+		// layout
+		tweetView.translatesAutoresizingMaskIntoConstraints = NO;
+		[cell.contentContainerView addSubview:tweetView];
+		NSDictionary *views = NSDictionaryOfVariableBindings(tweetView);
+		[cell.contentContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tweetView]|" options:0 metrics:nil views:views]];
+		[cell.contentContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tweetView]|" options:0 metrics:nil views:views]];
+	}
+	else if ([self.link isSelfpost] && !([self.link.selfTextHTML isEqualToString:@""])) // if selfpost and has selftext
 	{
 //		cell.content.textColor = [ThemeManager colorForKey:kTGThemeTextColor];
 		
@@ -630,8 +743,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	[ThemeManager styleSmallcapsHeader:cell.numComments];
 	
 	cell.separator.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
-	cell.backgroundColor = [UIColor clearColor];
-	cell.mainBackground.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
+	cell.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 	
 	if (self.isImagePost)// add border to top of postHeaderCell
 	{
@@ -654,9 +766,6 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	TGCommentTableViewCell *cell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGCommentTableViewCell" forIndexPath:indexPath];
 	[self configureCommentCell:cell atIndexPath:indexPath];
-	
-//	[cell setNeedsLayout]; TODO needed?
-//	[cell layoutIfNeeded];
 	
 	return cell;
 }
@@ -726,10 +835,10 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	if (self.postHeaderHeight != 0) return self.postHeaderHeight;
 	
 	static TGLinkPostCell *sizingCell = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
+//	static dispatch_once_t onceToken;
+//	dispatch_once(&onceToken, ^{
 		sizingCell = [self.commentTableView dequeueReusableCellWithIdentifier:@"TGLinkPostCell"];
-	});
+//	});
 	
 	[self configureHeaderCell:sizingCell];
 	
@@ -917,7 +1026,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
 	if (!self.isImagePost) return; // don't do anything if we're not an imagePost
-
+	
 	[self updatePreviewImageSizeBasedOnScrollView:scrollView];
 	
 	CGFloat const scrollThreshold = -44.0f; // when scrollView content is toolbar height away from top of screen
@@ -955,7 +1064,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		frame.origin.y = 0;
 		frame.size.height = -yOffset;
 	}
-
+	
 	self.previewImage.frame = frame;
 }
 
