@@ -377,6 +377,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	UIEdgeInsets insets = self.commentTableView.contentInset;
 	insets.top = self.previewViewHeight.constant;
 	self.commentTableView.contentInset = insets;
+	self.commentTableView.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 - (void) setPreviewContentWithURL:(NSURL *)contentURL
