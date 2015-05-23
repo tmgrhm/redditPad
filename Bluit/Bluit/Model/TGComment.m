@@ -8,6 +8,8 @@
 
 #import "TGComment.h"
 
+#import <MWFeedParser/NSString+HTML.h>
+
 @implementation TGComment
 
 - (instancetype) initCommentFromDictionary:(NSDictionary *)dict
@@ -29,7 +31,7 @@
 	body = [body stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
 	
 	_body =				body;
-	_bodyHTML =			data[@"body_html"];
+	_bodyHTML =			[data[@"body_html"] stringByDecodingHTMLEntities];
 	_scoreHidden =		[data[@"score_hidden"] boolValue];
 	_author =			data[@"author"];
 	_edited =			[data[@"edited"] boolValue];

@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMargin;
 
 @property (weak, nonatomic) IBOutlet UITextView *title;
+@property (weak, nonatomic) IBOutlet UIView *contentContainerView;
 @property (weak, nonatomic) IBOutlet UITextView *content;
 @property (weak, nonatomic) IBOutlet UITextView *metadata;
 @property (weak, nonatomic) IBOutlet UILabel *numComments;

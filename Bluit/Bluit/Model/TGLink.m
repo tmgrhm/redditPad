@@ -8,6 +8,8 @@
 
 #import "TGLink.h"
 
+#import <MWFeedParser/NSString+HTML.h>
+
 @implementation TGLink
 
 - (instancetype) initLinkFromDictionary:(NSDictionary *)dict
@@ -19,7 +21,7 @@
 	
 	NSDictionary *data = dict[@"data"];
 	
-	_title =				data[@"title"]; // TODO unescape HTML entities
+	_title =				[data[@"title"] stringByDecodingHTMLEntities];
 	_totalComments =	[data[@"num_comments"] unsignedIntegerValue];
 	_subreddit =			data[@"subreddit"];
 	_author =			data[@"author"];
@@ -41,7 +43,7 @@
 		selfText = [selfText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
 	}
 	_selfText =		data[@"selftext"];
-	_selfTextHTML =	data[@"selftext_html"] == [NSNull null] ? @"" : data[@"selftext_html"];
+	_selfTextHTML =	data[@"selftext_html"] == [NSNull null] ? @"" : [data[@"selftext_html"] stringByDecodingHTMLEntities];
 	
 	NSString *lastPathComponent = _url.lastPathComponent;
 	_isImageLink = [lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"];

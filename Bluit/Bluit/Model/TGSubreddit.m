@@ -8,6 +8,8 @@
 
 #import "TGSubreddit.h"
 
+#import <MWFeedParser/NSString+HTML.h>
+
 @implementation TGSubreddit
 
 + (NSString *) sortStringFromSubredditSort:(TGSubredditSort)sort
@@ -66,14 +68,14 @@
 	NSDictionary *data = dict[@"data"];
 	
 	_displayName =				data[@"display_name"];
-	_url =						[NSURL URLWithString:data[@"url"]];;
-	_title =					data[@"title"];
+	_url =						[NSURL URLWithString:data[@"url"]];
+	_title =						data[@"title"];
 	_publicDescription	=		data[@"public_description"];
 	_publicDescriptionHTML =	data[@"public_description_html"];
 	_nsfw =						[data[@"over18"] boolValue];
 	_subscribers =				[data[@"subscribers"] unsignedIntegerValue];
 	_sidebar =					data[@"description"];
-	_sidebarHTML =				data[@"description_html"];
+	_sidebarHTML =				data[@"description_html"] == [NSNull null] ? @"" : [data[@"description_html"] stringByDecodingHTMLEntities];
 	_submitText =				data[@"submit_text"];
 	_submitLinkBtnLabel =		data[@"submit_link_label"];
 	_submitTextBtnLabel =		data[@"submit_text_label"];
@@ -82,7 +84,7 @@
 	_userIsModerator =			[data[@"user_is_moderator"] boolValue];
 	_userIsBanned =				[data[@"user_is_banned"] boolValue];
 	
-	_activeUsers =				data[@"accounts_active"] == [NSNull null] ? -1 : [data[@"accounts_active"] integerValue];
+	_activeUsers =				data[@"accounts_active"] == [NSNull null] ? 0 : [data[@"accounts_active"] integerValue];
 	
 	if ([data[@"subreddit_type"] isEqualToString:@"public"])
 		_subredditType =		TGSubredditPublic;
