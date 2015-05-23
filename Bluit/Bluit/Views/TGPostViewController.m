@@ -20,6 +20,7 @@
 #import "TGRedditClient.h"
 #import "TGImgurClient.h"
 #import "TGTwitterClient.h"
+#import "TGGfycatClient.h"
 
 #import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
@@ -39,7 +40,9 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	EmbeddedMediaNone = 0,
 	EmbeddedMediaDirectImage,
+	EmbeddedMediaDirectVideo,
 	EmbeddedMediaImgur,
+	EmbeddedMediaGfycat,
 	EmbeddedMediaInstagram,
 	EmbeddedMediaTweet,
 	EmbeddedMediaTweetWithImage
@@ -108,6 +111,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		self.embeddedMediaType = EmbeddedMediaImgur;
 		return YES;
 	}
+	else if ([[TGGfycatClient sharedClient] URLisGfycatLink:self.link.url])
+	{
+		self.embeddedMediaType = EmbeddedMediaGfycat;
+		return YES;
+	}
 	
 	return NO;
 }
@@ -116,9 +124,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	switch (self.embeddedMediaType) {
 		case EmbeddedMediaDirectImage:
+		case EmbeddedMediaDirectVideo:
 		case EmbeddedMediaImgur:
 		case EmbeddedMediaInstagram:
 		case EmbeddedMediaTweetWithImage:
+		case EmbeddedMediaGfycat:
 			return YES;
 			break;
 		default:
@@ -312,6 +322,14 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 			}];
 			
 			break;
+		}
+		case EmbeddedMediaGfycat:
+		{
+			[self preparePreviewView]; // set up to display content preview
+			
+			[[TGGfycatClient sharedClient] mp4URLfromGfycatURL:self.link.url success:^(NSURL *mp4URL) {
+				[self setPreviewContentWithURL:mp4URL];
+			}];
 		}
 		default:
 		{
