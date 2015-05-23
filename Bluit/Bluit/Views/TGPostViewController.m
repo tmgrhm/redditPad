@@ -208,7 +208,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
 			self.previewImage.image = placeholder;
 
-			[[TGImgurClient sharedClient] imageURLfromURL:self.link.url success:^(NSURL *imageURL) {
+			[[TGImgurClient sharedClient] directImageURLfromImgurURL:self.link.url success:^(NSURL *imageURL) {
 				[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
 			}];
 			break;

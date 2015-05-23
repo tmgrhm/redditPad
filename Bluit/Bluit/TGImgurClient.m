@@ -74,26 +74,31 @@ static NSString * const kURIRedirectPath = nil;
 
 #pragma mark - Image
 
-- (void) imageURLfromURL:(NSURL *)fullURL success:(void (^)(NSURL *imageURL))success
+- (void) directImageURLfromImgurURL:(NSURL *)fullURL success:(void (^)(NSURL *imageURL))success
 {
-	if ([self URLisSingleImageLink:fullURL])
+	if ([self URLisSingleImageLink:fullURL]) // if link to single image
 	{
-		NSString *imageID = [self imageIDfromLink:fullURL];
+		NSString *imageID = [self imageIDfromLink:fullURL]; // get the imageID
 		if (imageID)
 		{
-			[self imageDataWithID:imageID success:^(id responseObject) {
+			[self imageDataWithID:imageID success:^(id responseObject) { // get the imageData from the API
 				NSDictionary *responseDict = (NSDictionary *)responseObject;
 				
-				NSURL *imageURL = [NSURL URLWithString:responseDict[@"data"][@"link"]]; // TODO
-				NSLog(@"imageURL %@", imageURL);
+				// TODO data[@"animated"] | @"looping" | @"gif" | @"mp4" | @"gifv" | @"webm"
+				// https://api.imgur.com/models/image
+				// http://engineering.flipboard.com/2014/05/animated-gif/
+				
+				NSURL *imageURL = [NSURL URLWithString:responseDict[@"data"][@"link"]]; // did retrieve the direct imageURL from the API
+				NSLog(@"directImageURL retrieved from imgur API: %@", imageURL);
 				success(imageURL);
 			}];
 		}
 	}
-	else if ([self URLisAlbumLink:fullURL])
+	else if ([self URLisAlbumLink:fullURL]) // if link to album
 	{
 		[self coverImageURLfromAlbumURL:fullURL success:success];
 	}
+	// TODO gallery link
 }
 
 - (void) imageDataFromURL:(NSURL *)url success:(void (^)(id responseObject))success
@@ -166,10 +171,11 @@ static NSString * const kURIRedirectPath = nil;
 
 - (BOOL) URLisImgurLink:(NSURL *)url
 {
-	if ([url.host isEqualToString:@"imgur.com"])
+	if ([url.host containsString:@"imgur.com"])
 	{
 		if ([self URLisAlbumLink:url]) return YES;
 		if ([self URLisSingleImageLink:url]) return YES;
+		// TODO /gallery/ links
 	}
 	
 	return NO;
@@ -198,8 +204,16 @@ static NSString * const kURIRedirectPath = nil;
 {
 	NSString *path = url.path;
 	
-	NSString *imageID = [path stringByReplacingOccurrencesOfString:@"/" withString:@""]; // single image
-	if (path.length - imageID.length == 1) return imageID;
+	NSString *imageID = [path stringByReplacingOccurrencesOfString:@"/" withString:@""];
+	if (path.length - imageID.length == 1)  // only one slash, suggests it should be a single image
+	{
+		// remove any file extensions
+		NSString *pattern = @"\\..*";
+		NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+		imageID = [regex stringByReplacingMatchesInString:imageID options:0 range:NSMakeRange(0, [imageID length]) withTemplate:@""];
+		
+		return imageID;
+	}
 	
 	return nil;
 }
