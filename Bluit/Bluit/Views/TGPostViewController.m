@@ -27,6 +27,7 @@
 #import "TGFormPresentationController.h"
 #import "TGFormAnimationController.h"
 
+@import MediaPlayer;
 #import <AFNetworking/UIImageView+AFNetworking.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 #import <MWFeedParser/NSString+HTML.h>
@@ -60,6 +61,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 @property (nonatomic) PostViewEmbeddedMediaType embeddedMediaType;
 @property (strong, nonatomic) NSDictionary *embeddedMediaData;
+@property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
 @property (nonatomic) BOOL isImagePost;
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
@@ -361,6 +363,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void) setPreviewContentWithURL:(NSURL *)contentURL
 {
+	NSString *fileExtension = [[[contentURL absoluteString] lastPathComponent] pathExtension];
+	
+	if ([fileExtension isEqualToString:@"mp4"])
+		[self setPreviewVideoWithURL:contentURL];
+	else // image
 		[self setPreviewImageWithURL:contentURL];
 		
 }
@@ -381,6 +388,37 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
 			// TODO
 		}];
+}
+
+- (void) setPreviewVideoWithURL:(NSURL *)videoURL
+{
+	MPMoviePlayerController *player = [MPMoviePlayerController new];
+	self.moviePlayer = player;
+	player.contentURL = videoURL;
+	[player prepareToPlay];
+	player.scalingMode = MPMovieScalingModeAspectFill;
+	player.repeatMode = MPMovieRepeatModeOne;
+	player.controlStyle = MPMovieControlStyleNone;
+	player.view.frame = self.previewView.frame;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewVideoDidLoad) name:@"MPMoviePlayerContentPreloadDidFinishNotification" object:self.moviePlayer];
+}
+
+- (void) previewVideoDidLoad
+{
+	if (self.moviePlayer.loadState == MPMovieLoadStatePlayable || self.moviePlayer.loadState == MPMovieLoadStatePlaythroughOK)
+	{
+		__weak __typeof(self)weakSelf = self;
+		[UIView transitionWithView:self.previewView
+						  duration:0.3f
+						   options:UIViewAnimationOptionTransitionCrossDissolve
+						animations:^{
+							[weakSelf setPreviewContentView:weakSelf.moviePlayer.view];
+						}
+						completion:NULL];
+		
+		[self.moviePlayer play];
+	}
 }
 
 - (void) configureTweetView:(TGTweetView *)tweetView
