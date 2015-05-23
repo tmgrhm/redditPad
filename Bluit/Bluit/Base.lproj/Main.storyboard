@@ -863,12 +863,13 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E7D-AF-goE" userLabel="Container">
                                 <rect key="frame" x="0.0" y="0.0" width="668" height="876"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-22-q4I">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOB-89-gFY" userLabel="previewView">
                                         <rect key="frame" x="0.0" y="0.0" width="668" height="0.0"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" id="0We-rI-RMx"/>
+                                            <constraint firstAttribute="height" id="HNu-zR-5rR"/>
                                         </constraints>
-                                    </imageView>
+                                    </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="JTU-WL-hlf">
                                         <rect key="frame" x="0.0" y="0.0" width="668" height="876"/>
                                         <inset key="scrollIndicatorInsets" minX="0.0" minY="44" maxX="0.0" maxY="0.0"/>
@@ -1159,16 +1160,16 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="JTU-WL-hlf" secondAttribute="width" id="08n-iP-aoD"/>
-                                    <constraint firstItem="j2d-22-q4I" firstAttribute="leading" secondItem="E7D-AF-goE" secondAttribute="leading" id="1dk-Pj-br1"/>
-                                    <constraint firstItem="j2d-22-q4I" firstAttribute="top" secondItem="E7D-AF-goE" secondAttribute="top" id="7ip-xZ-TCs"/>
                                     <constraint firstAttribute="bottom" secondItem="JTU-WL-hlf" secondAttribute="bottom" id="FYz-5Z-NUn"/>
+                                    <constraint firstItem="hOB-89-gFY" firstAttribute="top" secondItem="E7D-AF-goE" secondAttribute="top" id="GBp-6v-ZLH"/>
+                                    <constraint firstItem="hOB-89-gFY" firstAttribute="leading" secondItem="E7D-AF-goE" secondAttribute="leading" id="HID-2J-3Tm"/>
                                     <constraint firstItem="ArW-f8-L6R" firstAttribute="top" secondItem="E7D-AF-goE" secondAttribute="top" id="Lai-I0-Ky8"/>
                                     <constraint firstItem="JTU-WL-hlf" firstAttribute="leading" secondItem="E7D-AF-goE" secondAttribute="leading" id="P0o-hN-oqP"/>
                                     <constraint firstAttribute="trailing" secondItem="JTU-WL-hlf" secondAttribute="trailing" id="TDJ-3C-TGp"/>
                                     <constraint firstItem="JTU-WL-hlf" firstAttribute="top" secondItem="E7D-AF-goE" secondAttribute="top" id="Vj1-1N-3Wh"/>
+                                    <constraint firstAttribute="trailing" secondItem="hOB-89-gFY" secondAttribute="trailing" id="bXO-uQ-M7S"/>
                                     <constraint firstAttribute="width" secondItem="ArW-f8-L6R" secondAttribute="width" id="gRC-Pe-dKC"/>
                                     <constraint firstAttribute="centerX" secondItem="ArW-f8-L6R" secondAttribute="centerX" id="nIw-zx-giL"/>
-                                    <constraint firstAttribute="trailing" secondItem="j2d-22-q4I" secondAttribute="trailing" id="v1p-mS-86Q"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1190,8 +1191,8 @@
                         <outlet property="commentTableView" destination="JTU-WL-hlf" id="ZJo-ri-EHp"/>
                         <outlet property="containerView" destination="E7D-AF-goE" id="3aR-Tu-1P6"/>
                         <outlet property="hidePostButton" destination="oBS-dF-3Hu" id="jRX-4x-G86"/>
-                        <outlet property="previewImage" destination="j2d-22-q4I" id="aqW-lq-Rck"/>
-                        <outlet property="previewImageHeight" destination="0We-rI-RMx" id="Q5K-aJ-S4f"/>
+                        <outlet property="previewView" destination="hOB-89-gFY" id="39K-mk-iki"/>
+                        <outlet property="previewViewHeight" destination="HNu-zR-5rR" id="DiF-7E-9yi"/>
                         <outlet property="savePostButton" destination="Vfb-ku-gBd" id="7j9-Gs-kMP"/>
                         <outlet property="sharePostButton" destination="b9V-pB-qqY" id="aUd-W4-ZL0"/>
                         <outlet property="topToolbar" destination="ArW-f8-L6R" id="vSI-0b-ohg"/>

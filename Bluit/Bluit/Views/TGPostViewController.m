@@ -48,11 +48,12 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
 
-@property (weak, nonatomic) IBOutlet UITableView *commentTableView;
 @property (weak, nonatomic) IBOutlet UIToolbar *topToolbar;
 @property (weak, nonatomic) CAShapeLayer *topToolbarShadow;
-@property (weak, nonatomic) IBOutlet UIImageView *previewImage;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewImageHeight;
+
+@property (weak, nonatomic) IBOutlet UITableView *commentTableView;
+@property (weak, nonatomic) IBOutlet UIView *previewView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewViewHeight;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *savePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
@@ -196,6 +197,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	self.commentTableView.backgroundColor = [UIColor clearColor];
 	self.containerView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
+	self.previewView.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	
 	[self configureToolbarShadow];
 }
@@ -223,32 +225,33 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void) configureEmbeddedMedia
 {
+	UIImageView *previewImageView = [UIImageView new];
+	previewImageView.clipsToBounds = YES;
+	previewImageView.contentMode = UIViewContentModeScaleAspectFill;
+	// add to contentContainerView and create autoLayout constraints
+	[self setPreviewContentView:previewImageView];
+	
+	// set placeholder from blurredthumbnail
+	// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
+	[previewImageView setImageWithURL:self.link.thumbnailURL];
+	UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:previewImageView.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+	previewImageView.image = placeholder;
+	
 	switch (self.embeddedMediaType)
 	{
 		case EmbeddedMediaDirectImage:
 		{
-			// set placeholder from blurredthumbnail
-			// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
-			[self.previewImage setImageWithURL:self.link.thumbnailURL];
-			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+			[self preparePreviewView]; // set up to display content preview
 			
-			[self preparePreviewImage]; // set up to display previewImage
-			
-			[self setPreviewImageWithURL:self.link.url andPlaceholder:placeholder];
+			[self setPreviewContentWithURL:self.link.url];
 			break;
 		}
 		case EmbeddedMediaImgur:
 		{
-			// set placeholder from blurredthumbnail
-			// should be cached due to showing on listingVC — won't if this view came from a direct link so TODO consider that
-			[self.previewImage setImageWithURL:self.link.thumbnailURL];
-			UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
-			self.previewImage.image = placeholder;
-			
-			[self preparePreviewImage]; // set up to display previewImage
+			[self preparePreviewView]; // set up to display content preview
 			
 			[[TGImgurClient sharedClient] directImageURLfromImgurURL:self.link.url success:^(NSURL *imageURL) {
-				[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
+				[self setPreviewContentWithURL:imageURL];
 			}];
 			break;
 		}
@@ -271,18 +274,14 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 				{
 					self.embeddedMediaType = EmbeddedMediaTweetWithImage;
 					
-					[self.previewImage setImageWithURL:self.link.thumbnailURL];
-					UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
-					self.previewImage.image = placeholder;
-					
-					[UIView transitionWithView:self.previewImage
+					[UIView transitionWithView:self.previewView
 									  duration:0.3
 									   options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionCrossDissolve
-									animations:^{ [self preparePreviewImage]; }
+									animations:^{ [self preparePreviewView]; }
 									completion:NULL];
 					
 					NSURL *imageURL = [NSURL URLWithString:[self.embeddedMediaData[@"entities"][@"media"][0][@"media_url_https"] stringByAppendingString:@":large"]]; // get large variant
-					[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
+					[self setPreviewContentWithURL:imageURL];
 				}
 				// TODO display linked/embedded tweets above tweetView
 				/*for (NSDictionary* urlData in tweetData[@"entities"][@"urls"])
@@ -327,36 +326,57 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	// swiping between images in previewImage if gallery?
 }
 
-- (void) preparePreviewImage
+
+- (void) setPreviewContentView:(UIView *)view
+{
+	for (UIView *view in self.previewView.subviews) [view removeFromSuperview]; // remove any existing views
+	
+	view.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.previewView addSubview:view];
+	NSDictionary *views = NSDictionaryOfVariableBindings(view);
+	[self.previewView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[view]|" options:0 metrics:nil views:views]];
+	[self.previewView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[view]|" options:0 metrics:nil views:views]];
+}
+
+- (void) preparePreviewView
 {
 	[self setToolbarAlpha:0];
 	
 	// calculate height to be added to top of tableView
-	UIImage *image = self.previewImage.image; // thumbnail, generally has same aspect ratio
+	UIImageView *thumbnailImageView = self.previewView.subviews[0];
+	UIImage *image = thumbnailImageView.image;
 	if (image != nil)
 	{
-		CGFloat newWidth = self.previewImage.frame.size.width;
+		CGFloat newWidth = self.previewView.frame.size.width;
 		CGFloat aspectFilledImageHeight = (image.size.height / image.size.width) * newWidth;
-		self.previewImageHeight.constant = MIN(PreviewImageMaxHeight, aspectFilledImageHeight); // restrict to max height
+		self.previewViewHeight.constant = MIN(PreviewImageMaxHeight, aspectFilledImageHeight); // restrict to max height
 	}
-	else self.previewImageHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
+	else self.previewViewHeight.constant = PreviewImageMaxHeight; // TODO handle empty thumbnails on image posts
 	
 	// add empty space to top of tableView
 	UIEdgeInsets insets = self.commentTableView.contentInset;
-	insets.top = self.previewImageHeight.constant;
+	insets.top = self.previewViewHeight.constant;
 	self.commentTableView.contentInset = insets;
 }
 
-- (void) setPreviewImageWithURL:(NSURL *)imageURL andPlaceholder:(UIImage *)placeholder
+- (void) setPreviewContentWithURL:(NSURL *)contentURL
 {
+		[self setPreviewImageWithURL:contentURL];
+		
+}
+
+- (void) setPreviewImageWithURL:(NSURL *)imageURL
+{
+	UIImageView *previewImageView = self.previewView.subviews[0];
+	__block UIImageView *blockPreviewImageView = previewImageView;
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL];
 	[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
-	[self.previewImage setImageWithURLRequest:request placeholderImage:placeholder success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+	[previewImageView setImageWithURLRequest:request placeholderImage:previewImageView.image success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
 		{
-			[UIView transitionWithView:self.previewImage
+			[UIView transitionWithView:blockPreviewImageView
 							  duration:0.3f
 							   options:UIViewAnimationOptionTransitionCrossDissolve
-							animations:^{[self.previewImage setImage:image];} // TODO make consistently smooth + performant
+							animations:^{[blockPreviewImageView setImage:image];} // TODO make consistently smooth + performant
 							completion:NULL];
 		} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
 			// TODO
@@ -1065,14 +1085,13 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	
 	[self updatePreviewImageSizeBasedOnScrollView:scrollView];
 	
+	// update toolbar alpha if necessary
 	CGFloat const scrollThreshold = -44.0f; // when scrollView content is toolbar height away from top of screen
 	CGFloat alpha = (scrollView.contentOffset.y > scrollThreshold) ? 1.0f : 0.0f;
-	
 	CGFloat currentAlpha;
 	[self.topToolbar.backgroundColor getWhite:nil alpha:&currentAlpha];
-	if (currentAlpha == alpha) return; // don't need to do anything if toolbar alpha is already correct
 	
-	[UIView animateWithDuration:0.3 animations:^{ [self setToolbarAlpha:alpha]; }];
+	if (currentAlpha != alpha) [UIView animateWithDuration:0.3 animations:^{ [self setToolbarAlpha:alpha]; }];
 	
 	/*
 	 CGFloat offsetY = scrollView.contentOffset.y;
@@ -1092,11 +1111,12 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	CGFloat yOffset = scrollView.contentOffset.y;
 	if (yOffset > 0) return;
 	
-	CGRect frame = self.previewImage.frame;
+	UIView *previewContentView = self.previewView.subviews[0];
+	CGRect frame = previewContentView.frame;
 	
-	if (yOffset > -self.previewImageHeight.constant)
+	if (yOffset > -self.previewViewHeight.constant)
 	{
-		frame.origin.y = - ((self.previewImageHeight.constant + yOffset) / 2);
+		frame.origin.y = - ((self.previewViewHeight.constant + yOffset) / 2);
 	}
 	else
 	{
@@ -1104,7 +1124,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		frame.size.height = -yOffset;
 	}
 	
-	self.previewImage.frame = frame;
+	previewContentView.frame = frame;
 }
 
 #pragma mark - UITextView
