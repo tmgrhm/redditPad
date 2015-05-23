@@ -10,7 +10,6 @@
 #import "TGRedditClient.h"
 #import "ThemeManager.h"
 
-#import <MWFeedParser/NSString+HTML.h>
 #import <XNGMarkdownParser/XNGMarkdownParser.h>
 
 @implementation TGRedditMarkdownParser
@@ -36,7 +35,6 @@
 
 + (NSAttributedString *) attributedStringFromHTML:(NSString *)html
 {
-	html = [self htmlStringFromEscapedHTML:html];
 	html = [self styleHTML:html];
 	
 	NSData *htmlData = [html dataUsingEncoding:NSUTF8StringEncoding];
@@ -61,11 +59,6 @@
 		string = [string stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
 	
 	return string;
-}
-
-+ (NSString *) htmlStringFromEscapedHTML:(NSString *)string
-{
-	return [string stringByDecodingHTMLEntities]; // using <MWFeedParser/NSString+HTML.h> extension
 }
 
 + (NSString *) styleHTML:(NSString *)bodyHTML
