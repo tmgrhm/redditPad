@@ -82,13 +82,14 @@ static NSString * const kURIRedirectPath = nil;
 		if (imageID)
 		{
 			[self imageDataWithID:imageID success:^(id responseObject) { // get the imageData from the API
-				NSDictionary *responseDict = (NSDictionary *)responseObject;
+				NSDictionary *data = (NSDictionary *)responseObject[@"data"];
 				
-				// TODO data[@"animated"] | @"looping" | @"gif" | @"mp4" | @"gifv" | @"webm"
-				// https://api.imgur.com/models/image
-				// http://engineering.flipboard.com/2014/05/animated-gif/
+				NSString *imageURLstring = data[@"link"]; // get default image link
+				// check if it's animated, if so, get mp4 link instead
+				if ([data[@"animated"] boolValue] == YES && [@"image/gif" isEqualToString:data[@"type"]])
+					imageURLstring = data[@"mp4"];
 				
-				NSURL *imageURL = [NSURL URLWithString:responseDict[@"data"][@"link"]]; // did retrieve the direct imageURL from the API
+				NSURL *imageURL = [NSURL URLWithString:imageURLstring];
 				NSLog(@"directImageURL retrieved from imgur API: %@", imageURL);
 				success(imageURL);
 			}];
@@ -118,7 +119,6 @@ static NSString * const kURIRedirectPath = nil;
 	[self GET:url
 	parameters:nil
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
-		// TODO
 //		NSLog(@"%@", responseObject);
 		success(responseObject);
 	}
@@ -157,7 +157,6 @@ static NSString * const kURIRedirectPath = nil;
 	[self GET:url
    parameters:nil
 	  success:^(NSURLSessionDataTask *task, id responseObject) {
-		  // TODO
 //		  NSLog(@"album\n%@", responseObject);
 		  success(responseObject);
 	  }
