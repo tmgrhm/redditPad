@@ -40,7 +40,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	EmbeddedMediaDirectImage,
 	EmbeddedMediaImgur,
 	EmbeddedMediaInstagram,
-	EmbeddedMediaTweet
+	EmbeddedMediaTweet,
+	EmbeddedMediaTweetWithImage
 };
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
@@ -114,6 +115,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		case EmbeddedMediaDirectImage:
 		case EmbeddedMediaImgur:
 		case EmbeddedMediaInstagram:
+		case EmbeddedMediaTweetWithImage:
 			return YES;
 			break;
 		default:
@@ -265,6 +267,24 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 					return;
 				}
 				
+				if (self.embeddedMediaData[@"entities"][@"media"][0])
+				{
+					self.embeddedMediaType = EmbeddedMediaTweetWithImage;
+					
+					[self.previewImage setImageWithURL:self.link.thumbnailURL];
+					UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:self.previewImage.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
+					self.previewImage.image = placeholder;
+					
+					[UIView transitionWithView:self.previewImage
+									  duration:0.3
+									   options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionCrossDissolve
+									animations:^{ [self preparePreviewImage]; }
+									completion:NULL];
+					
+					NSURL *imageURL = [NSURL URLWithString:[self.embeddedMediaData[@"entities"][@"media"][0][@"media_url_https"] stringByAppendingString:@":large"]]; // get large variant
+					[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
+				}
+				
 				// configure tweet view data and colours
 				[self configureTweetView:tweetView];
 
@@ -347,6 +367,9 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 							tweetView.timestamp.text = data[@"created_at"];
 							
 							NSString *tweetText = [data[@"text"] stringByDecodingHTMLEntities];
+							if (self.embeddedMediaType == EmbeddedMediaTweetWithImage)
+								tweetText = [tweetText stringByReplacingOccurrencesOfString:data[@"entities"][@"media"][0][@"url"] withString:@""]; // remove shown image URL
+							
 							tweetView.tweetText.text = tweetText;
 						}
 						completion:NULL];
@@ -667,7 +690,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	cell.title.attributedText = mutAttrTitle;
 	
 	// body/link content
-	if (self.embeddedMediaType == EmbeddedMediaTweet)
+	if (self.embeddedMediaType == EmbeddedMediaTweet || self.embeddedMediaType == EmbeddedMediaTweetWithImage)
 	{
 		[cell.content removeFromSuperview];
 		TGTweetView *tweetView = [TGTweetView new];
