@@ -202,8 +202,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void) configureContentInsets
 {
-	[self.commentTableView setContentInset:UIEdgeInsetsMake(self.topToolbar.frame.size.height, 0, 0, 0)];
-	[self.commentTableView setScrollIndicatorInsets:self.commentTableView.contentInset];
+	self.commentTableView.contentInset = UIEdgeInsetsMake(self.topToolbar.frame.size.height, 0, 30, 0);
+	self.commentTableView.scrollIndicatorInsets = UIEdgeInsetsMake(self.topToolbar.frame.size.height, 0, 0, 0);
 }
 
 - (void) configureGestureRecognizer
