@@ -1054,9 +1054,12 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	
 	CGFloat const scrollThreshold = -44.0f; // when scrollView content is toolbar height away from top of screen
 	CGFloat alpha = (scrollView.contentOffset.y > scrollThreshold) ? 1.0f : 0.0f;
-	[UIView animateWithDuration:0.3f animations:^{
-		[self setToolbarAlpha:alpha]; // TODO test performance of calling this on every scrollViewDidScroll instead of determining whether necessary *here* instead of inside -setToolbarAlpha:
-	}];
+	
+	CGFloat currentAlpha;
+	[self.topToolbar.backgroundColor getWhite:nil alpha:&currentAlpha];
+	if (currentAlpha == alpha) return; // don't need to do anything if toolbar alpha is already correct
+	
+	[UIView animateWithDuration:0.3 animations:^{ [self setToolbarAlpha:alpha]; }];
 	
 	/*
 	 CGFloat offsetY = scrollView.contentOffset.y;
