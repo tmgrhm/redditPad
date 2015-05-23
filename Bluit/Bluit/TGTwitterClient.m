@@ -134,7 +134,7 @@ static NSString * const kURIRedirectPath = nil;
 
 - (BOOL) URLisTwitterLink:(NSURL *)url
 {
-	if ([url.host isEqualToString:@"twitter.com"]) return YES;
+	if ([url.host containsString:@"twitter.com"]) return YES;
 	
 	return NO;
 }
