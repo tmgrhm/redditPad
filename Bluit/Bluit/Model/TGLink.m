@@ -45,8 +45,8 @@
 	_selfText =		data[@"selftext"];
 	_selfTextHTML =	data[@"selftext_html"] == [NSNull null] ? @"" : [data[@"selftext_html"] stringByDecodingHTMLEntities];
 	
-	NSString *lastPathComponent = _url.lastPathComponent;
-	_isImageLink = [lastPathComponent hasSuffix:@".png"] || [lastPathComponent hasSuffix:@".jpg"] || [lastPathComponent hasSuffix:@".jpeg"];
+	NSString *urlFileExtension = _url.lastPathComponent.pathExtension;
+	_isImageLink = [urlFileExtension isEqualToString:@"png"] || [urlFileExtension isEqualToString:@"jpg"] || [urlFileExtension isEqualToString:@"jpeg"];
 	
 	_thumbnailURL = _selfpost ? nil : [NSURL URLWithString:data[@"thumbnail"]];
 	
