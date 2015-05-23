@@ -898,26 +898,8 @@
                                                                         <outlet property="delegate" destination="ibe-ay-a9l" id="qoc-Uj-vNg"/>
                                                                     </connections>
                                                                 </textView>
-                                                                <textView contentMode="scaleToFill" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="751" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-te-2tP" userLabel="Content">
-                                                                    <rect key="frame" x="75" y="70" width="568" height="37"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                    <attributedString key="attributedText">
-                                                                        <fragment content="Selfpost content or URL">
-                                                                            <attributes>
-                                                                                <font key="NSFont" size="15" name="AvenirNext-Medium"/>
-                                                                                <font key="NSOriginalFont" size="15" name="AvenirNext-Medium"/>
-                                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                                            </attributes>
-                                                                        </fragment>
-                                                                    </attributedString>
-                                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
-                                                                    <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                                                                    <connections>
-                                                                        <outlet property="delegate" destination="ibe-ay-a9l" id="qmk-wY-v6u"/>
-                                                                    </connections>
-                                                                </textView>
-                                                                <textView contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TU5-cU-OgG" userLabel="Metadata">
-                                                                    <rect key="frame" x="75" y="114" width="568" height="27"/>
+                                                                <textView contentMode="scaleToFill" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TU5-cU-OgG" userLabel="Metadata">
+                                                                    <rect key="frame" x="75" y="104" width="568" height="37"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <attributedString key="attributedText">
                                                                         <fragment content="0 points in /r/nowhere, 0 mins ago by /u/nobody">
@@ -988,20 +970,50 @@
                                                                         <constraint firstAttribute="height" priority="999" constant="56" id="ye1-qN-j8A"/>
                                                                     </constraints>
                                                                 </view>
+                                                                <view contentMode="scaleToFill" verticalHuggingPriority="500" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="6kv-1X-IJB" userLabel="ContentContainerView">
+                                                                    <rect key="frame" x="75" y="70" width="568" height="27"/>
+                                                                    <subviews>
+                                                                        <textView contentMode="scaleToFill" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="751" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YSU-te-2tP" userLabel="Content">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="568" height="27"/>
+                                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                            <attributedString key="attributedText">
+                                                                                <fragment content="Selfpost content or URL">
+                                                                                    <attributes>
+                                                                                        <font key="NSFont" size="15" name="AvenirNext-Medium"/>
+                                                                                        <font key="NSOriginalFont" size="15" name="AvenirNext-Medium"/>
+                                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                                                    </attributes>
+                                                                                </fragment>
+                                                                            </attributedString>
+                                                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no"/>
+                                                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                                                            <connections>
+                                                                                <outlet property="delegate" destination="ibe-ay-a9l" id="qmk-wY-v6u"/>
+                                                                            </connections>
+                                                                        </textView>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="bottom" secondItem="YSU-te-2tP" secondAttribute="bottom" id="HOO-47-ghG"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="YSU-te-2tP" secondAttribute="trailing" id="c6M-hI-nH1"/>
+                                                                        <constraint firstItem="YSU-te-2tP" firstAttribute="top" secondItem="6kv-1X-IJB" secondAttribute="top" id="gZc-Vb-MAx"/>
+                                                                        <constraint firstItem="YSU-te-2tP" firstAttribute="leading" secondItem="6kv-1X-IJB" secondAttribute="leading" id="q0w-Hn-1cq"/>
+                                                                    </constraints>
+                                                                </view>
                                                             </subviews>
                                                             <constraints>
                                                                 <constraint firstItem="5e7-Ys-PlF" firstAttribute="top" secondItem="imt-rF-eLP" secondAttribute="bottom" id="4vt-yl-tMZ"/>
-                                                                <constraint firstAttribute="trailing" secondItem="YSU-te-2tP" secondAttribute="trailing" constant="25" id="ATK-Yp-dCc"/>
-                                                                <constraint firstItem="YSU-te-2tP" firstAttribute="top" secondItem="qWy-1x-0OD" secondAttribute="bottom" constant="4" id="DnD-Nx-DjY"/>
-                                                                <constraint firstItem="TU5-cU-OgG" firstAttribute="top" secondItem="YSU-te-2tP" secondAttribute="bottom" constant="7" id="FPM-l7-txf"/>
+                                                                <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="6kv-1X-IJB" secondAttribute="leading" id="50H-p5-mE9"/>
+                                                                <constraint firstItem="6kv-1X-IJB" firstAttribute="top" secondItem="qWy-1x-0OD" secondAttribute="bottom" constant="4" id="8e7-Rl-Jsg"/>
+                                                                <constraint firstItem="TU5-cU-OgG" firstAttribute="top" secondItem="6kv-1X-IJB" secondAttribute="bottom" constant="7" id="AIG-Mj-AY4"/>
+                                                                <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="TU5-cU-OgG" secondAttribute="leading" id="DxV-La-N5p"/>
                                                                 <constraint firstAttribute="trailing" secondItem="qWy-1x-0OD" secondAttribute="trailing" constant="24" id="JpX-tP-ecZ"/>
-                                                                <constraint firstItem="TU5-cU-OgG" firstAttribute="leading" secondItem="YSU-te-2tP" secondAttribute="leading" id="N1R-A2-X3a"/>
-                                                                <constraint firstItem="qWy-1x-0OD" firstAttribute="leading" secondItem="YSU-te-2tP" secondAttribute="leading" id="NVx-d3-wvg"/>
                                                                 <constraint firstAttribute="bottom" secondItem="ekq-4S-enb" secondAttribute="bottom" id="UPG-42-H6v"/>
                                                                 <constraint firstItem="ekq-4S-enb" firstAttribute="top" secondItem="TU5-cU-OgG" secondAttribute="bottom" constant="23" id="VHL-ol-doL"/>
                                                                 <constraint firstItem="qWy-1x-0OD" firstAttribute="top" secondItem="Hn9-ej-aYd" secondAttribute="top" constant="26" id="WgG-ob-g08"/>
                                                                 <constraint firstItem="ekq-4S-enb" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="Z1c-46-IB8"/>
                                                                 <constraint firstAttribute="trailing" secondItem="ekq-4S-enb" secondAttribute="trailing" id="bTc-hj-OZX"/>
+                                                                <constraint firstAttribute="trailing" secondItem="6kv-1X-IJB" secondAttribute="trailing" constant="25" id="bUh-zB-0WC"/>
                                                                 <constraint firstAttribute="trailing" secondItem="TU5-cU-OgG" secondAttribute="trailing" constant="25" id="e77-0o-Hae"/>
                                                                 <constraint firstItem="5e7-Ys-PlF" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="f2z-Wi-ogV"/>
                                                                 <constraint firstItem="imt-rF-eLP" firstAttribute="leading" secondItem="Hn9-ej-aYd" secondAttribute="leading" id="ni8-cx-dUv"/>
@@ -1022,6 +1034,7 @@
                                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                 <connections>
                                                     <outlet property="content" destination="YSU-te-2tP" id="Hk7-mb-9JU"/>
+                                                    <outlet property="contentContainerView" destination="6kv-1X-IJB" id="haG-MZ-nhY"/>
                                                     <outlet property="downvoteButton" destination="5e7-Ys-PlF" id="Jnf-Ig-PR4"/>
                                                     <outlet property="mainBackground" destination="Hn9-ej-aYd" id="K8x-BL-ufc"/>
                                                     <outlet property="metadata" destination="TU5-cU-OgG" id="oOx-Ms-ecn"/>
@@ -1215,8 +1228,8 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="qgV-3d-NLN"/>
-        <segue reference="iGZ-e7-hTh"/>
+        <segue reference="fTW-1s-qNd"/>
         <segue reference="YFw-Df-Uep"/>
+        <segue reference="qgV-3d-NLN"/>
     </inferredMetricsTieBreakers>
 </document>

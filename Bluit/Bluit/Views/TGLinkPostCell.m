@@ -23,4 +23,12 @@
     // Configure the view for the selected state
 }
 
+- (void) setBackgroundColor:(UIColor *)backgroundColor
+{
+	[super setBackgroundColor:backgroundColor];
+	
+	self.mainBackground.backgroundColor = backgroundColor;
+	self.contentContainerView.backgroundColor = backgroundColor;
+}
+
 @end
