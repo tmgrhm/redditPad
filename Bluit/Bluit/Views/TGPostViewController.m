@@ -284,6 +284,21 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 					NSURL *imageURL = [NSURL URLWithString:[self.embeddedMediaData[@"entities"][@"media"][0][@"media_url_https"] stringByAppendingString:@":large"]]; // get large variant
 					[self setPreviewImageWithURL:imageURL andPlaceholder:placeholder];
 				}
+				// TODO display linked/embedded tweets above tweetView
+				/*for (NSDictionary* urlData in tweetData[@"entities"][@"urls"])
+				{
+					NSURL *url = [NSURL URLWithString:urlData[@"expanded_url"]];
+					NSString *tweetID = [[TGTwitterClient sharedClient] tweetIDfromLink:url];
+					if (tweetID)
+					{
+						TGTweetView *linkedTweetView = [TGTweetView new];
+						__block TGTweetView *blockLinkedTweetView = linkedTweetView;
+						[[TGTwitterClient sharedClient] tweetWithID:tweetID success:^(id responseObject) {
+							[self configureTweetView:blockLinkedTweetView withData:responseObject];
+							[self.postHeader.contentContainerView addSubview:blockLinkedTweetView];
+						}];
+					}
+				}*/
 				
 				// configure tweet view data and colours
 				[self configureTweetView:tweetView];
@@ -693,17 +708,15 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	if (self.embeddedMediaType == EmbeddedMediaTweet || self.embeddedMediaType == EmbeddedMediaTweetWithImage)
 	{
 		[cell.content removeFromSuperview];
+		// style contentContainerView
+		cell.contentContainerView.clipsToBounds = YES;
+		cell.contentContainerView.layer.cornerRadius = 4.0f;
+		cell.contentContainerView.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
+		cell.contentContainerView.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
+		// create and configure new tweetView with the current embeddedMediaData
 		TGTweetView *tweetView = [TGTweetView new];
-		
-		// configure tweetView // TODO move to [TGTweetView awakeFromNib] or similar?
-		tweetView.layer.cornerRadius = 4.0f;
-		tweetView.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
-		tweetView.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
-		tweetView.backgroundColor = [ThemeManager colorForKey:kTGThemeFadedBackgroundColor];
-		
 		[self configureTweetView:tweetView];
-		
-		// layout
+		// add to contentContainerView and create autoLayout constraints
 		tweetView.translatesAutoresizingMaskIntoConstraints = NO;
 		[cell.contentContainerView addSubview:tweetView];
 		NSDictionary *views = NSDictionaryOfVariableBindings(tweetView);

@@ -40,6 +40,7 @@
 	self.contentView.frame = self.bounds;
 	self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight;
 	
+	self.backgroundColor = [ThemeManager colorForKey:kTGThemeFadedBackgroundColor];
 	self.userProfileImage.layer.cornerRadius = self.userProfileImage.frame.size.width / 2.0f; // circular
 	self.userProfileImage.backgroundColor = [ThemeManager colorForKey:kTGThemeSeparatorColor];
 	
