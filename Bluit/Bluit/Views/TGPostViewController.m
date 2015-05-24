@@ -22,6 +22,7 @@
 #import "TGTwitterClient.h"
 #import "TGGfycatClient.h"
 #import "TGInstagramClient.h"
+#import "TGVineClient.h"
 
 #import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
@@ -46,7 +47,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	EmbeddedMediaGfycat,
 	EmbeddedMediaInstagram,
 	EmbeddedMediaTweet,
-	EmbeddedMediaTweetWithImage
+	EmbeddedMediaTweetWithImage,
+	EmbeddedMediaVine
 };
 
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
@@ -122,6 +124,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		self.embeddedMediaType = EmbeddedMediaInstagram;
 		return YES;
 	}
+	else if ([[TGVineClient sharedClient] URLisVineLink:self.link.url])
+	{
+		self.embeddedMediaType = EmbeddedMediaVine;
+		return YES;
+	}
 	
 	return NO;
 }
@@ -135,6 +142,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		case EmbeddedMediaInstagram:
 		case EmbeddedMediaTweetWithImage:
 		case EmbeddedMediaGfycat:
+		case EmbeddedMediaVine:
 			return YES;
 			break;
 		default:
@@ -326,7 +334,6 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 				// this causes a reload heights of cells; doesn't seem there's another easy way to do this
 				[self.commentTableView endUpdates];
 			}];
-			
 			break;
 		}
 		case EmbeddedMediaGfycat:
@@ -344,6 +351,15 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 			
 			[[TGInstagramClient sharedClient] directMediaURLfromInstagramURL:self.link.url success:^(NSURL *mediaURL) {
 				[self setPreviewContentWithURL:mediaURL];
+			}];
+			break;
+		}
+		case EmbeddedMediaVine:
+		{
+			[self preparePreviewView]; // set up to display content preview
+			
+			[[TGVineClient sharedClient] mp4URLfromVineURL:self.link.url success:^(NSURL *vineURL) {
+				[self setPreviewContentWithURL:vineURL];
 			}];
 			break;
 		}
