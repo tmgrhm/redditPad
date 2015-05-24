@@ -54,7 +54,7 @@
 - (void) goToSubreddit
 {
 	NSString *subreddit = [NSString stringWithFormat:@"/r/%@/", self.searchTextField.text];
-	[self.listingViewController loadSubreddit:subreddit];
+	[self.listingViewController didSelectSubreddit:subreddit];
 	
 	[self.navigationController popViewControllerAnimated:YES];
 }
