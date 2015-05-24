@@ -13,6 +13,8 @@
 #import "TGSubreddit.h"
 #import "TGPagination.h"
 
+static NSString * const TGVotableVoteStatusDidChangeNotification = @"TGVotableVoteStatusDidChangeNotification";
+
 typedef void (^TGListingCompletionBlock)(NSArray *collection, NSError *error); // TODO move
 
 @interface TGRedditClient : TGAPIClient

@@ -351,12 +351,16 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 
 #pragma mark - Voting
 
-- (void) vote:(TGThing *)thing direction:(TGVoteStatus)vote
+- (void) vote:(TGThing *)thing direction:(TGVoteStatus)voteStatus
 {
+	// perform vote on model
+	TGVotable *votableThing = [thing isKindOfClass:[TGVotable class]] ? (TGVotable *)thing : nil;
+	votableThing.voteStatus = voteStatus;
+	
+	// perform vote on API
 	NSString *url = [NSString stringWithFormat:@"%@api/vote", self.baseURLString];
 	NSDictionary *parameters = @{@"id":		thing.fullname,
-								 @"dir":		@(vote).stringValue}; // TODO vote direction
-	
+								 @"dir":	@(voteStatus).stringValue};
 	[self POST:url
 	parameters:parameters
 	   success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -365,6 +369,9 @@ static NSString * const scope = @"identity,edit,history,mysubreddits,read,report
 		   // TODO
 		   [self failureWithError:error];
 	   }];
+	
+	// send notification
+	[[NSNotificationCenter defaultCenter] postNotificationName:TGVotableVoteStatusDidChangeNotification object:votableThing];
 }
 
 #pragma mark - Subscribe

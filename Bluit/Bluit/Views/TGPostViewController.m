@@ -190,13 +190,12 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	[self configureGestureRecognizer];
 	
 	__weak __typeof(self)weakSelf = self;
-	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments)
-	 {
-		 [weakSelf commentsFromResponse:comments];
-	 }];
+	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments) { [weakSelf commentsFromResponse:comments]; }];
 	
 	if ([self isRichPost])		[self configureEmbeddedMedia];
 	if (![self isImagePost])	[self setToolbarAlpha:1];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(votableVoteStatusDidChange:) name:TGVotableVoteStatusDidChangeNotification object:nil];
 }
 
 - (void) viewDidAppear:(BOOL)animated
@@ -531,21 +530,21 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	self.hidePostButton.tintColor = tintColor;
 }
 
-- (void) updateVoteButtons
+- (void) updateVoteButtonsForCell:(TGLinkPostCell *)cell
 {
-	switch (self.link.voteStatus)	// TODO why isn't this reflecting properly in UI on viewDidAppear of postVC
+	switch (self.link.voteStatus)
 	{
 		case TGVoteStatusNone:
-			self.postHeader.upvoteButton.selected = NO;
-			self.postHeader.downvoteButton.selected = NO;
+			cell.upvoteButton.selected = NO;
+			cell.downvoteButton.selected = NO;
 			break;
 		case TGVoteStatusDownvoted:
-			self.postHeader.upvoteButton.selected = NO;
-			self.postHeader.downvoteButton.selected = YES;
+			cell.upvoteButton.selected = NO;
+			cell.downvoteButton.selected = YES;
 			break;
 		case TGVoteStatusUpvoted:
-			self.postHeader.upvoteButton.selected = YES;
-			self.postHeader.downvoteButton.selected = NO;
+			cell.upvoteButton.selected = YES;
+			cell.downvoteButton.selected = NO;
 			break;
 	}
 }
@@ -638,6 +637,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	self.topToolbarShadow = shapeLayer;
 }
 
+- (void) votableVoteStatusDidChange:(NSNotification *)notification
+{
+	if (self.link == notification.object) [self updateVoteButtonsForCell:self.postHeader];
+}
+
 #pragma mark - IBActions
 
 - (IBAction)closePressed:(id)sender
@@ -698,34 +702,16 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (IBAction)upvoteButtonPressed:(id)sender
 {
-	if (self.link.isUpvoted)
-	{
-		self.link.voteStatus = TGVoteStatusNone;
-		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusNone];
-	}
-	else
-	{
-		self.link.voteStatus = TGVoteStatusUpvoted;
-		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusUpvoted];
-	}
+	TGVoteStatus voteStatus = self.link.isUpvoted ? TGVoteStatusNone : TGVoteStatusUpvoted;
 	
-	[self updateVoteButtons];
+	[[TGRedditClient sharedClient] vote:self.link direction:voteStatus];
 }
 
 - (IBAction)downvoteButtonPressed:(id)sender
 {
-	if (self.link.isDownvoted)
-	{
-		self.link.voteStatus = TGVoteStatusNone;
-		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusNone];
-	}
-	else
-	{
-		self.link.voteStatus = TGVoteStatusDownvoted;
-		[[TGRedditClient sharedClient] vote:self.link direction:TGVoteStatusDownvoted];
-	}
-	
-	[self updateVoteButtons];
+	TGVoteStatus voteStatus = self.link.isDownvoted ? TGVoteStatusNone : TGVoteStatusDownvoted;
+
+	[[TGRedditClient sharedClient] vote:self.link direction:voteStatus];
 }
 
 - (void) singleSwipeLeft: (UIGestureRecognizer *)sender
@@ -794,7 +780,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void) configureHeaderCell:(TGLinkPostCell *)cell
 {
-	[self updateVoteButtons]; // TODO why is this not working
+	[self updateVoteButtonsForCell:cell];
 	
 	// clear the delegates to prevent crashes — TODO solve?
 	cell.title.delegate = self;
