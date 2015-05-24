@@ -21,6 +21,7 @@
 #import "TGImgurClient.h"
 #import "TGTwitterClient.h"
 #import "TGGfycatClient.h"
+#import "TGInstagramClient.h"
 
 #import "TGRedditMarkdownParser.h"
 #import "NSDate+RelativeDateString.h"
@@ -114,6 +115,11 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	else if ([[TGGfycatClient sharedClient] URLisGfycatLink:self.link.url])
 	{
 		self.embeddedMediaType = EmbeddedMediaGfycat;
+		return YES;
+	}
+	else if ([[TGInstagramClient sharedClient] URLisInstagramLink:self.link.url])
+	{
+		self.embeddedMediaType = EmbeddedMediaInstagram;
 		return YES;
 	}
 	
@@ -330,6 +336,16 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 			[[TGGfycatClient sharedClient] mp4URLfromGfycatURL:self.link.url success:^(NSURL *mp4URL) {
 				[self setPreviewContentWithURL:mp4URL];
 			}];
+			break;
+		}
+		case EmbeddedMediaInstagram:
+		{
+			[self preparePreviewView]; // set up to display content preview
+			
+			[[TGInstagramClient sharedClient] directMediaURLfromInstagramURL:self.link.url success:^(NSURL *mediaURL) {
+				[self setPreviewContentWithURL:mediaURL];
+			}];
+			break;
 		}
 		default:
 		{
@@ -384,7 +400,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	NSString *fileExtension = [[[contentURL absoluteString] lastPathComponent] pathExtension];
 	
-	if ([fileExtension isEqualToString:@"mp4"])
+	if ([fileExtension hasPrefix:@"mp4"])
 		[self setPreviewVideoWithURL:contentURL];
 	else // image
 		[self setPreviewImageWithURL:contentURL];
