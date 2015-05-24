@@ -24,13 +24,14 @@
 
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSMutableDictionary *listingCellHeights;
+
+@property (strong, nonatomic) NSMutableArray *links;
+@property (strong, nonatomic) TGLink *selectedLink;
 
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sortControl;
 
-@property (strong, nonatomic) NSMutableArray *listings;
-@property (strong, nonatomic) NSMutableDictionary *listingCellHeights;
-@property (strong, nonatomic) TGLink *selectedLink;
 
 @end
 
@@ -40,7 +41,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-	self.listings = [NSMutableArray new];
+	self.links = [NSMutableArray new];
 	self.listingCellHeights = [NSMutableDictionary new];
 	
 	// TODO custom refreshControl
@@ -56,9 +57,9 @@
 	
 	self.pagination = [TGPagination new];
 	[self loadSubreddit:self.pagination.subreddit];
-	
 	[self scrollToTopWithAnimation:NO];
-	
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(votableVoteStatusDidChange:) name:TGVotableVoteStatusDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeDidChange) name:kThemeDidChangeNotification object:nil];
 }
 
@@ -154,6 +155,27 @@
 	[self reloadTableView];
 }
 
+- (void) votableVoteStatusDidChange:(NSNotification *)notification
+{
+	TGLink *link = notification.object;
+	NSInteger indexOfLink = [self.links indexOfObject:link];
+	NSIndexPath *indexPath = [NSIndexPath indexPathForItem:indexOfLink inSection:0];
+	TGListingTableViewCell *cell = (TGListingTableViewCell *) [self.tableView cellForRowAtIndexPath:indexPath];
+	[self updateVoteIndicatorsForCell:cell withLink:link];
+}
+
+- (void) updateVoteIndicatorsForCell:(TGListingTableViewCell *)cell withLink:(TGLink *)link
+{
+	NSString *upvoteIndicatorName = @"Icon-Listing-Upvote-Inactive";
+	NSString *downvoteIndicatorName = @"Icon-Listing-Downvote-Inactive";
+	
+	if (link.isUpvoted)			upvoteIndicatorName = @"Icon-Listing-Upvote-Active";
+	else if (link.isDownvoted)	downvoteIndicatorName = @"Icon-Listing-Downvote-Active";
+	
+	cell.upvoteIndicator.image = [UIImage imageNamed:upvoteIndicatorName];
+	cell.downvoteIndicator.image = [UIImage imageNamed:downvoteIndicatorName];
+}
+
 #pragma mark - IBAction
 
 - (void)refreshData	// pull-to-refresh
@@ -234,7 +256,7 @@
 
 - (void) loadMore
 {
-	[self loadSubredditAfter:self.listings.lastObject];	// TODO handle no results case
+	[self loadSubredditAfter:self.links.lastObject];	// TODO handle no results case
 }
 
 - (void) loadSubredditAfter:(TGLink *)link
@@ -252,8 +274,8 @@
 		 {
 			 if (collection.count == 0) // no posts found after that post, probably because it's no longer in the current listing?
 			 {
-				 NSUInteger index = [self.listings indexOfObject:link];
-				 [self loadSubredditAfter:self.listings[index-1]];
+				 NSUInteger index = [self.links indexOfObject:link];
+				 [self loadSubredditAfter:self.links[index-1]];
 			 }
 			 else
 				 [weakSelf appendPosts:collection];
@@ -284,10 +306,10 @@
 	NSMutableArray *indexPathsToAdd = [NSMutableArray new];
 	for (int i=0; i < posts.count; i++) [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:0]];
 	NSMutableArray *indexPathsToRemove = [NSMutableArray new];
-	for (int i=0; i < self.listings.count; i++) [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+	for (int i=0; i < self.links.count; i++) [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:0]];
 
 	[self.tableView beginUpdates];
-	self.listings = [posts mutableCopy];
+	self.links = [posts mutableCopy];
 	[self.tableView deleteRowsAtIndexPaths:indexPathsToRemove withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView insertRowsAtIndexPaths:indexPathsToAdd withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
@@ -302,9 +324,9 @@
 	{
 		TGLink *currentNewPost = posts[i];
 		BOOL isAlreadyInListing = NO;
-		for (int j=0; (j < self.listings.count) && !isAlreadyInListing; j++)
+		for (int j=0; (j < self.links.count) && !isAlreadyInListing; j++)
 		{
-			TGLink *existingPost = self.listings[j];
+			TGLink *existingPost = self.links[j];
 			if ([existingPost.id isEqualToString:currentNewPost.id])
 			{
 				isAlreadyInListing = YES;
@@ -314,13 +336,13 @@
 	}
 	NSLog(@"appended %lu posts", (unsigned long)newPosts.count);
 	
-	NSInteger currentCount = self.listings.count;
+	NSInteger currentCount = self.links.count;
 	for (int i=0; i < newPosts.count; i++) {
 		[indexPaths addObject:[NSIndexPath indexPathForRow:currentCount+i inSection:0]];
 	}
 	
 	[self.tableView beginUpdates];
-	[self.listings addObjectsFromArray:newPosts];
+	[self.links addObjectsFromArray:newPosts];
 	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView endUpdates];
 }
@@ -349,12 +371,12 @@
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return self.listings.count;
+	return self.links.count;
 }
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.row == self.listings.count-10)
+	if (indexPath.row == self.links.count-10)
 		[self loadMore];
 	
 	return [self listingCellAtIndexPath:indexPath];
@@ -373,7 +395,7 @@
 
 - (void)configureListingCell:(TGListingTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-	TGLink *link = ((TGLink *)self.listings[indexPath.row]);
+	TGLink *link = ((TGLink *)self.links[indexPath.row]);
 	
 	cell.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 	
@@ -385,11 +407,7 @@
 	cell.totalComments.text = [NSString stringWithFormat:@"%lu", (unsigned long)link.totalComments];
 	cell.commentsButton.tag = indexPath.row; // TODO better way
 	
-	cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Inactive"];
-	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Inactive"];
-	
-	if (link.isUpvoted)			cell.upvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Upvote-Active"];
-	else if (link.isDownvoted)	cell.downvoteIndicator.image = [UIImage imageNamed:@"Icon-Listing-Downvote-Active"];
+	[self updateVoteIndicatorsForCell:cell withLink:link];
 	
 	if (link.thumbnailURL != nil && !([[link.thumbnailURL absoluteString] isEqualToString:@"default"])) // not empty nor "default"
 	{
@@ -431,7 +449,7 @@
 
 - (CGFloat)heightForListingCellAtIndexPath:(NSIndexPath *)indexPath
 {
-	TGLink *link = self.listings[indexPath.row];
+	TGLink *link = self.links[indexPath.row];
 	CGFloat height;
 	if ((height = [[self.listingCellHeights objectForKey:link.id] floatValue]))
 	{
@@ -480,7 +498,7 @@
 	// When user selects a row
    [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 	
-	self.selectedLink = self.listings[indexPath.row];
+	self.selectedLink = self.links[indexPath.row];
 	
 /*	if ([self.selectedLink isImageLink])
 	{
@@ -523,7 +541,7 @@
 			indexPathRow = commentsButton.tag;
 			// TODO change how the row is identified
 			// http://stackoverflow.com/questions/23784630/
-			self.selectedLink = self.listings[indexPathRow];
+			self.selectedLink = self.links[indexPathRow];
 		}
 		linkVC.link = self.selectedLink;
 	}
