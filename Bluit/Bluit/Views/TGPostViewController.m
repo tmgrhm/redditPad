@@ -38,19 +38,6 @@
 
 static CGFloat const PreviewImageMaxHeight = 300.0f;
 
-typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
-{
-	EmbeddedMediaNone = 0,
-	EmbeddedMediaDirectImage,
-	EmbeddedMediaDirectVideo,
-	EmbeddedMediaImgur,
-	EmbeddedMediaGfycat,
-	EmbeddedMediaInstagram,
-	EmbeddedMediaTweet,
-	EmbeddedMediaTweetWithImage,
-	EmbeddedMediaVine
-};
-
 @interface TGPostViewController () <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, UIBarPositioningDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *containerView;
@@ -65,10 +52,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *hidePostButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *sharePostButton;
 
-@property (nonatomic) PostViewEmbeddedMediaType embeddedMediaType;
-@property (strong, nonatomic) NSDictionary *embeddedMediaData;
 @property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
-@property (nonatomic) BOOL isImagePost;
 @property (nonatomic) CGFloat postHeaderHeight;
 @property (strong, nonatomic) TGLinkPostCell *postHeader;
 
@@ -93,62 +77,6 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 {
 	_originalComments = comments;
 	self.comments = [comments mutableCopy];
-}
-
-- (BOOL) isRichPost
-{
-	if (self.embeddedMediaType != EmbeddedMediaNone) return YES; // cheap check after first use
-	
-	if ([[TGTwitterClient sharedClient] URLisTwitterLink:self.link.url])
-	{
-		self.embeddedMediaType = EmbeddedMediaTweet;
-		return YES;
-	}
-	else if (self.link.isImageLink)
-	{
-		self.embeddedMediaType = EmbeddedMediaDirectImage;
-		return YES;
-	}
-	else if ([[TGImgurClient sharedClient] URLisImgurLink:self.link.url])
-	{
-		self.embeddedMediaType = EmbeddedMediaImgur;
-		return YES;
-	}
-	else if ([[TGGfycatClient sharedClient] URLisGfycatLink:self.link.url])
-	{
-		self.embeddedMediaType = EmbeddedMediaGfycat;
-		return YES;
-	}
-	else if ([[TGInstagramClient sharedClient] URLisInstagramLink:self.link.url])
-	{
-		self.embeddedMediaType = EmbeddedMediaInstagram;
-		return YES;
-	}
-	else if ([[TGVineClient sharedClient] URLisVineLink:self.link.url])
-	{
-		self.embeddedMediaType = EmbeddedMediaVine;
-		return YES;
-	}
-	
-	return NO;
-}
-
-- (BOOL) isImagePost
-{
-	switch (self.embeddedMediaType) {
-		case EmbeddedMediaDirectImage:
-		case EmbeddedMediaDirectVideo:
-		case EmbeddedMediaImgur:
-		case EmbeddedMediaInstagram:
-		case EmbeddedMediaTweetWithImage:
-		case EmbeddedMediaGfycat:
-		case EmbeddedMediaVine:
-			return YES;
-			break;
-		default:
-			return NO;
-			break;
-	}
 }
 
 #pragma mark - Init
@@ -192,8 +120,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	__weak __typeof(self)weakSelf = self;
 	[[TGRedditClient sharedClient] requestCommentsForLink:self.link withCompletion:^(NSArray *comments) { [weakSelf commentsFromResponse:comments]; }];
 	
-	if ([self isRichPost])		[self configureEmbeddedMedia];
-	if (![self isImagePost])	[self setToolbarAlpha:1];
+	if ([self.link isRichLink])		[self configureEmbeddedMedia];
+	if (![self.link isMediaLink])	[self setToolbarAlpha:1];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(votableVoteStatusDidChange:) name:TGVotableVoteStatusDidChangeNotification object:nil];
 }
@@ -262,29 +190,26 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	UIImage *placeholder = [UIImageEffects imageByApplyingBlurToImage:previewImageView.image withRadius:0.9 tintColor:nil saturationDeltaFactor:1.4 maskImage:nil];
 	previewImageView.image = placeholder;
 	
-	switch (self.embeddedMediaType)
+	switch (self.link.embeddedMediaType)
 	{
 		case EmbeddedMediaDirectImage:
-		{
-			[self preparePreviewView]; // set up to display content preview
-			
-			[self setPreviewContentWithURL:self.link.url];
-			break;
-		}
+		case EmbeddedMediaDirectVideo:
 		case EmbeddedMediaImgur:
+		case EmbeddedMediaGfycat:
+		case EmbeddedMediaInstagram:
+		case EmbeddedMediaVine:
 		{
 			[self preparePreviewView]; // set up to display content preview
 			
-			[[TGImgurClient sharedClient] directImageURLfromImgurURL:self.link.url success:^(NSURL *imageURL) {
-				[self setPreviewContentWithURL:imageURL];
+			[self.link requestDirectURLforEmbeddedMediaWithSuccess:^(NSURL *mediaURL) {
+				[self setPreviewContentWithURL:mediaURL];
 			}];
 			break;
 		}
 		case EmbeddedMediaTweet:
+		case EmbeddedMediaTweetWithImage:
 		{
-			[[TGTwitterClient sharedClient] tweetWithID:[[TGTwitterClient sharedClient] tweetIDfromLink:self.link.url] success:^(id responseObject) {
-				self.embeddedMediaData = (NSDictionary *) responseObject;
-				
+			[self.link requestDirectURLforEmbeddedMediaWithSuccess:^(NSURL *mediaURL) {
 				// check view in contentContainerView is a TweetView
 				UIView *contentContainerSubview = [self.postHeader.contentContainerView subviews][0];
 				TGTweetView *tweetView;
@@ -295,18 +220,15 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 					return;
 				}
 				
-				if (self.embeddedMediaData[@"entities"][@"media"][0])
+				if (mediaURL) // tweet does have media
 				{
-					self.embeddedMediaType = EmbeddedMediaTweetWithImage;
-					
 					[UIView transitionWithView:self.previewView
 									  duration:0.3
 									   options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionCrossDissolve
 									animations:^{ [self preparePreviewView]; }
 									completion:NULL];
 					
-					NSURL *imageURL = [NSURL URLWithString:[self.embeddedMediaData[@"entities"][@"media"][0][@"media_url_https"] stringByAppendingString:@":large"]]; // get large variant
-					[self setPreviewContentWithURL:imageURL];
+					[self setPreviewContentWithURL:mediaURL];
 				}
 				// TODO display linked/embedded tweets above tweetView
 				/*for (NSDictionary* urlData in tweetData[@"entities"][@"urls"])
@@ -332,33 +254,6 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 				[self.commentTableView beginUpdates];
 				// this causes a reload heights of cells; doesn't seem there's another easy way to do this
 				[self.commentTableView endUpdates];
-			}];
-			break;
-		}
-		case EmbeddedMediaGfycat:
-		{
-			[self preparePreviewView]; // set up to display content preview
-			
-			[[TGGfycatClient sharedClient] mp4URLfromGfycatURL:self.link.url success:^(NSURL *mp4URL) {
-				[self setPreviewContentWithURL:mp4URL];
-			}];
-			break;
-		}
-		case EmbeddedMediaInstagram:
-		{
-			[self preparePreviewView]; // set up to display content preview
-			
-			[[TGInstagramClient sharedClient] directMediaURLfromInstagramURL:self.link.url success:^(NSURL *mediaURL) {
-				[self setPreviewContentWithURL:mediaURL];
-			}];
-			break;
-		}
-		case EmbeddedMediaVine:
-		{
-			[self preparePreviewView]; // set up to display content preview
-			
-			[[TGVineClient sharedClient] mp4URLfromVineURL:self.link.url success:^(NSURL *vineURL) {
-				[self setPreviewContentWithURL:vineURL];
 			}];
 			break;
 		}
@@ -473,7 +368,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void) configureTweetView:(TGTweetView *)tweetView
 {
-	NSDictionary *data = self.embeddedMediaData;
+	NSDictionary *data = self.link.embeddedMediaData;
 	if (data)
 	{
 		[UIView transitionWithView:tweetView
@@ -490,7 +385,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 							tweetView.timestamp.text = data[@"created_at"];
 							
 							NSString *tweetText = [data[@"text"] stringByDecodingHTMLEntities];
-							if (self.embeddedMediaType == EmbeddedMediaTweetWithImage)
+							if (self.link.embeddedMediaType == EmbeddedMediaTweetWithImage)
 								tweetText = [tweetText stringByReplacingOccurrencesOfString:data[@"entities"][@"media"][0][@"url"] withString:@""]; // remove shown image URL
 							
 							tweetView.tweetText.text = tweetText;
@@ -800,7 +695,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	cell.title.attributedText = mutAttrTitle;
 	
 	// body/link content
-	if (self.embeddedMediaType == EmbeddedMediaTweet || self.embeddedMediaType == EmbeddedMediaTweetWithImage)
+	if (self.link.embeddedMediaType == EmbeddedMediaTweet || self.link.embeddedMediaType == EmbeddedMediaTweetWithImage)
 	{
 		[cell.content removeFromSuperview];
 		// style contentContainerView
@@ -808,7 +703,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 		cell.contentContainerView.layer.cornerRadius = 4.0f;
 		cell.contentContainerView.layer.borderColor = [[ThemeManager colorForKey:kTGThemeSeparatorColor] CGColor];
 		cell.contentContainerView.layer.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
-		// create and configure new tweetView with the current embeddedMediaData
+		// create and configure new tweetView with self.link.embeddedMediaData
 		TGTweetView *tweetView = [TGTweetView new];
 		[self configureTweetView:tweetView];
 		// add to contentContainerView and create autoLayout constraints
@@ -876,7 +771,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	cell.separator.backgroundColor = [ThemeManager colorForKey:kTGThemeBackgroundColor];
 	cell.backgroundColor = [ThemeManager colorForKey:kTGThemeContentBackgroundColor];
 	
-	if (self.isImagePost)// add border to top of postHeaderCell
+	if (self.link.isMediaLink)// add border to top of postHeaderCell
 	{
 		UIBezierPath *path = [UIBezierPath bezierPath];
 		[path moveToPoint:CGPointMake(0, 0)];
@@ -1156,7 +1051,7 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-	if (!self.isImagePost) return; // don't do anything if we're not an imagePost
+	if (!self.link.isMediaLink) return; // don't do anything if we're not an imagePost
 	
 	[self updatePreviewImageSizeBasedOnScrollView:scrollView];
 	
@@ -1186,7 +1081,8 @@ typedef NS_ENUM(NSUInteger, PostViewEmbeddedMediaType)
 	CGFloat yOffset = scrollView.contentOffset.y;
 	if (yOffset > 0) return;
 	
-	UIView *previewContentView = self.previewView.subviews[0];
+	UIView *previewContentView = self.previewView.subviews.count > 0 ? self.previewView.subviews[0] : nil;
+	if (previewContentView == nil) return;
 	CGRect frame = previewContentView.frame;
 	
 	if (yOffset > -self.previewViewHeight.constant)

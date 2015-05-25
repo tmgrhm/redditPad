@@ -8,6 +8,20 @@
 
 #import "TGVotable.h"
 
+typedef NS_ENUM(NSUInteger, TGLinkEmbeddedMediaType)
+{
+	EmbeddedMediaUnknown,
+	EmbeddedMediaNone,
+	EmbeddedMediaDirectImage,
+	EmbeddedMediaDirectVideo,
+	EmbeddedMediaImgur,
+	EmbeddedMediaGfycat,
+	EmbeddedMediaInstagram,
+	EmbeddedMediaTweet,
+	EmbeddedMediaTweetWithImage,
+	EmbeddedMediaVine
+};
+
 @interface TGLink : TGVotable
 
 // TODO flair
@@ -30,10 +44,17 @@
 @property (nonatomic, assign, getter=isSticky) BOOL sticky;
 @property (nonatomic, assign, getter=isHidden) BOOL hidden;
 @property (nonatomic, assign, getter=isViewed) BOOL viewed; // TODO set when viewed
-@property (nonatomic, assign) BOOL isImageLink;
-
 @property (nonatomic, copy, readonly) NSURL *permalink;
 
+@property (nonatomic) TGLinkEmbeddedMediaType embeddedMediaType;
+@property (strong, nonatomic) NSDictionary *embeddedMediaData;
+
 - (instancetype) initLinkFromDictionary:(NSDictionary *)dict;
+
+- (BOOL) isRichLink;
+- (BOOL) isImageLink;
+- (BOOL) isMediaLink;
+
+- (void) requestDirectURLforEmbeddedMediaWithSuccess:(void (^)(NSURL *mediaURL))success;
 
 @end
