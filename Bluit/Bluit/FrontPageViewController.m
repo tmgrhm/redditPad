@@ -11,7 +11,7 @@
 #import "TGListingTableViewCell.h"
 #import "TGWebViewController.h"
 #import "TGPostViewController.h"
-#import "TGImageViewController.h"
+#import "TGMediaViewController.h"
 #import "TGSearchViewController.h"
 #import "TGSubredditInfoViewController.h"
 
@@ -550,10 +550,12 @@
 		TGWebViewController *webVC = segue.destinationViewController;
 		webVC.link = self.selectedLink;
 	}
-	else if ([segue.identifier isEqualToString:@"listingToImageView"])
+	else if ([segue.identifier isEqualToString:@"listingToMediaView"])
 	{
-		TGImageViewController *imageVC = segue.destinationViewController;
-		imageVC.imageURL = self.selectedLink.url;
+		TGMediaViewController *imageVC = segue.destinationViewController;
+		[self.selectedLink requestDirectURLforEmbeddedMediaWithSuccess:^(NSURL *mediaURL) {
+			[imageVC loadMediaFromURL:mediaURL];
+		}];
 	}
 	else if ([segue.identifier isEqualToString:@"searchListing"])
 	{

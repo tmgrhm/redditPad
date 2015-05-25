@@ -281,7 +281,7 @@
                         <outlet property="sortControl" destination="PoJ-5q-Gbo" id="Gyp-S0-SKA"/>
                         <outlet property="tableView" destination="BZg-Up-pLI" id="aL0-mq-d06"/>
                         <segue destination="gFf-Ur-DKX" kind="presentation" identifier="listingToWebView" id="iGZ-e7-hTh"/>
-                        <segue destination="Hgp-7R-LJR" kind="presentation" identifier="listingToImageView" modalPresentationStyle="overFullScreen" id="Acd-4H-vvZ"/>
+                        <segue destination="Hgp-7R-LJR" kind="presentation" identifier="listingToMediaView" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="Acd-4H-vvZ"/>
                         <segue destination="f8m-7O-Sit" kind="popoverPresentation" identifier="listingToSubredditInfo" popoverAnchorView="BZg-Up-pLI" id="p1t-S3-o0r">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
@@ -759,10 +759,10 @@
             </objects>
             <point key="canvasLocation" x="-788" y="-112"/>
         </scene>
-        <!--Image View Controller-->
+        <!--Media View Controller-->
         <scene sceneID="RGj-LM-YPV">
             <objects>
-                <viewController id="Hgp-7R-LJR" customClass="TGImageViewController" sceneMemberID="viewController">
+                <viewController id="Hgp-7R-LJR" customClass="TGMediaViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nVs-I2-sv0"/>
                         <viewControllerLayoutGuide type="bottom" id="5s5-JW-vVh"/>
@@ -781,16 +781,14 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="9YX-E0-ajR" secondAttribute="trailing" id="3fu-FF-AKx"/>
                             <constraint firstAttribute="width" secondItem="8Ft-mC-4TJ" secondAttribute="width" id="AWz-hu-h7e"/>
                             <constraint firstAttribute="height" secondItem="8Ft-mC-4TJ" secondAttribute="height" id="Dk3-E1-Pbt"/>
-                            <constraint firstItem="9YX-E0-ajR" firstAttribute="leading" secondItem="Gdw-38-U4i" secondAttribute="leading" id="FiN-4d-EzC"/>
-                            <constraint firstItem="5s5-JW-vVh" firstAttribute="top" secondItem="9YX-E0-ajR" secondAttribute="bottom" id="Oyc-qp-gbS"/>
-                            <constraint firstAttribute="trailing" secondItem="8Ft-mC-4TJ" secondAttribute="trailing" id="YuV-qw-QHP"/>
-                            <constraint firstItem="9YX-E0-ajR" firstAttribute="top" secondItem="Gdw-38-U4i" secondAttribute="top" id="jRo-gR-3Hz"/>
-                            <constraint firstItem="8Ft-mC-4TJ" firstAttribute="top" secondItem="Gdw-38-U4i" secondAttribute="top" id="qAd-9v-oyX"/>
-                            <constraint firstItem="8Ft-mC-4TJ" firstAttribute="leading" secondItem="Gdw-38-U4i" secondAttribute="leading" id="sKX-Ju-dqg"/>
-                            <constraint firstItem="5s5-JW-vVh" firstAttribute="top" secondItem="8Ft-mC-4TJ" secondAttribute="bottom" id="zCQ-fL-4tq"/>
+                            <constraint firstAttribute="centerX" secondItem="9YX-E0-ajR" secondAttribute="centerX" id="KqR-JO-cHA"/>
+                            <constraint firstAttribute="centerX" secondItem="8Ft-mC-4TJ" secondAttribute="centerX" id="LAK-rs-Rbn"/>
+                            <constraint firstAttribute="width" secondItem="9YX-E0-ajR" secondAttribute="width" id="Y8a-r1-ify"/>
+                            <constraint firstAttribute="centerY" secondItem="8Ft-mC-4TJ" secondAttribute="centerY" id="ayZ-pb-16C"/>
+                            <constraint firstAttribute="centerY" secondItem="9YX-E0-ajR" secondAttribute="centerY" id="e6P-ve-cJV"/>
+                            <constraint firstAttribute="height" secondItem="9YX-E0-ajR" secondAttribute="height" id="mZd-qu-65a"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="s3A-RO-Ei3" appends="YES" id="y49-Jc-Upp"/>
@@ -1229,8 +1227,8 @@
         <image name="User Icon - Inactive" width="15" height="19"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fTW-1s-qNd"/>
-        <segue reference="YFw-Df-Uep"/>
         <segue reference="qgV-3d-NLN"/>
+        <segue reference="YFw-Df-Uep"/>
+        <segue reference="iGZ-e7-hTh"/>
     </inferredMetricsTieBreakers>
 </document>
