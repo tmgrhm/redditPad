@@ -82,16 +82,11 @@ static NSString * const kURIRedirectPath = nil;
 		if (imageID)
 		{
 			[self imageDataWithID:imageID success:^(id responseObject) { // get the imageData from the API
-				NSDictionary *data = (NSDictionary *)responseObject[@"data"];
+				NSDictionary *imageDict = (NSDictionary *)responseObject[@"data"];
 				
-				NSString *imageURLstring = data[@"link"]; // get default image link
-				// check if it's animated, if so, get mp4 link instead
-				if ([data[@"animated"] boolValue] == YES && [@"image/gif" isEqualToString:data[@"type"]])
-					imageURLstring = data[@"mp4"];
-				
-				NSURL *imageURL = [NSURL URLWithString:imageURLstring];
-				NSLog(@"directImageURL retrieved from imgur API: %@", imageURL);
-				success(imageURL);
+				NSURL *directURL = [self directURLfromImageDictionary:imageDict];
+				NSLog(@"directImageURL retrieved from imgur API: %@", directURL);
+				success(directURL);
 			}];
 		}
 	}
@@ -140,9 +135,8 @@ static NSString * const kURIRedirectPath = nil;
 			// get coverImageID and use that to get coverImageURL
 			NSString *coverImageID = responseDict[@"data"][@"cover"];
 			NSURL *coverImageURL;
-			for (id image in responseDict[@"data"][@"images"])
-				if ([image[@"id"] isEqualToString:coverImageID])
-					coverImageURL = [NSURL URLWithString:image[@"link"]];
+			for (NSDictionary *imageDict in responseDict[@"data"][@"images"])
+				if ([imageDict[@"id"] isEqualToString:coverImageID]) coverImageURL = [self directURLfromImageDictionary:imageDict];
 			
 			NSLog(@"coverImageURL %@", coverImageURL);
 			success(coverImageURL);
@@ -225,6 +219,15 @@ static NSString * const kURIRedirectPath = nil;
 	if (path.length - albumCoverImageID.length == 3) return albumCoverImageID;
 	
 	return nil;
+}
+
+- (NSURL *) directURLfromImageDictionary:(NSDictionary *)imageDict
+{
+	NSString *imageURLstring = imageDict[@"link"]; // get default image link
+	if ([imageDict[@"animated"] boolValue] == YES && [@"image/gif" isEqualToString:imageDict[@"type"]]) imageURLstring = imageDict[@"mp4"]; // check if it's animated, if so, get mp4 link instead
+	
+	NSURL *directURL = [NSURL URLWithString:imageURLstring];
+	return directURL;
 }
 
 @end
