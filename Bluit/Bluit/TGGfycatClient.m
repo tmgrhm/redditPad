@@ -52,7 +52,7 @@ static NSString * const kBaseHTTPSURLString = nil;
 		[self gfyDataWithID:gfyID success:^(id responseObject) { // get the imageData from the API
 			NSDictionary *data = (NSDictionary *)responseObject[@"gfyItem"];
 			
-			NSString *mp4URLstring = data[@"mp4Url"];
+			NSString *mp4URLstring = data[@"mp4Url"]; // TODO get smaller version if wider than 668?
 			NSURL *mp4URL = [NSURL URLWithString:mp4URLstring];
 			success(mp4URL);
 		}];
