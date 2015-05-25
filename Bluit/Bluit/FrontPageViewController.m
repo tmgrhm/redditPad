@@ -19,7 +19,6 @@
 #import "ThemeManager.h"
 
 #import "NSDate+RelativeDateString.h"
-
 #import <AFNetworking/UIImageView+AFNetworking.h>
 
 @interface FrontPageViewController () <UITableViewDataSource, UITableViewDelegate>
@@ -31,7 +30,6 @@
 
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *sortControl;
-
 
 @end
 
@@ -500,16 +498,10 @@
 	
 	self.selectedLink = self.links[indexPath.row];
 	
-/*	if ([self.selectedLink isImageLink])
-	{
-		[self performSegueWithIdentifier:@"listingToImageView" sender:self]; // TODO better imageView
-	} else */
-	if ([self.selectedLink isSelfpost])
-	{
-		[self performSegueWithIdentifier:@"listingToPostView" sender:self];
-	}
-	else
-		[self performSegueWithIdentifier:@"listingToWebView" sender:self];
+	
+	if ([self.selectedLink isSelfpost])			[self performSegueWithIdentifier:@"listingToPostView" sender:self];
+	else if ([self.selectedLink isMediaLink])	[self performSegueWithIdentifier:@"listingToMediaView" sender:self];
+	else											[self performSegueWithIdentifier:@"listingToWebView" sender:self];
 }
 
 - (void) scrollToTopWithAnimation:(BOOL)animated
