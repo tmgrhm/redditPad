@@ -31,7 +31,6 @@ PODS:
   - MWFeedParser/NSDate+InternetDateTime (1.0.1)
   - MWFeedParser/NSString+HTML (1.0.1)
   - TUSafariActivity (1.0.4)
-  - URBMediaFocusViewController (0.5.8)
   - XNGMarkdownParser (0.3.2)
 
 DEPENDENCIES:
@@ -39,7 +38,6 @@ DEPENDENCIES:
   - fmemopen
   - MWFeedParser (~> 1.0)
   - TUSafariActivity (~> 1.0)
-  - URBMediaFocusViewController
   - XNGMarkdownParser
 
 SPEC CHECKSUMS:
@@ -47,7 +45,6 @@ SPEC CHECKSUMS:
   fmemopen: dc31f7d3004644b33deee95e047305d23f8cfdd4
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  URBMediaFocusViewController: 21618bda6290f74b2767059e983f3a7f4f3e8cd1
   XNGMarkdownParser: aed98c14f0c0eb20064184ddf9bac26c482722b2
 
 COCOAPODS: 0.36.4

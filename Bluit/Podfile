@@ -4,7 +4,7 @@ pod 'fmemopen', :inhibit_warnings => true
 pod 'AFNetworking', '~> 2.5', :inhibit_warnings => true
 # pod 'TSMarkdownParser'
 pod 'XNGMarkdownParser', :inhibit_warnings => true
-pod 'URBMediaFocusViewController'
+# pod 'URBMediaFocusViewController'
 # pod 'Reveal-iOS-SDK', :configurations => ['Debug']
 pod 'TUSafariActivity', '~> 1.0'
 # pod 'DTCoreText', '~> 1.6'
