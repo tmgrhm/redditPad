@@ -7,25 +7,28 @@
 //
 
 #import "TGMediaViewController.h"
+
 #import "ThemeManager.h"
 
 #import <AFNetworking/UIImageView+AFNetworking.h>
+@import MediaPlayer;
 
 @interface TGMediaViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, UIDynamicAnimatorDelegate>
 
-@property (strong, nonatomic) UIImageView *imageView;
-@property (strong, nonatomic) UIView *containerView;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic) IBOutlet UIView *fadeView;
+@property (strong, nonatomic) UIView *containerView;
+
+@property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
+@property (strong, nonatomic) UIImageView *imageView;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panRecognizer;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
 
 @property (nonatomic) CGPoint originalCenter;
-
 @property (nonatomic) CGFloat minScale;
-@property (nonatomic) CGFloat maxScale;
-@property (nonatomic) CGFloat lastPinchScale;
+
+@property (nonatomic) BOOL hasLaidOut;
 
 @end
 
@@ -47,10 +50,11 @@
 	self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	[self.scrollView addSubview:self.containerView];
 	
+	self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(self.containerView.frame.size.width/2, self.containerView.frame.size.height/2, 0, 0)];
 	self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 	self.imageView.userInteractionEnabled = YES;
 	self.imageView.layer.allowsEdgeAntialiasing = YES;
-	[self.containerView addSubview:self.imageView];
+	[self setContentView:self.imageView];
 	
 	self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
 	self.panRecognizer.delegate = self;
@@ -58,14 +62,16 @@
 	
 	self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
 //	self.animator.delegate = self;
+	
+	self.hasLaidOut = YES;
+	
+	if (self.mediaURL) [self loadMediaFromURL:self.mediaURL];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 
 - (void) themeAppearance
 {
@@ -77,74 +83,118 @@
 	self.scrollView.showsVerticalScrollIndicator = YES;
 }
 
--(UIImageView *)imageView
+- (void) setContentView:(UIView *)contentView
 {
-	if (!_imageView) _imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-	return _imageView;
-}
-
-- (void)setImage:(UIImage *)image
-{
-	self.imageView.image = image;
-	
-	// update scrollView.contentSize to the size of the image
-	self.scrollView.contentSize = image.size;
-	CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / self.scrollView.contentSize.width;
-	CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / self.scrollView.contentSize.height;
-	CGFloat scale = MIN(scaleWidth, scaleHeight);
-	
-	// image view's destination frame is the size of the image capped to the width/height of the target view
-	CGPoint midpoint = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
-	CGSize scaledImageSize = CGSizeMake(image.size.width * scale, image.size.height * scale);
-	CGRect targetRect = CGRectMake(midpoint.x - scaledImageSize.width / 2.0, midpoint.y - scaledImageSize.height / 2.0, scaledImageSize.width, scaledImageSize.height);
-	
-	self.imageView.frame = targetRect;
-	
-	if (scale < 1.0f) {
-		self.scrollView.minimumZoomScale = 1.0f;
-		self.scrollView.maximumZoomScale = 1.0f / scale;
-	}
-	else {
-		self.scrollView.minimumZoomScale = 1.0f / scale;
-		self.scrollView.maximumZoomScale = 1.0f;
-	}
-	
-	self.minScale = self.scrollView.minimumZoomScale;
-	self.maxScale = self.scrollView.maximumZoomScale;
-	self.lastPinchScale = 1.0f;
+	for (UIView *view in self.containerView.subviews) [view removeFromSuperview]; // remove any existing views
+//	contentView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.containerView addSubview:contentView];
+//	NSDictionary *views = NSDictionaryOfVariableBindings(contentView);
+//	[self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[contentView]|" options:0 metrics:nil views:views]];
+//	[self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|" options:0 metrics:nil views:views]];
 }
 
 - (void)loadMediaFromURL:(NSURL *)url
 {
 	self.mediaURL = url;
 	
+	if (!self.hasLaidOut) return;
+	
 	NSString *fileExtension = [[[url absoluteString] lastPathComponent] pathExtension];
 	
 	if ([fileExtension hasPrefix:@"mp4"])
-		[self loadVideoFromURL:url];
+		[self setVideoWithURL:url];
 	else // image
-		[self loadImageFromURL:url];
+		[self setImageWithURL:url];
 }
 
-- (void) loadVideoFromURL:(NSURL *)url
+- (void) setImageWithURL:(NSURL *)imageURL
 {
-	// TODO
-	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)loadImageFromURL:(NSURL *)url
-{
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:imageURL];
+ 	[request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+	
+ 	UIImageView *imageView = self.containerView.subviews[0];
+	if (!imageView) return;
+ 
+//	UIImageView *imageView = self.imageView;
+	__block UIImageView *blockImageView = imageView;
 	__weak __typeof(self)weakSelf = self;
-	[self.imageView setImageWithURLRequest:[NSURLRequest requestWithURL:url]
-						  placeholderImage:[UIImage imageNamed:@"Icon-Navbar-Refresh"] // TODO loader
-								   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+	
+	[imageView setImageWithURLRequest:request placeholderImage:imageView.image success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+		{
+			[UIView transitionWithView:blockImageView
+							  duration:0.3f
+							   options:UIViewAnimationOptionTransitionCrossDissolve
+							animations:^{
+								weakSelf.imageView.image = image;
+								[weakSelf layoutWithContentSize:image.size];
+							} // TODO make consistently smooth + performant
+							completion:NULL];
+		} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+			// TODO
+		}];
+}
+
+- (void) setVideoWithURL:(NSURL *)videoURL
+{
+	MPMoviePlayerController *player = [MPMoviePlayerController new];
+	self.moviePlayer = player;
+	player.contentURL = videoURL;
+	[player prepareToPlay];
+	player.scalingMode = MPMovieScalingModeAspectFit;
+	player.repeatMode = MPMovieRepeatModeOne;
+	player.controlStyle = MPMovieControlStyleNone;
+	// centred, zero-size frame until we get the video size in videoDidLoad, after which we layoutWithContentSize
+	player.view.frame = CGRectMake(self.containerView.frame.size.width/2, self.containerView.frame.size.height/2, 0, 0);
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(videoDidLoad) name:@"MPMoviePlayerContentPreloadDidFinishNotification" object:self.moviePlayer];
+}
+
+- (void) videoDidLoad
+{
+	if (self.moviePlayer.loadState == MPMovieLoadStatePlayable || self.moviePlayer.loadState == MPMovieLoadStatePlaythroughOK)
 	{
-		[weakSelf setImage: image];
+		__weak __typeof(self)weakSelf = self;
+		[UIView transitionWithView:self.containerView
+						  duration:0.3f
+						   options:UIViewAnimationOptionTransitionCrossDissolve
+						animations:^{
+							[weakSelf setContentView:weakSelf.moviePlayer.view];
+							[weakSelf layoutWithContentSize:weakSelf.moviePlayer.naturalSize];
+						}
+						completion:NULL];
+		
+		[self.moviePlayer play];
 	}
-								   failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error)
+}
+
+- (void) layoutWithContentSize:(CGSize)contentSize
+{
+	// update scrollView.contentSize to the size of the content
+	self.scrollView.contentSize = contentSize;
+	CGFloat scaleWidth = CGRectGetWidth(self.scrollView.frame) / self.scrollView.contentSize.width;
+	CGFloat scaleHeight = CGRectGetHeight(self.scrollView.frame) / self.scrollView.contentSize.height;
+	CGFloat scale = MIN(scaleWidth, scaleHeight);
+	
+	// content view's destination frame is the size of the content capped to the width/height of the target view
+	CGPoint midpoint = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+	CGSize scaledContentSize = CGSizeMake(contentSize.width * scale, contentSize.height * scale);
+	CGRect targetRect = CGRectMake(midpoint.x - scaledContentSize.width / 2.0, midpoint.y - scaledContentSize.height / 2.0, scaledContentSize.width, scaledContentSize.height);
+	
+	UIView *contentView = self.containerView.subviews[0];
+	contentView.frame = targetRect;
+	
+	if (scale < 1.0f)
 	{
-		NSLog(@"Failure loading image :(");
-	}];
+		self.scrollView.minimumZoomScale = 1.0f;
+		self.scrollView.maximumZoomScale = 1.0f / scale;
+	}
+	else
+	{
+		self.scrollView.minimumZoomScale = 1.0f / scale;
+		self.scrollView.maximumZoomScale = 1.0f;
+	}
+	
+	self.minScale = self.scrollView.minimumZoomScale;
 }
 
 #pragma mark - UIGestureRecognizer

@@ -12,7 +12,6 @@
 
 @property (strong, nonatomic) NSURL *mediaURL;
 
-- (void)setImage:(UIImage *)image;
 - (void)loadMediaFromURL:(NSURL *)url;
 
 @end
