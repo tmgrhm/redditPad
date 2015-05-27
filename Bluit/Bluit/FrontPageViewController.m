@@ -11,7 +11,7 @@
 #import "TGListingTableViewCell.h"
 #import "TGWebViewController.h"
 #import "TGPostViewController.h"
-#import "TGMediaViewController.h"
+#import "TGMediaGalleryViewController.h"
 #import "TGSearchViewController.h"
 #import "TGSubredditInfoViewController.h"
 
@@ -498,6 +498,8 @@
 	
 	self.selectedLink = self.links[indexPath.row];
 	
+//	[self performSegueWithIdentifier:@"listingToMediaView" sender:self];
+//	return; // TODO
 	
 	if ([self.selectedLink isSelfpost])			[self performSegueWithIdentifier:@"listingToPostView" sender:self];
 	else if ([self.selectedLink isMediaLink])	[self performSegueWithIdentifier:@"listingToMediaView" sender:self];
@@ -544,9 +546,9 @@
 	}
 	else if ([segue.identifier isEqualToString:@"listingToMediaView"])
 	{
-		TGMediaViewController *imageVC = segue.destinationViewController;
+		TGMediaGalleryViewController *mediaVC = segue.destinationViewController;
 		[self.selectedLink requestDirectURLforEmbeddedMediaWithSuccess:^(NSURL *mediaURL) {
-			[imageVC loadMediaFromURL:mediaURL];
+			[mediaVC loadMediaFromURL:mediaURL];
 		}];
 	}
 	else if ([segue.identifier isEqualToString:@"searchListing"])
