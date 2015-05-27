@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TGMediaViewController : UIViewController
+@interface TGMediaGalleryViewController : UIViewController
 
 @property (strong, nonatomic) NSURL *mediaURL;
 

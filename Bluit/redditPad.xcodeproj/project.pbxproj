@@ -13,6 +13,7 @@
 		E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */ = {isa = PBXBuildFile; fileRef = E22047FF1AD8342200A5FACF /* TGSubreddit.m */; };
 		E22048031AD85DA200A5FACF /* TGMoreComments.m in Sources */ = {isa = PBXBuildFile; fileRef = E22048021AD85DA200A5FACF /* TGMoreComments.m */; };
 		E22A6F9B1B051ACC00B31F16 /* TGRedditMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E22A6F9A1B051ACC00B31F16 /* TGRedditMarkdownParser.m */; };
+		E23AFE3B1B15A83F000412D8 /* TGMediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = E23AFE3A1B15A83F000412D8 /* TGMediaView.m */; };
 		E24514611AA6448500B80D2E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514601AA6448500B80D2E /* main.m */; };
 		E24514641AA6448500B80D2E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514631AA6448500B80D2E /* AppDelegate.m */; };
 		E24514671AA6448500B80D2E /* FrontPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E24514661AA6448500B80D2E /* FrontPageViewController.m */; };
@@ -52,7 +53,7 @@
 		E2C8A9641B04941100E49169 /* markdownStyle.html in Resources */ = {isa = PBXBuildFile; fileRef = E2C8A9631B04941100E49169 /* markdownStyle.html */; };
 		E2DE9BFF1AF932A000BACD5E /* TGFormPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */; };
 		E2DE9C021AF942B100BACD5E /* TGFormAnimationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */; };
-		E2FBF7231AC5A7D00031C957 /* TGMediaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FBF7221AC5A7D00031C957 /* TGMediaViewController.m */; };
+		E2FBF7231AC5A7D00031C957 /* TGMediaGalleryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FBF7221AC5A7D00031C957 /* TGMediaGalleryViewController.m */; };
 		F01739A4B8845F47B0205BA2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F306A862EA62B98203377AA7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +82,8 @@
 		E22048021AD85DA200A5FACF /* TGMoreComments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGMoreComments.m; path = Model/TGMoreComments.m; sourceTree = "<group>"; };
 		E22A6F991B051ACC00B31F16 /* TGRedditMarkdownParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGRedditMarkdownParser.h; sourceTree = "<group>"; };
 		E22A6F9A1B051ACC00B31F16 /* TGRedditMarkdownParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGRedditMarkdownParser.m; sourceTree = "<group>"; };
+		E23AFE391B15A83F000412D8 /* TGMediaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMediaView.h; sourceTree = "<group>"; };
+		E23AFE3A1B15A83F000412D8 /* TGMediaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMediaView.m; sourceTree = "<group>"; };
 		E245145B1AA6448400B80D2E /* redditPad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redditPad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E245145F1AA6448500B80D2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E24514601AA6448500B80D2E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -155,8 +158,8 @@
 		E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFormPresentationController.m; sourceTree = "<group>"; };
 		E2DE9C001AF942B100BACD5E /* TGFormAnimationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGFormAnimationController.h; sourceTree = "<group>"; };
 		E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGFormAnimationController.m; sourceTree = "<group>"; };
-		E2FBF7211AC5A7D00031C957 /* TGMediaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMediaViewController.h; sourceTree = "<group>"; };
-		E2FBF7221AC5A7D00031C957 /* TGMediaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMediaViewController.m; sourceTree = "<group>"; };
+		E2FBF7211AC5A7D00031C957 /* TGMediaGalleryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMediaGalleryViewController.h; sourceTree = "<group>"; };
+		E2FBF7221AC5A7D00031C957 /* TGMediaGalleryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMediaGalleryViewController.m; sourceTree = "<group>"; };
 		F306A862EA62B98203377AA7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -343,8 +346,8 @@
 				E2A512891AC0D42C0007A842 /* TGPostViewController.m */,
 				E28BB7F11AB0D98C005E47B8 /* TGWebViewController.h */,
 				E28BB7F21AB0D98C005E47B8 /* TGWebViewController.m */,
-				E2FBF7211AC5A7D00031C957 /* TGMediaViewController.h */,
-				E2FBF7221AC5A7D00031C957 /* TGMediaViewController.m */,
+				E2FBF7211AC5A7D00031C957 /* TGMediaGalleryViewController.h */,
+				E2FBF7221AC5A7D00031C957 /* TGMediaGalleryViewController.m */,
 				E24CDCD21ADAE8800018907F /* TGSearchViewController.h */,
 				E24CDCD31ADAE8800018907F /* TGSearchViewController.m */,
 				E2BDB7791AE8D13400FEB59C /* TGSubredditInfoViewController.h */,
@@ -353,6 +356,8 @@
 				E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */,
 				E2DE9C001AF942B100BACD5E /* TGFormAnimationController.h */,
 				E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */,
+				E23AFE391B15A83F000412D8 /* TGMediaView.h */,
+				E23AFE3A1B15A83F000412D8 /* TGMediaView.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -518,7 +523,7 @@
 				E2BDB7751AE8CF2000FEB59C /* TGSubredditInfoCell.m in Sources */,
 				E28BB7F31AB0D98C005E47B8 /* TGWebViewController.m in Sources */,
 				E288CBA11AD2EABB0059855E /* NSDate+RelativeDateString.m in Sources */,
-				E2FBF7231AC5A7D00031C957 /* TGMediaViewController.m in Sources */,
+				E2FBF7231AC5A7D00031C957 /* TGMediaGalleryViewController.m in Sources */,
 				E24CDCD41ADAE8800018907F /* TGSearchViewController.m in Sources */,
 				E245146A1AA6448500B80D2E /* TGSubredditListViewController.m in Sources */,
 				E2A5128E1AC354D50007A842 /* TGLinkPostCell.m in Sources */,
@@ -536,6 +541,7 @@
 				E2158D001B08B05B00A809D9 /* UIImageEffects.m in Sources */,
 				E2C5CAC11B0BDDE500A6C303 /* TGImgurClient.m in Sources */,
 				E2B88B8B1B0F036E00238922 /* TGTweetView.m in Sources */,
+				E23AFE3B1B15A83F000412D8 /* TGMediaView.m in Sources */,
 				E2BDB77B1AE8D13400FEB59C /* TGSubredditInfoViewController.m in Sources */,
 				E288CBD61AD50C070059855E /* TGVotable.m in Sources */,
 				E24514641AA6448500B80D2E /* AppDelegate.m in Sources */,

@@ -181,6 +181,7 @@ static CGFloat const PreviewImageMaxHeight = 300.0f;
 	UIImageView *previewImageView = [UIImageView new];
 	previewImageView.clipsToBounds = YES;
 	previewImageView.contentMode = UIViewContentModeScaleAspectFill;
+	
 	// add to contentContainerView and create autoLayout constraints
 	[self setPreviewContentView:previewImageView];
 	
