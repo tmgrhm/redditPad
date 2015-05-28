@@ -10,6 +10,8 @@
 
 #import "TGAPIClient+Private.h"
 
+#import "TGMedia.h"
+
 static NSString * const kBaseURLString = @"http://www.imgur.com/";
 static NSString * const kBaseHTTPSURLString = @"https://api.imgur.com/3/";
 
@@ -72,9 +74,35 @@ static NSString * const kURIRedirectPath = nil;
 	return nil;
 }
 
+#pragma mark - Media
+
+- (void) mediaFromURL:(NSURL *)url success:(void (^)(NSArray *media))success
+{
+	if ([self URLisSingleImageLink:url]) // if link to single image
+	{
+		[self imageMediaWithID:[self imageIDfromLink:url] success:success];
+	}
+	else if ([self URLisAlbumLink:url]) // if link to album
+	{
+		[self albumMediaWithID:[self albumIDfromLink:url] success:success];
+	}
+	// TODO gallery
+}
+
 #pragma mark - Image
 
-- (void) directImageURLfromImgurURL:(NSURL *)fullURL success:(void (^)(NSURL *imageURL))success
+- (void) imageMediaWithID:(NSString *)imageID success:(void (^)(NSArray *media))success
+{
+	[self imageDataWithID:imageID success:^(id responseObject) { // get the imageData from the API
+		NSDictionary *imageDict = (NSDictionary *)responseObject[@"data"];
+		
+		TGMedia *media = [self mediaObjectFromImageDictionary:imageDict];
+		NSLog(@"media URL retrieved single image from imgur API: %@", media.url);
+		success(@[media]);
+	}];
+}
+
+- (void) directImageURLfromImgurURL:(NSURL *)fullURL success:(void (^)(NSURL *imageURL))success // TODO remove
 {
 	if ([self URLisSingleImageLink:fullURL]) // if link to single image
 	{
@@ -95,16 +123,6 @@ static NSString * const kURIRedirectPath = nil;
 		[self coverImageURLfromAlbumURL:fullURL success:success];
 	}
 	// TODO gallery link
-}
-
-- (void) imageDataFromURL:(NSURL *)url success:(void (^)(id responseObject))success
-{
-	NSString *path = url.path;
-	NSString *imageID = [path stringByReplacingOccurrencesOfString:@"/" withString:@""];
-	NSInteger numSlashes = [path length] - [imageID length];
-	
-	if (numSlashes == 1) [self imageDataWithID:imageID success:success];
-	else if ([path hasPrefix:@"/a/"]) [self albumDataWithID:[self albumIDfromLink:url] success:success];
 }
 
 - (void) imageDataWithID:(NSString *)imageID success:(void (^)(id responseObject))success
@@ -142,6 +160,24 @@ static NSString * const kURIRedirectPath = nil;
 			success(coverImageURL);
 		}];
 	}
+}
+
+- (void) albumMediaWithID:(NSString *)albumID success:(void (^)(NSArray *media))success
+{
+	[self albumDataWithID:albumID success:^(id responseObject) {
+		NSDictionary *dataDict = (NSDictionary *)responseObject[@"data"];
+		NSMutableArray *media = [NSMutableArray new];
+		
+		NSArray *imageDictsArray = dataDict[@"images"];
+		for (NSDictionary *imageDict in imageDictsArray)
+		{
+			[media addObject:[self mediaObjectFromImageDictionary:imageDict]];
+		}
+		
+		NSLog(@"album media retrieved from imgur API: %@", media);
+		
+		success(media);
+	}];
 }
 
 - (void) albumDataWithID:(NSString *)albumID success:(void (^)(id responseObject))success
@@ -228,6 +264,18 @@ static NSString * const kURIRedirectPath = nil;
 	
 	NSURL *directURL = [NSURL URLWithString:imageURLstring];
 	return directURL;
+}
+
+- (TGMedia *) mediaObjectFromImageDictionary:(NSDictionary *)imageDict
+{
+	TGMedia *media = [TGMedia new];
+	media.type = [imageDict[@"type"] isEqualToString:@"image/gif"] ? TGMediaTypeVideo : TGMediaTypeImage;
+	media.url = [self directURLfromImageDictionary:imageDict];
+	media.title = imageDict[@"title"];
+	media.caption = imageDict[@"description"];
+	media.size = CGSizeMake([imageDict[@"width"] floatValue], [imageDict[@"height"] floatValue]);
+	
+	return media;
 }
 
 @end

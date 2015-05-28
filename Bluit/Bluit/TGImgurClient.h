@@ -12,16 +12,18 @@
 
 @interface TGImgurClient : TGAPIClient
 
+#pragma mark - Media
+
+- (void) mediaFromURL:(NSURL *)url success:(void (^)(NSArray *media))success;
+
 #pragma mark - Image
 
 - (void) directImageURLfromImgurURL:(NSURL *)fullURL success:(void (^)(NSURL *imageURL))success;
-- (void) imageDataFromURL:(NSURL *)url success:(void (^)(id responseObject))success;
-- (void) imageDataWithID:(NSString *)imageID success:(void (^)(id responseObject))success;
 
 #pragma mark - Album
 
 - (void) coverImageURLfromAlbumURL:(NSURL *)fullURL success:(void (^)(NSURL *coverImageURL))success;
-- (void) albumDataWithID:(NSString *)albumID success:(void (^)(id responseObject))success;
+- (void) albumMediaWithID:(NSString *)albumID success:(void (^)(NSArray *media))success;
 
 #pragma mark - Detecting Link Types
 
