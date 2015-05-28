@@ -39,7 +39,7 @@
 	
 	[self themeAppearance];
 	
-	self.containerView = [[UIView alloc] initWithFrame:self.view.bounds];
+	self.containerView = [[UIView alloc] initWithFrame:self.scrollView.bounds];
 	self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	[self.scrollView addSubview:self.containerView];
 	

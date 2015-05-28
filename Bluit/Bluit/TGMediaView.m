@@ -69,7 +69,7 @@
 	self.scrollView.canCancelContentTouches = NO;
 	[self addSubview:self.scrollView];
 	
-	self.containerView = [[UIView alloc] initWithFrame:self.bounds];
+	self.containerView = [[UIView alloc] initWithFrame:self.scrollView.bounds];
 	self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 	[self.scrollView addSubview:self.containerView];
 	
