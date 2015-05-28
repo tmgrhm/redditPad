@@ -10,6 +10,7 @@
 		E210FEA11AB2DA240000E739 /* TGCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA01AB2DA240000E739 /* TGCommentTableViewCell.m */; };
 		E210FEA71AB2DBA50000E739 /* TGComment.m in Sources */ = {isa = PBXBuildFile; fileRef = E210FEA61AB2DBA50000E739 /* TGComment.m */; };
 		E2158D001B08B05B00A809D9 /* UIImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = E2158CFF1B08B05B00A809D9 /* UIImageEffects.m */; };
+		E21BE2E91B16E3A90009C3DB /* TGMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = E21BE2E81B16E3A90009C3DB /* TGMedia.m */; };
 		E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */ = {isa = PBXBuildFile; fileRef = E22047FF1AD8342200A5FACF /* TGSubreddit.m */; };
 		E22048031AD85DA200A5FACF /* TGMoreComments.m in Sources */ = {isa = PBXBuildFile; fileRef = E22048021AD85DA200A5FACF /* TGMoreComments.m */; };
 		E22A6F9B1B051ACC00B31F16 /* TGRedditMarkdownParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E22A6F9A1B051ACC00B31F16 /* TGRedditMarkdownParser.m */; };
@@ -76,6 +77,8 @@
 		E210FEA61AB2DBA50000E739 /* TGComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGComment.m; path = Model/TGComment.m; sourceTree = "<group>"; };
 		E2158CFE1B08B05B00A809D9 /* UIImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageEffects.h; sourceTree = "<group>"; };
 		E2158CFF1B08B05B00A809D9 /* UIImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageEffects.m; sourceTree = "<group>"; };
+		E21BE2E71B16E3A90009C3DB /* TGMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGMedia.h; path = Model/TGMedia.h; sourceTree = "<group>"; };
+		E21BE2E81B16E3A90009C3DB /* TGMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGMedia.m; path = Model/TGMedia.m; sourceTree = "<group>"; };
 		E22047FE1AD8342200A5FACF /* TGSubreddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGSubreddit.h; path = Model/TGSubreddit.h; sourceTree = "<group>"; };
 		E22047FF1AD8342200A5FACF /* TGSubreddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TGSubreddit.m; path = Model/TGSubreddit.m; sourceTree = "<group>"; };
 		E22048011AD85DA200A5FACF /* TGMoreComments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TGMoreComments.h; path = Model/TGMoreComments.h; sourceTree = "<group>"; };
@@ -306,6 +309,8 @@
 				E22048021AD85DA200A5FACF /* TGMoreComments.m */,
 				E2BDB76D1AE7779200FEB59C /* TGPagination.h */,
 				E2BDB76E1AE7779200FEB59C /* TGPagination.m */,
+				E21BE2E71B16E3A90009C3DB /* TGMedia.h */,
+				E21BE2E81B16E3A90009C3DB /* TGMedia.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -329,6 +334,8 @@
 				E2BDB7771AE8CF3200FEB59C /* TGSubredditSidebarCell.m */,
 				E2B88B891B0F036E00238922 /* TGTweetView.h */,
 				E2B88B8A1B0F036E00238922 /* TGTweetView.m */,
+				E23AFE391B15A83F000412D8 /* TGMediaView.h */,
+				E23AFE3A1B15A83F000412D8 /* TGMediaView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -356,8 +363,6 @@
 				E2DE9BFE1AF932A000BACD5E /* TGFormPresentationController.m */,
 				E2DE9C001AF942B100BACD5E /* TGFormAnimationController.h */,
 				E2DE9C011AF942B100BACD5E /* TGFormAnimationController.m */,
-				E23AFE391B15A83F000412D8 /* TGMediaView.h */,
-				E23AFE3A1B15A83F000412D8 /* TGMediaView.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -558,6 +563,7 @@
 				E22048001AD8342200A5FACF /* TGSubreddit.m in Sources */,
 				E24514611AA6448500B80D2E /* main.m in Sources */,
 				E2B88B941B1142FF00238922 /* TGVineClient.m in Sources */,
+				E21BE2E91B16E3A90009C3DB /* TGMedia.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
