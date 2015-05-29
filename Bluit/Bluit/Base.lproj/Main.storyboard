@@ -774,31 +774,45 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Ft-mC-4TJ" userLabel="Fade View">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" maximumZoomScale="10" translatesAutoresizingMaskIntoConstraints="NO" id="9YX-E0-ajR">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" maximumZoomScale="10" translatesAutoresizingMaskIntoConstraints="NO" id="9YX-E0-ajR">
+                                <rect key="frame" x="50" y="50" width="500" height="500"/>
                             </scrollView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="L3n-2g-JYN">
+                                <rect key="frame" x="281" y="543" width="39" height="37"/>
+                            </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="8Ft-mC-4TJ" secondAttribute="width" id="AWz-hu-h7e"/>
                             <constraint firstAttribute="height" secondItem="8Ft-mC-4TJ" secondAttribute="height" id="Dk3-E1-Pbt"/>
-                            <constraint firstAttribute="centerX" secondItem="9YX-E0-ajR" secondAttribute="centerX" id="KqR-JO-cHA"/>
+                            <constraint firstAttribute="centerX" secondItem="9YX-E0-ajR" secondAttribute="centerX" id="Eli-v0-0ne"/>
                             <constraint firstAttribute="centerX" secondItem="8Ft-mC-4TJ" secondAttribute="centerX" id="LAK-rs-Rbn"/>
-                            <constraint firstAttribute="width" secondItem="9YX-E0-ajR" secondAttribute="width" id="Y8a-r1-ify"/>
                             <constraint firstAttribute="centerY" secondItem="8Ft-mC-4TJ" secondAttribute="centerY" id="ayZ-pb-16C"/>
                             <constraint firstAttribute="centerY" secondItem="9YX-E0-ajR" secondAttribute="centerY" id="e6P-ve-cJV"/>
-                            <constraint firstAttribute="height" secondItem="9YX-E0-ajR" secondAttribute="height" id="mZd-qu-65a"/>
+                            <constraint firstItem="5s5-JW-vVh" firstAttribute="top" secondItem="L3n-2g-JYN" secondAttribute="bottom" constant="20" id="hdW-xb-jd4"/>
+                            <constraint firstAttribute="height" secondItem="9YX-E0-ajR" secondAttribute="height" constant="100" id="mZd-qu-65a"/>
+                            <constraint firstItem="9YX-E0-ajR" firstAttribute="width" secondItem="Gdw-38-U4i" secondAttribute="width" constant="-100" id="mrQ-KW-rQf"/>
+                            <constraint firstAttribute="centerX" secondItem="L3n-2g-JYN" secondAttribute="centerX" constant="-0.5" id="wpW-5l-tKS"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="fadeView" destination="8Ft-mC-4TJ" id="meE-A4-1n4"/>
+                        <outlet property="pageControl" destination="L3n-2g-JYN" id="Vkw-ha-NNg"/>
                         <outlet property="scrollView" destination="9YX-E0-ajR" id="eeG-PH-5oZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JTD-56-18T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3559" y="-550"/>
+        </scene>
+        <!--Page View Controller-->
+        <scene sceneID="fYe-ky-BNP">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="pKE-qg-Xn8" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FJ1-kU-5hf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4259" y="-550"/>
         </scene>
         <!--Front Page-->
         <scene sceneID="GKL-32-1aC">

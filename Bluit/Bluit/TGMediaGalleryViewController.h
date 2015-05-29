@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import "TGMedia.h"
+
 @interface TGMediaGalleryViewController : UIViewController
 
-@property (strong, nonatomic) NSURL *mediaURL;
+@property (strong, nonatomic) NSArray *media; // array of TGMedia objects
 
-- (void)loadMediaFromURL:(NSURL *)url;
+- (void) loadMedia;
 
 @end

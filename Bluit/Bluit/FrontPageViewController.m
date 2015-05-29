@@ -547,8 +547,8 @@
 	else if ([segue.identifier isEqualToString:@"listingToMediaView"])
 	{
 		TGMediaGalleryViewController *mediaVC = segue.destinationViewController;
-		[self.selectedLink requestDirectURLforEmbeddedMediaWithSuccess:^(NSURL *mediaURL) {
-			[mediaVC loadMediaFromURL:mediaURL];
+		[self.selectedLink requestEmbeddedMedia:^(NSArray *media) {
+			mediaVC.media = media;
 		}];
 	}
 	else if ([segue.identifier isEqualToString:@"searchListing"])
