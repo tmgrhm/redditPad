@@ -11,6 +11,8 @@
 @interface TGMediaView : UIView
 
 @property (strong, nonatomic) NSURL *mediaURL;
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *caption;
 
 - (void)loadMediaFromURL:(NSURL *)url;
 
