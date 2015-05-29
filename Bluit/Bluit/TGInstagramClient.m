@@ -10,6 +10,8 @@
 
 #import "TGAPIClient+Private.h"
 
+#import "TGMedia.h"
+
 static NSString * const kBaseURLString = @"http://www.instagram.com/";
 static NSString * const kBaseHTTPSURLString = @"https://api.instagram.com/v1/";
 
@@ -52,6 +54,40 @@ static NSString * const client_id = @"94127b77e375428e9e64716c7a4fb317";
 }
 
 #pragma mark - Image
+
+- (void) mediaFromInstagramURL:(NSURL *)fullURL success:(void (^)(NSArray *media))success
+{
+	NSString *mediaID = [self mediaIDfromLink:fullURL]; // get the imageID
+	if (mediaID)
+	{
+		[self mediaDataWithID:mediaID success:^(id responseObject) { // get the mediaDict from the API
+			NSDictionary *data = (NSDictionary *)responseObject[@"data"];
+			TGMediaType type;
+			NSDictionary *imageOrVideoDict;
+			if ([data[@"type"] isEqualToString:@"video"])
+			{
+				imageOrVideoDict = data[@"videos"][@"standard_resolution"];
+				type = TGMediaTypeVideo;
+			}
+			else
+			{
+				imageOrVideoDict = data[@"images"][@"standard_resolution"];
+				type = TGMediaTypeImage;
+			}
+			
+			TGMedia *media = [TGMedia new];
+			media.type = type;
+			media.url = [NSURL URLWithString:imageOrVideoDict[@"url"]];
+			media.size = CGSizeMake([imageOrVideoDict[@"width"] floatValue], [imageOrVideoDict[@"height"] floatValue]);
+			media.title = data[@"user"][@"username"];
+			media.caption = data[@"caption"][@"text"];
+			
+			NSLog(@"media retrieved from instagram API: %@", media);
+			
+			success(@[media]);
+		}];
+	}
+}
 
 - (void) directMediaURLfromInstagramURL:(NSURL *)fullURL success:(void (^)(NSURL *mediaURL))success
 {

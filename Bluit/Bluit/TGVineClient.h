@@ -12,8 +12,8 @@
 
 #pragma mark - Image
 
+- (void) mediaFromVineURL:(NSURL *)url success:(void (^)(NSArray *media))success;
 - (void) mp4URLfromVineURL:(NSURL *)fullURL success:(void (^)(NSURL *vineURL))success;
-- (void) vineDataWithID:(NSString *)vineID success:(void (^)(id responseObject))success;
 
 #pragma mark - Detecting Link Types
 

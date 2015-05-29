@@ -10,10 +10,10 @@
 
 @interface TGInstagramClient : TGAPIClient
 
-#pragma mark - Image
+#pragma mark - Media
 
+- (void) mediaFromInstagramURL:(NSURL *)fullURL success:(void (^)(NSArray *media))success;
 - (void) directMediaURLfromInstagramURL:(NSURL *)fullURL success:(void (^)(NSURL *mediaURL))success;
-- (void) mediaDataWithID:(NSString *)mediaID success:(void (^)(id responseObject))success;
 
 #pragma mark - Detecting Link Types
 

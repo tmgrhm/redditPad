@@ -10,6 +10,8 @@
 
 #import "TGAPIClient+Private.h"
 
+#import "TGMedia.h"
+
 static NSString * const kBaseURLString = @"http://gfycat.com/";
 static NSString * const kBaseHTTPSURLString = nil;
 
@@ -43,6 +45,24 @@ static NSString * const kBaseHTTPSURLString = nil;
 }
 
 #pragma mark - Gfy
+
+- (void) mediaFromURL:(NSURL *)url success:(void (^)(NSArray *media))success
+{
+	NSString *gfyID = [self gfyIDfromLink:url]; // get the gfyID
+	if (gfyID)
+	{
+		[self gfyDataWithID:gfyID success:^(id responseObject) { // get the dict from the API
+			NSDictionary *data = (NSDictionary *)responseObject[@"gfyItem"];
+			
+			TGMedia *media = [TGMedia new];
+			media.type = TGMediaTypeVideo;
+			media.url = [NSURL URLWithString:data[@"mp4Url"]]; // TODO get smaller version if wider than 668?
+			media.title = data[@"title"];
+			media.size = CGSizeMake([data[@"width"] floatValue], [data[@"height"] floatValue]);
+			success(@[media]);
+		}];
+	}
+}
 
 - (void) mp4URLfromGfycatURL:(NSURL *)fullURL success:(void (^)(NSURL *mp4URL))success
 {

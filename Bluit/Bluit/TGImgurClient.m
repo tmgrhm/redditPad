@@ -78,15 +78,9 @@ static NSString * const kURIRedirectPath = nil;
 
 - (void) mediaFromURL:(NSURL *)url success:(void (^)(NSArray *media))success
 {
-	if ([self URLisSingleImageLink:url]) // if link to single image
-	{
-		[self imageMediaWithID:[self imageIDfromLink:url] success:success];
-	}
-	else if ([self URLisAlbumLink:url]) // if link to album
-	{
-		[self albumMediaWithID:[self albumIDfromLink:url] success:success];
-	}
-	// TODO gallery
+	if ([self URLisSingleImageLink:url])	[self imageMediaWithID:[self imageIDfromLink:url] success:success];
+	else if ([self URLisAlbumLink:url])		[self albumMediaWithID:[self albumIDfromLink:url] success:success];
+	else if ([self URLisGalleryLink:url])	[self galleryMediaWithID:[self galleryIDfromLink:url] success:success];
 }
 
 #pragma mark - Image
@@ -97,7 +91,7 @@ static NSString * const kURIRedirectPath = nil;
 		NSDictionary *imageDict = (NSDictionary *)responseObject[@"data"];
 		
 		TGMedia *media = [self mediaObjectFromImageDictionary:imageDict];
-		NSLog(@"media URL retrieved single image from imgur API: %@", media.url);
+		NSLog(@"retrieved single image media from imgur API: %@", media);
 		success(@[media]);
 	}];
 }
@@ -122,7 +116,6 @@ static NSString * const kURIRedirectPath = nil;
 	{
 		[self coverImageURLfromAlbumURL:fullURL success:success];
 	}
-	// TODO gallery link
 }
 
 - (void) imageDataWithID:(NSString *)imageID success:(void (^)(id responseObject))success
@@ -196,15 +189,44 @@ static NSString * const kURIRedirectPath = nil;
 	  }];
 }
 
+#pragma mark - Gallery
+
+- (void) galleryMediaWithID:(NSString *)galleryID success:(void (^)(NSArray *media))success
+{
+	[self galleryDataWithID:galleryID success:^(id responseObject) { // get the galleryData from the API
+		NSDictionary *imageDict = (NSDictionary *)responseObject[@"data"];
+		
+		TGMedia *media = [self mediaObjectFromImageDictionary:imageDict];
+		NSLog(@"retrieved gallery media from imgur API: %@", media);
+		success(@[media]);
+	}];
+}
+
+- (void) galleryDataWithID:(NSString *)galleryID success:(void (^)(id responseObject))success
+{
+	NSString *url = [NSString stringWithFormat:@"%@gallery/%@", self.baseURLString, galleryID];
+	
+	[self GET:url
+   parameters:nil
+	  success:^(NSURLSessionDataTask *task, id responseObject) {
+		  //		NSLog(@"%@", responseObject);
+		  success(responseObject);
+	  }
+	  failure:^(NSURLSessionDataTask *task, NSError *error) {
+		  // TODO
+		  [self failureWithError:error];
+	  }];
+}
+
 #pragma mark - Detecting Link Types
 
 - (BOOL) URLisImgurLink:(NSURL *)url
 {
 	if ([url.host containsString:@"imgur.com"])
 	{
-		if ([self URLisAlbumLink:url]) return YES;
-		if ([self URLisSingleImageLink:url]) return YES;
-		// TODO /gallery/ links
+		if ([self URLisAlbumLink:url])			return YES;
+		if ([self URLisSingleImageLink:url])	return YES;
+		if ([self URLisGalleryLink:url])		return YES;
 	}
 	
 	return NO;
@@ -224,6 +246,14 @@ static NSString * const kURIRedirectPath = nil;
 	NSString *path = url.path;
 	
 	if ([path hasPrefix:@"/a/"]) return YES;
+	else return NO;
+}
+
+- (BOOL) URLisGalleryLink:(NSURL *)url
+{
+	NSString *path = url.path;
+	
+	if ([path hasPrefix:@"/gallery/"]) return YES;
 	else return NO;
 }
 
@@ -250,9 +280,21 @@ static NSString * const kURIRedirectPath = nil;
 - (NSString *) albumIDfromLink:(NSURL *)url
 {
 	NSString *path = url.path;
+	NSString *pattern = @"/a/";
+	NSString *albumID = [path stringByReplacingOccurrencesOfString:pattern withString:@""];
 	
-	NSString *albumCoverImageID = [path stringByReplacingOccurrencesOfString:@"/a/" withString:@""]; // album
-	if (path.length - albumCoverImageID.length == 3) return albumCoverImageID;
+	if (path.length - albumID.length == pattern.length) return albumID;
+	
+	return nil;
+}
+
+- (NSString *) galleryIDfromLink:(NSURL *)url
+{
+	NSString *path = url.path;
+	NSString *pattern = @"/gallery/";
+	NSString *galleryID = [path stringByReplacingOccurrencesOfString:pattern withString:@""];
+	
+	if (path.length - galleryID.length == pattern.length) return galleryID;
 	
 	return nil;
 }

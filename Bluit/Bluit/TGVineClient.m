@@ -10,6 +10,8 @@
 
 #import "TGAPIClient+Private.h"
 
+#import "TGMedia.h"
+
 static NSString * const kBaseURLString = @"http://www.vine.com/";
 static NSString * const kBaseHTTPSURLString = @"https://api.vineapp.com/";
 
@@ -45,7 +47,31 @@ static NSString * const kBaseHTTPSURLString = @"https://api.vineapp.com/";
 	return kBaseHTTPSURLString;
 }
 
-#pragma mark - Image
+#pragma mark - Media
+
+- (void) mediaFromVineURL:(NSURL *)url success:(void (^)(NSArray *media))success
+{
+	NSString *vineID = [self vineIDfromLink:url]; // get the vineID
+	if (vineID)
+	{
+		[self vineDataWithID:vineID success:^(id responseObject) { // get the vineData from the API
+			NSDictionary *data = responseObject[@"data"][@"records"][0]; // get default image link
+			
+			NSString *urlString = data[@"videoUrl"];
+			NSString *pattern = @"mp4\?.*";
+			NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+			urlString = [regex stringByReplacingMatchesInString:urlString options:0 range:NSMakeRange(0, [urlString length]) withTemplate:@"mp4"];
+			
+			TGMedia *media = [TGMedia new];
+			media.type = TGMediaTypeVideo;
+			media.url = [NSURL URLWithString:urlString];
+			media.title = data[@"username"];
+			media.caption = data[@"description"];
+			NSLog(@"media retrieved from Vine API: %@", media);
+			success(@[media]);
+		}];
+	}
+}
 
 - (void) mp4URLfromVineURL:(NSURL *)fullURL success:(void (^)(NSURL *vineURL))success
 {

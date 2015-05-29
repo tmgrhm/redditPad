@@ -12,8 +12,8 @@
 
 #pragma mark - Gfy
 
+- (void) mediaFromURL:(NSURL *)url success:(void (^)(NSArray *media))success;
 - (void) mp4URLfromGfycatURL:(NSURL *)fullURL success:(void (^)(NSURL *mp4URL))success;
-- (void) gfyDataWithID:(NSString *)gfyID success:(void (^)(id responseObject))success;
 
 #pragma mark - Detecting Link Types
 
