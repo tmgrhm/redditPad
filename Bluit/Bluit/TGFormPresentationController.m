@@ -45,8 +45,8 @@
 - (void) presentationTransitionWillBegin
 {
 	// customise // TODO imrpove appearance
-	self.presentedView.layer.borderColor = [[[ThemeManager colorForKey:kTGThemeShadowBorderColor] colorWithAlphaComponent:0.5f] CGColor];
-	self.presentedView.layer.borderWidth = 1.0f;
+//	self.presentedView.layer.borderColor = [[[ThemeManager colorForKey:kTGThemeShadowBorderColor] colorWithAlphaComponent:0.2f] CGColor];
+//	self.presentedView.layer.borderWidth = 1.0f;
 	self.presentedView.layer.cornerRadius = 8.0f;
 	self.presentedView.clipsToBounds = YES;
 	

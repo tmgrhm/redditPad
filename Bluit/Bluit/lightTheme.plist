@@ -6,8 +6,6 @@
 	<string>lightTheme</string>
 	<key>darkOrLight</key>
 	<string>light</string>
-	<key>oldBackgroundColor</key>
-	<string>E9EAF0</string>
 	<key>backgroundColor</key>
 	<string>EDEFF5</string>
 	<key>contentBackgroundColor</key>
@@ -30,15 +28,22 @@
 	<string>2FD675</string>
 	<key>separatorColor</key>
 	<string>E9EAF0</string>
-	<key>shadowColor</key>
-	<string>949799</string>
-	<key>shadowBorderColor</key>
-	<string>8A9399</string>
 	<key>shadeColor</key>
-	<string>C6C9CC</string>
+	<string>2B2F33</string>
+	<key>shadowBorderColor</key>
+	<string>E9EAF0</string>
 	<key>hiddenCommentBackground</key>
 	<string>F5F6FA</string>
 	<key>imageOverlayBorder</key>
 	<string>000E5C</string>
+	<key>OLD</key>
+	<dict>
+		<key>shadowBorderColor</key>
+		<string>8A9399</string>
+		<key>backgroundColor</key>
+		<string>E9EAF0</string>
+		<key>dimmerColor</key>
+		<string>C6C9CC</string>
+	</dict>
 </dict>
 </plist>
