@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, TGLinkEmbeddedMediaType)
 
 @property (nonatomic) TGLinkEmbeddedMediaType embeddedMediaType;
 @property (strong, nonatomic) NSDictionary *embeddedMediaData;
+@property (strong, nonatomic) NSArray *embeddedMedia; // array of TGMedia objects
 
 - (instancetype) initLinkFromDictionary:(NSDictionary *)dict;
 
@@ -56,5 +57,6 @@ typedef NS_ENUM(NSUInteger, TGLinkEmbeddedMediaType)
 - (BOOL) isMediaLink;
 
 - (void) requestDirectURLforEmbeddedMediaWithSuccess:(void (^)(NSURL *mediaURL))success;
+- (void) requestEmbeddedMedia:(void (^)(NSArray *media))success;
 
 @end

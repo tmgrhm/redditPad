@@ -8,6 +8,8 @@
 
 #import "TGLink.h"
 
+#import "TGMedia.h"
+
 #import "TGImgurClient.h"
 #import "TGTwitterClient.h"
 #import "TGGfycatClient.h"
@@ -114,6 +116,76 @@
 		default:
 			return NO;
 			break;
+	}
+}
+
+- (void) requestEmbeddedMedia:(void (^)(NSArray *media))success
+{
+	switch (self.embeddedMediaType)
+	{
+		case EmbeddedMediaDirectImage:
+		{
+			TGMedia *media = [TGMedia new];
+			media.url = self.url;
+			
+			self.embeddedMedia = @[media];
+			success(self.embeddedMedia);
+			break;
+		}
+		case EmbeddedMediaImgur:
+		{
+			[[TGImgurClient sharedClient] mediaFromURL:self.url success:^(NSArray *media) {
+				self.embeddedMedia = media;
+				success(media);
+			}];
+			break;
+		}
+		case EmbeddedMediaTweet:
+		{
+//			[[TGTwitterClient sharedClient] tweetWithID:[[TGTwitterClient sharedClient] tweetIDfromLink:self.url] success:^(id responseObject) {
+//				self.embeddedMediaData = (NSDictionary *) responseObject;
+//				
+//				if (self.embeddedMediaData[@"entities"][@"media"][0])
+//				{
+//					self.embeddedMediaType = EmbeddedMediaTweetWithImage;
+//					
+//					NSURL *imageURL = [NSURL URLWithString:[self.embeddedMediaData[@"entities"][@"media"][0][@"media_url_https"] stringByAppendingString:@":large"]]; // get large variant
+//					
+//					success(imageURL);
+//				}
+//				success(nil);
+//			}];
+			break;
+		}
+		case EmbeddedMediaGfycat:
+		{
+			[[TGGfycatClient sharedClient] mediaFromURL:self.url success:^(NSArray *media) {
+				self.embeddedMedia = media;
+				success(media);
+			}];
+			break;
+		}
+		case EmbeddedMediaInstagram:
+		{
+			[[TGInstagramClient sharedClient] mediaFromInstagramURL:self.url success:^(NSArray *media) {
+				self.embeddedMedia = media;
+				success(media);
+			}];
+			break;
+		}
+		case EmbeddedMediaVine:
+		{
+			[[TGVineClient sharedClient] mediaFromVineURL:self.url success:^(NSArray *media) {
+				self.embeddedMedia = media;
+				success(media);
+			}];
+			break;
+		}
+		default:
+		{
+			NSLog(@"I shouldn't be here…"); // TODO doublecheck
+			success(nil);
+		}
 	}
 }
 
